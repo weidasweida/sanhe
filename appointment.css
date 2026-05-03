@@ -1,0 +1,754 @@
+/* ========== Appointment Module Styles ========== */
+
+/* ---------- Page Layout ---------- */
+.appt-page {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.appt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.appt-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.appt-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ---------- Filter Bar ---------- */
+.appt-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.appt-filter-bar select,
+.appt-filter-bar input {
+  padding: 6px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-body);
+  color: var(--text-primary);
+  font-size: 13px;
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.appt-filter-bar select:focus,
+.appt-filter-bar input:focus {
+  border-color: var(--color-primary);
+}
+
+.appt-filter-bar .filter-date {
+  min-width: 140px;
+}
+
+.status-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.status-tab {
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.status-tab:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.status-tab.active {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+/* ---------- Table ---------- */
+.appt-table-wrapper {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.appt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.appt-table thead {
+  background: var(--bg-body);
+}
+
+.appt-table th {
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  font-size: 12px;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border-color);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.appt-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.appt-table tr:last-child td {
+  border-bottom: none;
+}
+
+.appt-table tr:hover td {
+  background: rgba(22, 119, 255, 0.03);
+}
+
+/* Status badges */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.badge-pending {
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+}
+
+.badge-confirmed {
+  background: var(--color-info-bg);
+  color: var(--color-info);
+}
+
+.badge-completed {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.badge-cancelled {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+.badge-unpaid {
+  background: #FFF3E0;
+  color: #FF7D00;
+}
+
+.badge-paid {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.badge-pending-consume {
+  background: var(--color-info-bg);
+  color: var(--color-info);
+}
+
+/* Action links */
+.action-link {
+  color: var(--color-primary);
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 12px;
+  transition: opacity var(--transition);
+}
+
+.action-link:hover {
+  opacity: 0.7;
+}
+
+.action-link.danger {
+  color: var(--color-danger);
+}
+
+/* ---------- Pagination ---------- */
+.appt-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  font-size: 13px;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.appt-pagination .page-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.appt-pagination select {
+  padding: 4px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-body);
+  color: var(--text-primary);
+  font-size: 12px;
+}
+
+.page-btns {
+  display: flex;
+  gap: 4px;
+}
+
+.page-btn {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-secondary);
+  transition: all var(--transition);
+}
+
+.page-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.page-btn.active {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+/* ---------- Tab Content ---------- */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* ---------- Section cards ---------- */
+.section-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.section-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 16px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---------- Stats Cards (预约数据) ---------- */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 16px;
+  text-align: center;
+  transition: box-shadow var(--transition);
+}
+
+.stat-card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.stat-card .stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.stat-card .stat-value.primary { color: var(--color-primary); }
+.stat-card .stat-value.success { color: var(--color-success); }
+.stat-card .stat-value.warning { color: var(--color-warning); }
+.stat-card .stat-value.danger { color: var(--color-danger); }
+
+.stat-card .stat-label {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+}
+
+/* ---------- Board (预约看板) ---------- */
+.board-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.board-header .store-select {
+  padding: 6px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 13px;
+}
+
+.board-header .date-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.board-header .date-nav button {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+}
+
+.board-header .date-nav button:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.board-header .date-display {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 100px;
+  text-align: center;
+}
+
+.board-header .toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.board-grid-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+}
+
+.board-grid {
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.board-grid th {
+  padding: 8px 10px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  font-size: 11px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-body);
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.board-grid td {
+  padding: 0;
+  border: 1px solid var(--border-color);
+  vertical-align: top;
+  min-width: 100px;
+  height: 60px;
+  position: relative;
+}
+
+.board-grid .time-label {
+  padding: 4px 8px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-align: right;
+  white-space: nowrap;
+  background: var(--bg-body);
+  width: 60px;
+  min-width: 60px;
+}
+
+.board-slot {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 2px;
+  bottom: 2px;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 11px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: opacity var(--transition);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.board-slot:hover {
+  opacity: 0.85;
+}
+
+.board-slot .slot-name {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.board-slot .slot-detail {
+  font-size: 9px;
+  opacity: 0.85;
+}
+
+.board-slot.color-1 { background: #1677FF; }
+.board-slot.color-2 { background: #00B42A; }
+.board-slot.color-3 { background: #FF7D00; }
+.board-slot.color-4 { background: #722ED1; }
+.board-slot.color-5 { background: #F53F3F; }
+
+/* ---------- Params (预约参数) ---------- */
+.param-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 20px;
+}
+
+.param-tab {
+  padding: 10px 24px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all var(--transition);
+}
+
+.param-tab:hover {
+  color: var(--color-primary);
+}
+
+.param-tab.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.param-form {
+  max-width: 700px;
+}
+
+.param-group {
+  margin-bottom: 24px;
+}
+
+.param-group h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.param-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.param-row:last-child {
+  border-bottom: none;
+}
+
+.param-row .param-label {
+  font-size: 13px;
+  color: var(--text-primary);
+  min-width: 140px;
+  flex-shrink: 0;
+}
+
+.param-row .param-desc {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.param-row select,
+.param-row input[type="text"],
+.param-row input[type="number"] {
+  padding: 6px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 13px;
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.param-row select:focus,
+.param-row input:focus {
+  border-color: var(--color-primary);
+}
+
+.param-row input[type="number"] {
+  width: 80px;
+}
+
+.param-row input[type="text"] {
+  width: 200px;
+}
+
+.param-row select {
+  min-width: 100px;
+}
+
+.param-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.param-checkbox-row label {
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.param-checkbox-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.param-radio-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.param-radio-row label {
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.param-radio-row input[type="radio"] {
+  accent-color: var(--color-primary);
+}
+
+.btn-save-params {
+  padding: 8px 28px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: opacity var(--transition);
+}
+
+.btn-save-params:hover {
+  opacity: 0.85;
+}
+
+/* ---------- Staff (可约员工) ---------- */
+.staff-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.staff-header .search-input {
+  padding: 8px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  font-size: 13px;
+  width: 240px;
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.staff-header .search-input:focus {
+  border-color: var(--color-primary);
+}
+
+.btn-add-staff {
+  padding: 8px 20px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity var(--transition);
+}
+
+.btn-add-staff:hover {
+  opacity: 0.85;
+}
+
+/* ---------- Data (预约数据) ---------- */
+.data-sub-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 16px;
+}
+
+.data-sub-tab {
+  padding: 8px 20px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 13px;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all var(--transition);
+}
+
+.data-sub-tab:hover {
+  color: var(--color-primary);
+}
+
+.data-sub-tab.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  font-weight: 500;
+}
+
+/* ---------- Right sidebar info panel ---------- */
+.appt-global-info {
+  padding: 12px 16px;
+  background: var(--color-primary-light);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.appt-global-info span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.appt-global-info .label {
+  color: var(--text-tertiary);
+  font-size: 12px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .appt-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .appt-table th, .appt-table td {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+  .board-grid {
+    font-size: 12px;
+  }
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
