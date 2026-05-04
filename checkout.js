@@ -402,35 +402,73 @@ function selectMember(memberId) {
   updateCart();
 }
 
-// ========== Payment ==========
-function quickPay(amount) {
-  // Fill in quick amount — for demo just show toast
-  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
-  const discount = selectedMember && selectedMember.levelDiscount < 1
-    ? total * (1 - selectedMember.levelDiscount)
-    : 0;
-  const finalTotal = total - discount;
-  showToast(`${currentLang === 'zh' ? '收款' : 'Pay'}: ¥${amount}`, 'success');
+// ========== Payment (真接口)==========
+const ORDER_API = 'http://47.236.39.12:8999/api/orders';
+
+function getPaymentName(method) {
+  const names = {
+    wechat: '微信', alipay: '支付宝', cash: '现金',
+    card: '银行卡', balance: '储值卡',
+  };
+  return names[method] || method;
 }
 
-function pay(method) {
-  if (cart.length === 0) return;
-  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
-  const discount = selectedMember && selectedMember.levelDiscount < 1
-    ? total * (1 - selectedMember.levelDiscount)
-    : 0;
-  const finalTotal = total - discount;
+function getCustomerInfo() {
+  if (selectedMember) {
+    return { customer: selectedMember.name, phone: selectedMember.phone };
+  }
+  return { customer: '散客', phone: '' };
+}
 
-  const methodNames = {
-    wechat: currentLang === 'zh' ? '微信' : 'WeChat',
-    alipay: currentLang === 'zh' ? '支付宝' : 'Alipay',
-    cash: currentLang === 'zh' ? '现金' : 'Cash',
-    card: currentLang === 'zh' ? '银行卡' : 'Card',
-    balance: currentLang === 'zh' ? '储值卡' : 'Balance Card',
+async function quickPay(amount) {
+  if (cart.length === 0) return;
+  // quickPay is just a shortcut — we still submit real items
+  await submitOrder('cash');
+}
+
+async function pay(method) {
+  if (cart.length === 0) return;
+  await submitOrder(method);
+}
+
+async function submitOrder(method) {
+  const subtotal = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  const discount = selectedMember && selectedMember.levelDiscount < 1
+    ? subtotal * (1 - selectedMember.levelDiscount)
+    : 0;
+  const finalTotal = subtotal - discount;
+  const { customer, phone } = getCustomerInfo();
+
+  const items = cart.map(c => ({
+    name: c.name,
+    qty: c.qty,
+    price: c.price,
+  }));
+
+  const body = {
+    customer,
+    phone,
+    total: Math.round(finalTotal),
+    payment: getPaymentName(method),
+    items,
   };
 
-  showToast(`${currentLang === 'zh' ? '支付成功' : 'Payment Successful'}!\n${methodNames[method]} ¥${finalTotal.toFixed(0)}`, 'success');
-  clearCart();
+  try {
+    const r = await fetch(ORDER_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await r.json();
+    if (data.code === 0) {
+      showToast(`${currentLang === 'zh' ? '🎉 下单成功' : '🎉 Order Success'}!\n${getPaymentName(method)} ¥${finalTotal.toFixed(0)}\n单号: ${data.data.order_no}`, 'success');
+      clearCart();
+    } else {
+      showToast(`${currentLang === 'zh' ? '下单失败' : 'Order Failed'}: ${data.msg}`, 'error');
+    }
+  } catch (e) {
+    showToast(`${currentLang === 'zh' ? '网络错误，请重试' : 'Network error, please retry'}`, 'error');
+  }
 }
 
 // ========== Scan Simulation ==========
