@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>收银系统 - 订单管理</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="menu-common.css" />
+  <style>
+    /* 订单页面专用样式 */
+    .order-content { padding: 20px; }
+    .order-toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px; }
+    .order-toolbar-left { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .order-toolbar-right { display:flex; gap:8px; }
+    .order-search { padding:8px 12px; border:1px solid var(--color-border); border-radius:6px; font-size:14px; width:200px; background:var(--color-bg); color:var(--color-text); }
+    .order-status-filter { padding:8px 12px; border:1px solid var(--color-border); border-radius:6px; font-size:14px; background:var(--color-bg); color:var(--color-text); cursor:pointer; }
+    .btn { padding:8px 16px; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:500; }
+    .btn-primary { background:var(--color-primary,#4f46e5); color:#fff; }
+    .btn-outline { background:transparent; border:1px solid var(--color-border); color:var(--color-text); }
+    .btn-danger { background:#ef4444; color:#fff; }
+    .btn-sm { padding:4px 10px; font-size:12px; }
+    .order-table { width:100%; border-collapse:collapse; background:var(--color-bg); border-radius:8px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.1); }
+    .order-table th { background:var(--color-bg-secondary); padding:10px 12px; text-align:left; font-size:13px; color:var(--color-text-secondary); font-weight:600; white-space:nowrap; }
+    .order-table td { padding:10px 12px; border-top:1px solid var(--color-border); font-size:13px; }
+    .order-table tr:hover { background:var(--color-bg-hover,#f5f5ff); }
+    .status-badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+    .status-已完成 { background:#dcfce7; color:#166534; }
+    .status-待付款 { background:#fef3c7; color:#92400e; }
+    .status-已退款 { background:#fee2e2; color:#991b1b; }
+    .status-处理中 { background:#dbeafe; color:#1e40af; }
+    .total-amount { font-weight:700; color:var(--color-primary,#4f46e5); }
+    .empty-state { text-align:center; padding:60px 20px; color:var(--color-text-secondary); }
+    .empty-state .icon { font-size:48px; margin-bottom:12px; }
+    /* Modal */
+    .modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center; }
+    .modal-overlay.active { display:flex; }
+    .modal { background:var(--color-bg); border-radius:12px; width:600px; max-width:90vw; max-height:85vh; overflow-y:auto; box-shadow:0 10px 40px rgba(0,0,0,0.3); }
+    .modal-header { padding:16px 20px; border-bottom:1px solid var(--color-border); display:flex; justify-content:space-between; align-items:center; }
+    .modal-header h3 { margin:0; font-size:16px; }
+    .modal-close { background:none; border:none; font-size:20px; cursor:pointer; color:var(--color-text-secondary); }
+    .modal-body { padding:20px; }
+    .modal-footer { padding:12px 20px; border-top:1px solid var(--color-border); display:flex; justify-content:flex-end; gap:8px; }
+    .detail-row { display:flex; margin-bottom:12px; }
+    .detail-label { width:80px; color:var(--color-text-secondary); font-size:13px; flex-shrink:0; }
+    .detail-value { font-size:13px; }
+    .detail-items { margin-top:8px; }
+    .detail-items table { width:100%; border-collapse:collapse; font-size:12px; }
+    .detail-items th { background:var(--color-bg-secondary); padding:6px 8px; text-align:left; }
+    .detail-items td { padding:6px 8px; border-top:1px solid var(--color-border); }
+    .pagination { display:flex; justify-content:center; align-items:center; gap:8px; margin-top:16px; }
+    .page-btn { padding:6px 12px; border:1px solid var(--color-border); border-radius:4px; background:var(--color-bg); cursor:pointer; font-size:13px; }
+    .page-btn.active { background:var(--color-primary,#4f46e5); color:#fff; border-color:transparent; }
+    .page-btn:disabled { opacity:0.4; cursor:not-allowed; }
+    .loading { text-align:center; padding:40px; color:var(--color-text-secondary); }
+  </style>
+</head>
+<body>
+<div id="app" data-theme="aurora-blue">
+  <header class="header">
+    <div class="header-left">
+      <button class="mobile-back-btn" onclick="goBack()">‹</button>
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+      <div class="logo">🏪 <span>收银通</span></div>
+      <span class="version">v2.0</span>
+    </div>
+    <div class="header-right">
+      <button class="lang-switch" onclick="toggleLang()">EN / 中文</button>
+      <button class="theme-btn" onclick="toggleThemePanel()">🎨</button>
+      <div class="notification-badge">🔔 <span class="badge">3</span></div>
+      <div class="user-avatar">👤 <span>管理员</span></div>
+    </div>
+  </header>
+  <div class="main-layout" style="margin-top:var(--header-height);">
+    <!-- 左侧导航 -->
+    <nav class="sidebar">
+      <div class="nav-item" onclick="location='index.html'"><span class="nav-icon">🏠</span><span>总览</span></div>
+      <div class="nav-item" onclick="location='checkout.html'"><span class="nav-icon">🧾</span><span>快速开单</span></div>
+      <div class="nav-item" onclick="location='booking.html'"><span class="nav-icon">📅</span><span>预约管理</span></div>
+      <div class="nav-item" onclick="location='products.html'"><span class="nav-icon">📦</span><span>商品管理</span></div>
+      <div class="nav-item" onclick="location='inventory.html'"><span class="nav-icon">📋</span><span>库存管理</span></div>
+      <div class="nav-item active"><span class="nav-icon">📝</span><span>订单管理</span></div>
+      <div class="nav-item" onclick="location='members.html'"><span class="nav-icon">👥</span><span>会员管理</span></div>
+      <div class="nav-item" onclick="location='reports.html'"><span class="nav-icon">📊</span><span>营业报表</span></div>
+      <div class="nav-item" onclick="location='marketing.html'"><span class="nav-icon">🎫</span><span>优惠营销</span></div>
+      <div class="nav-item" onclick="location='settings.html'"><span class="nav-icon">⚙️</span><span>系统设置</span></div>
+    </nav>
+
+    <!-- 右侧内容 -->
+    <div class="order-content">
+      <div class="order-toolbar">
+        <div class="order-toolbar-left">
+          <input type="text" class="order-search" id="searchInput" placeholder="🔍 搜索订单号/客户..." oninput="filterOrders()" />
+          <select class="order-status-filter" id="statusFilter" onchange="filterOrders()">
+            <option value="">全部状态</option>
+            <option value="已完成">已完成</option>
+            <option value="待付款">待付款</option>
+            <option value="已退款">已退款</option>
+            <option value="处理中">处理中</option>
+          </select>
+        </div>
+        <div class="order-toolbar-right">
+          <button class="btn btn-outline" onclick="loadOrders()">🔄 刷新</button>
+        </div>
+      </div>
+
+      <div id="loadingArea" class="loading">加载中...</div>
+
+      <table class="order-table" id="orderTable" style="display:none;">
+        <thead>
+          <tr>
+            <th>订单号</th>
+            <th>客户</th>
+            <th>电话</th>
+            <th>金额</th>
+            <th>支付方式</th>
+            <th>状态</th>
+            <th>时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="orderTbody"></tbody>
+      </table>
+
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <div class="icon">📭</div>
+        <p>暂无订单</p>
+        <p style="font-size:12px;">去 <a href="checkout.html" style="color:var(--color-primary);">收银台</a> 创建新订单</p>
+      </div>
+
+      <div class="pagination" id="pagination" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 订单详情弹窗 -->
+<div class="modal-overlay" id="detailModal" onmousedown="if(event.target===this)closeDetail()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3>📋 订单详情</h3>
+      <button class="modal-close" onclick="closeDetail()">✕</button>
+    </div>
+    <div class="modal-body" id="detailBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeDetail()">关闭</button>
+      <button class="btn btn-danger btn-sm" id="refundBtn" onclick="refundOrder()">💰 退款</button>
+    </div>
+  </div>
+</div>
+
+<script src="shared-data.js"></script>
+<script src="app.js"></script>
+<script>
+// ====== 订单管理 JS ======
+const API = '/api/orders';
+let allOrders = [];
+let currentDetailId = null;
+
+// 加载订单列表
+async function loadOrders() {
+  const loading = document.getElementById('loadingArea');
+  const table = document.getElementById('orderTable');
+  const empty = document.getElementById('emptyState');
+  loading.style.display = 'block';
+  table.style.display = 'none';
+  empty.style.display = 'none';
+
+  try {
+    const res = await fetch(API);
+    const json = await res.json();
+    allOrders = json.data || json || [];
+    renderOrders(allOrders);
+  } catch(e) {
+    console.error('加载订单失败:', e);
+    loading.innerHTML = '<p>❌ 加载失败，请检查后端服务</p>';
+  }
+}
+
+// 渲染订单表格
+function renderOrders(orders) {
+  const loading = document.getElementById('loadingArea');
+  const table = document.getElementById('orderTable');
+  const empty = document.getElementById('emptyState');
+  const tbody = document.getElementById('orderTbody');
+  loading.style.display = 'none';
+
+  if (!orders || orders.length === 0) {
+    table.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+
+  table.style.display = '';
+  empty.style.display = 'none';
+
+  tbody.innerHTML = orders.map(o => `
+    <tr>
+      <td><code>${esc(o.order_no)}</code></td>
+      <td>${esc(o.customer || '-')}</td>
+      <td>${esc(o.phone || '-')}</td>
+      <td class="total-amount">¥${(o.total||0).toFixed(2)}</td>
+      <td>${esc(o.payment || '-')}</td>
+      <td><span class="status-badge status-${o.status||'已完成'}">${esc(o.status||'已完成')}</span></td>
+      <td>${fmtTime(o.created_at)}</td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="viewDetail(${o.id})">详情</button>
+      </td>
+    </tr>
+  `).join('');
+
+  renderPagination(orders.length);
+}
+
+// 过滤
+function filterOrders() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const status = document.getElementById('statusFilter').value;
+  let filtered = allOrders;
+  if (search) {
+    filtered = filtered.filter(o => 
+      (o.order_no||'').toLowerCase().includes(search) ||
+      (o.customer||'').toLowerCase().includes(search) ||
+      (o.phone||'').includes(search)
+    );
+  }
+  if (status) {
+    filtered = filtered.filter(o => o.status === status);
+  }
+  renderOrders(filtered);
+}
+
+// 查看详情
+async function viewDetail(id) {
+  try {
+    const res = await fetch(`${API}/${id}`);
+    const json = await res.json();
+    const o = json.data || json;
+    currentDetailId = id;
+
+    let items = [];
+    try { items = typeof o.items === 'string' ? JSON.parse(o.items) : (o.items||[]); } catch(e) {}
+
+    const itemsHtml = items.length > 0 ? `
+      <div class="detail-items">
+        <table>
+          <thead><tr><th>商品</th><th>数量</th><th>单价</th></tr></thead>
+          <tbody>${items.map(i => `
+            <tr><td>${esc(i.name||'')}</td><td>${i.qty||1}</td><td>¥${(i.price||0).toFixed(2)}</td></tr>
+          `).join('')}</tbody>
+        </table>
+      </div>
+    ` : '<p style="color:var(--color-text-secondary);font-size:13px;">无商品明细</p>';
+
+    document.getElementById('detailBody').innerHTML = `
+      <div class="detail-row"><span class="detail-label">订单号</span><span class="detail-value"><b>${esc(o.order_no)}</b></span></div>
+      <div class="detail-row"><span class="detail-label">客户</span><span class="detail-value">${esc(o.customer || '-')}</span></div>
+      <div class="detail-row"><span class="detail-label">电话</span><span class="detail-value">${esc(o.phone || '-')}</span></div>
+      <div class="detail-row"><span class="detail-label">金额</span><span class="detail-value total-amount">¥${(o.total||0).toFixed(2)}</span></div>
+      <div class="detail-row"><span class="detail-label">支付</span><span class="detail-value">${esc(o.payment || '-')}</span></div>
+      <div class="detail-row"><span class="detail-label">状态</span><span class="detail-value"><span class="status-badge status-${o.status||'已完成'}">${esc(o.status||'已完成')}</span></span></div>
+      <div class="detail-row"><span class="detail-label">时间</span><span class="detail-value">${fmtTime(o.created_at)}</span></div>
+      <div class="detail-row"><span class="detail-label">备注</span><span class="detail-value">${esc(o.remark || '无')}</span></div>
+      ${itemsHtml}
+    `;
+
+    const refundBtn = document.getElementById('refundBtn');
+    refundBtn.style.display = o.status === '已退款' ? 'none' : '';
+
+    document.getElementById('detailModal').classList.add('active');
+  } catch(e) {
+    alert('获取订单详情失败');
+  }
+}
+
+function closeDetail() {
+  document.getElementById('detailModal').classList.remove('active');
+  currentDetailId = null;
+}
+
+// 退款
+async function refundOrder() {
+  if (!currentDetailId) return;
+  if (!confirm('确认退款？退款后状态将变为"已退款"。')) return;
+  try {
+    const res = await fetch(`${API}/${currentDetailId}`, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({status: '已退款'})
+    });
+    const json = await res.json();
+    if (json.code === 0) {
+      alert('退款成功');
+      closeDetail();
+      loadOrders();
+    } else {
+      alert('退款失败: ' + (json.msg||'未知错误'));
+    }
+  } catch(e) {
+    alert('退款请求失败');
+  }
+}
+
+// 分页
+function renderPagination(total) {
+  const pageSize = 20;
+  const pages = Math.ceil(total / pageSize);
+  const el = document.getElementById('pagination');
+  if (pages <= 1) { el.style.display = 'none'; return; }
+  el.style.display = 'flex';
+  el.innerHTML = `<button class="page-btn" disabled>‹</button>
+    <span style="font-size:13px;">共 ${total} 条</span>
+    <button class="page-btn" disabled>›</button>`;
+}
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function fmtTime(t) {
+  if (!t) return '-';
+  try {
+    const d = new Date(t);
+    if (isNaN(d.getTime())) return t;
+    return d.toLocaleString('zh-CN', {month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+  } catch(e) { return t; }
+}
+
+// 初始化
+loadOrders();
+</script>
+</body>
+</html>
