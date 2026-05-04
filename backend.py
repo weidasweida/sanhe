@@ -264,6 +264,51 @@ class Handler(BaseHTTPRequestHandler):
                 else:
                     self._send({'code': 404, 'msg': '产品不存在'}, 404)
 
+            # ====== 订单 ======
+            elif path == '/api/orders':
+                c.execute("SELECT * FROM orders ORDER BY id DESC")
+                rows = [dict(r) for r in c.fetchall()]
+                self._send({'code': 0, 'data': rows})
+
+            elif path.startswith('/api/orders/'):
+                oid = path.split('/')[-1]
+                c.execute("SELECT * FROM orders WHERE id=?", (oid,))
+                row = c.fetchone()
+                if row:
+                    self._send({'code': 0, 'data': dict(row)})
+                else:
+                    self._send({'code': 404, 'msg': '订单不存在'}, 404)
+
+            # ====== 会员 ======
+            elif path == '/api/members':
+                c.execute("SELECT * FROM members ORDER BY id DESC")
+                rows = [dict(r) for r in c.fetchall()]
+                self._send({'code': 0, 'data': rows})
+
+            elif path.startswith('/api/members/'):
+                mid = path.split('/')[-1]
+                c.execute("SELECT * FROM members WHERE id=?", (mid,))
+                row = c.fetchone()
+                if row:
+                    self._send({'code': 0, 'data': dict(row)})
+                else:
+                    self._send({'code': 404, 'msg': '会员不存在'}, 404)
+
+            # ====== 预约 ======
+            elif path == '/api/bookings':
+                c.execute("SELECT * FROM bookings ORDER BY id DESC")
+                rows = [dict(r) for r in c.fetchall()]
+                self._send({'code': 0, 'data': rows})
+
+            elif path.startswith('/api/bookings/'):
+                bid = path.split('/')[-1]
+                c.execute("SELECT * FROM bookings WHERE id=?", (bid,))
+                row = c.fetchone()
+                if row:
+                    self._send({'code': 0, 'data': dict(row)})
+                else:
+                    self._send({'code': 404, 'msg': '预约不存在'}, 404)
+
             else:
                 self._send({'code': 404, 'msg': 'Not Found'}, 404)
         finally:
@@ -416,6 +461,45 @@ class Handler(BaseHTTPRequestHandler):
                         msg += f'...等{len(errors)}个'
                 self._send({'code': 0, 'msg': msg})
 
+            # ====== 订单 POST ======
+            elif path == '/api/orders':
+                customer = body.get('customer', '').strip()
+                order_no = body.get('order_no', '')
+                import datetime, random
+                if not order_no:
+                    order_no = datetime.datetime.now().strftime('%Y%m%d%H%M%S') + str(random.randint(1000,9999))
+                c.execute("INSERT INTO orders(order_no,customer,phone,total,payment,items,remark) VALUES(?,?,?,?,?,?,?)",
+                          (order_no, customer, body.get('phone',''), body.get('total',0),
+                           body.get('payment','现金'), json.dumps(body.get('items',[]), ensure_ascii=False),
+                           body.get('remark','')))
+                conn.commit()
+                self._send({'code': 0, 'msg': '下单成功', 'data': {'id': c.lastrowid, 'order_no': order_no}})
+
+            # ====== 会员 POST ======
+            elif path == '/api/members':
+                name = body.get('name', '').strip()
+                if not name:
+                    self._send({'code': 1, 'msg': '会员姓名不能为空'})
+                    return
+                c.execute("INSERT INTO members(name,phone,level,points,balance,join_date) VALUES(?,?,?,?,?,date('now'))",
+                          (name, body.get('phone',''), body.get('level','普通会员'),
+                           body.get('points',0), body.get('balance',0)))
+                conn.commit()
+                self._send({'code': 0, 'msg': '新增成功', 'data': {'id': c.lastrowid}})
+
+            # ====== 预约 POST ======
+            elif path == '/api/bookings':
+                customer = body.get('customer', '').strip()
+                if not customer:
+                    self._send({'code': 1, 'msg': '客户姓名不能为空'})
+                    return
+                c.execute("INSERT INTO bookings(customer,phone,service,date,time,duration,staff,remark) VALUES(?,?,?,?,?,?,?,?)",
+                          (customer, body.get('phone',''), body.get('service',''),
+                           body.get('date',''), body.get('time',''),
+                           body.get('duration',60), body.get('staff',''), body.get('remark','')))
+                conn.commit()
+                self._send({'code': 0, 'msg': '预约成功', 'data': {'id': c.lastrowid}})
+
             else:
                 self._send({'code': 404, 'msg': 'Not Found'}, 404)
         finally:
@@ -556,6 +640,60 @@ class Handler(BaseHTTPRequestHandler):
                 conn.commit()
                 self._send({'code': 0, 'msg': '更新成功'})
 
+            # ====== 订单 PUT ======
+            elif path.startswith('/api/orders/'):
+                oid = path.split('/')[-1]
+                status = body.get('status')
+                payment = body.get('payment')
+                total = body.get('total')
+                if status:
+                    c.execute("UPDATE orders SET status=? WHERE id=?", (status, oid))
+                if payment:
+                    c.execute("UPDATE orders SET payment=? WHERE id=?", (payment, oid))
+                if total is not None:
+                    c.execute("UPDATE orders SET total=? WHERE id=?", (total, oid))
+                conn.commit()
+                self._send({'code': 0, 'msg': '更新成功'})
+
+            # ====== 会员 PUT ======
+            elif path.startswith('/api/members/'):
+                mid = path.split('/')[-1]
+                name = body.get('name')
+                phone = body.get('phone')
+                level = body.get('level')
+                points = body.get('points')
+                balance = body.get('balance')
+                if name:
+                    c.execute("UPDATE members SET name=? WHERE id=?", (name, mid))
+                if phone is not None:
+                    c.execute("UPDATE members SET phone=? WHERE id=?", (phone, mid))
+                if level:
+                    c.execute("UPDATE members SET level=? WHERE id=?", (level, mid))
+                if points is not None:
+                    c.execute("UPDATE members SET points=? WHERE id=?", (int(points), mid))
+                if balance is not None:
+                    c.execute("UPDATE members SET balance=? WHERE id=?", (float(balance), mid))
+                conn.commit()
+                self._send({'code': 0, 'msg': '更新成功'})
+
+            # ====== 预约 PUT ======
+            elif path.startswith('/api/bookings/'):
+                bid = path.split('/')[-1]
+                status = body.get('status')
+                staff = body.get('staff')
+                date = body.get('date')
+                time = body.get('time')
+                if status:
+                    c.execute("UPDATE bookings SET status=? WHERE id=?", (status, bid))
+                if staff:
+                    c.execute("UPDATE bookings SET staff=? WHERE id=?", (staff, bid))
+                if date:
+                    c.execute("UPDATE bookings SET date=? WHERE id=?", (date, bid))
+                if time:
+                    c.execute("UPDATE bookings SET time=? WHERE id=?", (time, bid))
+                conn.commit()
+                self._send({'code': 0, 'msg': '更新成功'})
+
             else:
                 self._send({'code': 404, 'msg': 'Not Found'}, 404)
         finally:
@@ -644,6 +782,27 @@ class Handler(BaseHTTPRequestHandler):
                     c.execute("DELETE FROM products WHERE id=?", (pid,))
                     conn.commit()
                     self._send({'code': 0, 'msg': '删除成功'})
+
+            # ====== 订单 DELETE ======
+            elif path.startswith('/api/orders/'):
+                oid = path.split('/')[-1]
+                c.execute("DELETE FROM orders WHERE id=?", (oid,))
+                conn.commit()
+                self._send({'code': 0, 'msg': '删除成功'})
+
+            # ====== 会员 DELETE ======
+            elif path.startswith('/api/members/'):
+                mid = path.split('/')[-1]
+                c.execute("DELETE FROM members WHERE id=?", (mid,))
+                conn.commit()
+                self._send({'code': 0, 'msg': '删除成功'})
+
+            # ====== 预约 DELETE ======
+            elif path.startswith('/api/bookings/'):
+                bid = path.split('/')[-1]
+                c.execute("DELETE FROM bookings WHERE id=?", (bid,))
+                conn.commit()
+                self._send({'code': 0, 'msg': '删除成功'})
 
             else:
                 self._send({'code': 404, 'msg': 'Not Found'}, 404)
