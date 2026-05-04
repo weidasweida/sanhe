@@ -1,0 +1,87 @@
+{
+  "updated": "2026-05-05 02:00:00",
+  "updated_ts": 0,
+  "project": "收银系统 POS",
+  "repo": "https://github.com/weidasweida/sanhe.git",
+  "lead": "小马弟",
+  "brothers": [
+    {
+      "name": "小马哥",
+      "role": "老板本机 Hermes Agent",
+      "status": "online",
+      "task": "总管监控+任务分发",
+      "host": "WSL"
+    },
+    {
+      "name": "小马弟",
+      "role": "项目负责人 👑",
+      "status": "online",
+      "task": "统筹全局+后端订单/会员API+前端订单页面",
+      "host": "47.236.39.12"
+    },
+    {
+      "name": "小马妹",
+      "role": "开发执行",
+      "status": "online",
+      "task": "前端会员/报表页面+收银台对接",
+      "host": "47.84.125.253"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task1",
+      "name": "搭项目骨架+装依赖",
+      "assignee": "小马弟",
+      "status": "completed"
+    },
+    {
+      "id": "task2",
+      "name": "订单系统后端API（orders CRUD）",
+      "assignee": "小马弟",
+      "status": "in_progress",
+      "priority": "🔴 P0"
+    },
+    {
+      "id": "task3",
+      "name": "会员系统后端API（members CRUD）",
+      "assignee": "小马弟",
+      "status": "in_progress",
+      "priority": "🔴 P0"
+    },
+    {
+      "id": "task4",
+      "name": "前端订单管理页面（订单列表/详情/退款）",
+      "assignee": "小马弟",
+      "status": "pending",
+      "priority": "🔴 P0"
+    },
+    {
+      "id": "task5",
+      "name": "前端会员管理页面（会员列表/充值/积分）",
+      "assignee": "小马妹",
+      "status": "pending",
+      "priority": "🟡 P1"
+    },
+    {
+      "id": "task6",
+      "name": "前端报表页面（日/周/月营业报表）",
+      "assignee": "小马妹",
+      "status": "pending",
+      "priority": "🟡 P1"
+    },
+    {
+      "id": "task7",
+      "name": "收银台对接后端API",
+      "assignee": "小马妹",
+      "status": "pending",
+      "priority": "🔴 P0"
+    },
+    {
+      "id": "task8",
+      "name": "预约系统后端API（bookings CRUD）",
+      "assignee": "小马弟",
+      "status": "pending",
+      "priority": "🟡 P1"
+    }
+  ]
+}

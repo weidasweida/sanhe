@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>三兄弟监控面板</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    h1 span { color: #888; font-size: 14px; font-weight: normal; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    .card {
+      background: #1a1a2e;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #2a2a4a;
+      transition: all 0.3s;
+    }
+    .card.online { border-color: #22c55e; box-shadow: 0 0 20px rgba(34,197,94,0.1); }
+    .card.offline { border-color: #ef4444; opacity: 0.7; }
+    .card.working { border-color: #f59e0b; box-shadow: 0 0 20px rgba(245,158,11,0.15); }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .status-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .status-dot.online { background: #22c55e; box-shadow: 0 0 8px #22c55e; }
+    .status-dot.offline { background: #ef4444; }
+    .status-dot.working { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .status-badge {
+      font-size: 12px;
+      padding: 2px 10px;
+      border-radius: 10px;
+      font-weight: 500;
+    }
+    .status-badge.online { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .status-badge.offline { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .status-badge.working { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .status-badge.unknown { background: rgba(100,100,100,0.15); color: #888; }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 13px;
+      border-bottom: 1px solid #2a2a3a;
+    }
+    .info-row:last-child { border: none; }
+    .info-label { color: #888; }
+    .info-value { color: #e0e0e0; }
+    .task-section {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #2a2a3a;
+    }
+    .task-label { font-size: 12px; color: #888; margin-bottom: 6px; }
+    .task-box {
+      background: #12121e;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+      min-height: 40px;
+      word-break: break-word;
+    }
+    .task-box .task-title { color: #f59e0b; font-weight: 500; }
+    .task-box .task-detail { color: #aaa; margin-top: 4px; font-size: 12px; }
+    .task-box.empty { color: #555; display: flex; align-items: center; justify-content: center; }
+    .task-box.error { color: #ef4444; font-size: 12px; }
+    .bottom-bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: #1a1a2e;
+      border-radius: 8px;
+      border: 1px solid #2a2a4a;
+      flex-wrap: wrap;
+    }
+    .last-update { color: #666; font-size: 12px; }
+    .overall-status {
+      display: flex;
+      gap: 16px;
+      font-size: 13px;
+      flex-wrap: wrap;
+    }
+    .overall-status .stat { display: flex; align-items: center; gap: 6px; }
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 200px;
+      color: #666;
+      font-size: 16px;
+    }
+    .spinner {
+      width: 20px; height: 20px;
+      border: 2px solid #333;
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 10px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-msg {
+      text-align: center;
+      padding: 40px;
+      color: #ef4444;
+    }
+  </style>
+</head>
+<body>
+  <h1>🤖 三兄弟监控面板 <span id="subtitle">收银系统重建项目</span></h1>
+
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <span>加载中...</span>
+  </div>
+
+  <div id="app" style="display:none">
+    <div class="grid" id="brothersGrid"></div>
+
+    <div class="bottom-bar">
+      <div class="overall-status" id="statsBar"></div>
+      <div class="last-update">上次更新: <span id="lastUpdate">--</span></div>
+    </div>
+  </div>
+
+  <script>
+    const STATUS_URL = 'https://raw.githubusercontent.com/weidasweida/sanhe/master/docs/status.json';
+    // 也用 jsdelivr CDN 做备用
+    const STATUS_URL_BACKUP = 'https://cdn.jsdelivr.net/gh/weidasweida/sanhe@master/docs/status.json';
+
+    async function fetchStatus() {
+      try {
+        let r = await fetch(STATUS_URL + '?_=' + Date.now());
+        if (!r.ok) r = await fetch(STATUS_URL_BACKUP + '?_=' + Date.now());
+        return await r.json();
+      } catch(e) {
+        // 备用
+        const r = await fetch(STATUS_URL_BACKUP + '?_=' + Date.now());
+        return await r.json();
+      }
+    }
+
+    function getBadge(status) {
+      const map = { online: '🟢 在线', offline: '🔴 离线', working: '🟡 工作中', unknown: '⚪ 未知' };
+      return map[status] || '⚪ 未知';
+    }
+
+    function getCardClass(status) {
+      if (status === 'working') return 'working';
+      if (status === 'online') return 'online';
+      return 'offline';
+    }
+
+    function renderCard(id, data, extra) {
+      const isBoss = id === 'boss';
+      const status = data.status || 'unknown';
+      const cardClass = getCardClass(status);
+      const badge = getBadge(status);
+      const task = data.task || '—';
+      const error = data.error || '';
+      const lastSeen = data.last_seen || '';
+
+      let taskHtml = '';
+      if (isBoss) {
+        taskHtml = `<div class="task-title">📋 ${task}</div>`;
+      } else if (status === 'offline') {
+        taskHtml = `<div class="task-title" style="color:#ef4444">🔴 ${task || '离线'}</div>`;
+        if (error) taskHtml += `<div class="task-detail error">${error}</div>`;
+      } else if (task && task !== '—') {
+        taskHtml = `<div class="task-title">📋 ${task}</div>`;
+      } else {
+        taskHtml = `<div class="task-box empty">⏳ 等待派发</div>`;
+      }
+
+      let extraHtml = '';
+      if (extra) {
+        extraHtml = Object.entries(extra).map(([k,v]) =>
+          `<div class="info-row"><span class="info-label">${k}</span><span class="info-value">${v}</span></div>`
+        ).join('');
+      }
+
+      return `
+        <div class="card ${cardClass}" id="card-${id}">
+          <div class="card-header">
+            <div class="card-title">${isBoss ? '👑' : '🐴'} ${data.name} <span class="status-dot ${status}"></span></div>
+            <span class="status-badge ${status}">${badge}</span>
+          </div>
+          ${extraHtml}
+          <div class="task-section">
+            <div class="task-label">当前任务</div>
+            <div class="task-box">${taskHtml}</div>
+          </div>
+          ${lastSeen ? `<div class="info-row" style="margin-top:8px;border:none"><span class="info-label">最后通信</span><span class="info-value">${lastSeen}</span></div>` : ''}
+        </div>
+      `;
+    }
+
+    async function refresh() {
+      try {
+        const data = await fetchStatus();
+        
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        document.getElementById('lastUpdate').textContent = data.updated_at || new Date().toLocaleString();
+
+        // 渲染三个卡片
+        const grid = document.getElementById('brothersGrid');
+        
+        // 小马哥
+        const bossExtra = {};
+        if (data.boss) {
+          grid.innerHTML = renderCard('boss', data.boss, null);
+        }
+
+        // 小马弟 & 小马妹
+        if (data.brothers) {
+          for (const [id, info] of Object.entries(data.brothers)) {
+            const extra = info.ip ? { 'IP': info.ip, 'API': info.api, '模型': info.model } :
+              { 'IP': id === 'didi' ? '47.236.39.12' : '47.84.125.253',
+                'API': id === 'didi' ? ':8083' : ':8084',
+                '模型': 'DeepSeek' };
+            grid.innerHTML += renderCard(id, info, extra);
+          }
+        }
+
+        // 统计
+        const stats = data.stats || {};
+        const total = (stats.online || 0) + (stats.offline || 0);
+        document.getElementById('statsBar').innerHTML = `
+          <div class="stat">✅ <span>${stats.online || 0}</span> 在线</div>
+          <div class="stat">🔴 <span>${stats.offline || 0}</span> 离线</div>
+          <div class="stat">📋 <span>${total}</span> 总计</div>
+        `;
+      } catch(e) {
+        document.getElementById('loading').innerHTML = `
+          <div class="error-msg">
+            ❌ 加载失败: ${e.message}<br>
+            <small>请确认 status.json 已推送到仓库</small>
+          </div>
+        `;
+      }
+    }
+
+    refresh();
+    setInterval(refresh, 30000);
+  </script>
+</body>
+</html>
