@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>收银系统 - 营业报表</title>
+  <link rel="stylesheet" href="styles.css?v=20260427" />
+  <script src="shared-data.js?v=20260427"></script>
+  <script src="app.js?v=20260427"></script>
+</head>
+<body>
+<div id="app" data-theme="aurora-blue">
+<div id="app" data-theme="aurora-blue">
+
+  <!-- ========== 顶部栏 ========== -->
+  <header class="header">
+    <div class="header-left">
+      <button class="mobile-back-btn" onclick="goBack()">‹</button>
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+      <div class="logo">🏪 <span data-i18n="brand">收银通</span></div>
+      <span class="version">v2.0</span>
+    </div>
+    <div class="header-right">
+      <button class="lang-switch" onclick="toggleLang()">EN / 中文</button>
+      <button class="theme-btn" onclick="toggleThemePanel()">🎨</button>
+      <div class="notification-badge">🔔 <span class="badge">3</span></div>
+      <div class="user-avatar">👤 <span data-i18n="admin">管理员</span></div>
+    </div>
+  </header>
+
+  <!-- ========== 主区域（收银布局） ========== -->
+  <div class="main-layout" style="margin-top:var(--header-height);">
+
+    <!-- 左侧导航 -->
+
+  <div class="main-layout">
+    <nav class="sidebar">
+      <div class="nav-item" onclick="window.location.href='index.html'">
+        <span class="nav-icon">🏠</span>
+        <span data-i18n="nav.overview">总览</span>
+      </div>
+      <div class="nav-item active" onclick="window.location.href='checkout.html'">
+        <span class="nav-icon">🧾</span>
+        <span data-i18n="nav.checkout">快速开单</span>
+      </div>
+      <!-- 预约管理（二级菜单） -->
+      <div class="nav-group">
+        <div class="nav-item group-header" data-page="booking.html" onclick="toggleNavGroup(this)">
+          <span class="nav-icon">📅</span>
+          <span data-i18n="nav.appointment">预约管理</span>
+          <span class="group-arrow">▼</span>
+        </div>
+        <div class="sub-nav">
+          <div class="sub-nav-item" onclick="window.location.href='booking.html'">
+            <span class="sub-dot">📋</span>
+            <span data-i18n="nav.appt.records">预约记录</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='booking.html'">
+            <span class="sub-dot">🗓️</span>
+            <span data-i18n="nav.appt.board">预约看板</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='booking.html'">
+            <span class="sub-dot">📊</span>
+            <span data-i18n="nav.appt.data">预约数据</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='booking.html'">
+            <span class="sub-dot">👥</span>
+            <span data-i18n="nav.appt.staff">可约员工</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='booking.html'">
+            <span class="sub-dot">⚙️</span>
+            <span data-i18n="nav.appt.params">预约参数</span>
+          </div>
+        </div>
+      </div>
+      <!-- 商品管理（二级菜单） -->
+      <div class="nav-group">
+        <div class="nav-item group-header" data-page="products.html" onclick="toggleNavGroup(this)">
+          <span class="nav-icon">📦</span>
+          <span data-i18n="nav.products">商品管理</span>
+          <span class="group-arrow">▼</span>
+        </div>
+        <div class="sub-nav">
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">🏠</span>
+            <span data-i18n="nav.products.home">商品主页</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">📦</span>
+            <span data-i18n="nav.products.product">产品管理</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">📄</span>
+            <span data-i18n="nav.products.project">项目管理</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">📦</span>
+            <span data-i18n="nav.products.package">套餐管理</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">💳</span>
+            <span data-i18n="nav.products.card">储值卡管理</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">🎁</span>
+            <span data-i18n="nav.products.gift">积分礼品</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">🏷️</span>
+            <span data-i18n="nav.products.type">产品类型</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">🏷️</span>
+            <span data-i18n="nav.products.brand">产品品牌</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">📐</span>
+            <span data-i18n="nav.products.spec">产品规格</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">🔖</span>
+            <span data-i18n="nav.products.tag">自定义标签</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">📁</span>
+            <span data-i18n="nav.products.category">项目类别</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">📏</span>
+            <span data-i18n="nav.products.unit">销售单位</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">🎴</span>
+            <span data-i18n="nav.products.handCard">手牌管理</span>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item" onclick="window.location.href='inventory.html'">
+        <span class="nav-icon">📦</span>
+        <span data-i18n="nav.inventory">库存管理</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='members.html'">
+        <span class="nav-icon">📋</span>
+        <span data-i18n="nav.orders">订单管理</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='members.html'">
+        <span class="nav-icon">👥</span>
+        <span data-i18n="nav.members">会员管理</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='reports.html'">
+        <span class="nav-icon">📊</span>
+        <span data-i18n="nav.reports">营业报表</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='marketing.html'">
+        <span class="nav-icon">🎫</span>
+        <span data-i18n="nav.promotion">优惠营销</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='settings.html'">
+        <span class="nav-icon">⚙️</span>
+        <span data-i18n="nav.settings">系统设置</span>
+      </div>
+
+    <div class="p-content">
+      <div class="p-global-bar">
+        <div class="p-global-left">📊 <span data-i18n="nav.reports">营业报表</span></div>
+        <div class="p-global-right"></div>
+      </div>
+<div class="p-tab-nav" style="display:flex;gap:8px;padding:16px 24px 0;border-bottom:2px solid var(--border-color);">
+  <div class="p-tab-item active" data-tab="daily" onclick="switchTab('daily')">销售日报</div>
+  <div class="p-tab-item" data-tab="monthly" onclick="switchTab('monthly')">销售月报</div>
+  <div class="p-tab-item" data-tab="trend" onclick="switchTab('trend')">经营趋势</div>
+  <div class="p-tab-item" data-tab="staff" onclick="switchTab('staff')">员工业绩</div>
+  <div class="p-tab-item" data-tab="product" onclick="switchTab('product')">商品排名</div>
+  <div class="p-tab-item" data-tab="profit" onclick="switchTab('profit')">利润分析</div>
+</div>
+
+<div class="p-tab-content active" data-tab="daily">
+  <div class="p-action-bar">
+    <div class="p-action-left">
+      <input type="text" class="p-search" id="searchDaily" placeholder="搜索..." oninput="filterData('daily')" />
+    </div>
+    <div class="p-action-right">
+      <button class="btn btn-primary" onclick="openAddModal('daily')">➕ 新增</button>
+    </div>
+  </div>
+  <div class="p-table-wrap">
+    <table class="p-table">
+      <thead><tr id="thead-daily"></tr></thead>
+      <tbody id="tbody-daily"></tbody>
+    </table>
+  </div>
+</div>
+<div class="p-tab-content" data-tab="monthly">
+  <div class="p-action-bar">
+    <div class="p-action-left">
+      <input type="text" class="p-search" id="searchMonthly" placeholder="搜索..." oninput="filterData('monthly')" />
+    </div>
+    <div class="p-action-right">
+      <button class="btn btn-primary" onclick="openAddModal('monthly')">➕ 新增</button>
+    </div>
+  </div>
+  <div class="p-table-wrap">
+    <table class="p-table">
+      <thead><tr id="thead-monthly"></tr></thead>
+      <tbody id="tbody-monthly"></tbody>
+    </table>
+  </div>
+</div>
+<div class="p-tab-content" data-tab="trend">
+  <div class="p-action-bar">
+    <div class="p-action-left">
+      <input type="text" class="p-search" id="searchTrend" placeholder="搜索..." oninput="filterData('trend')" />
+    </div>
+    <div class="p-action-right">
+      <button class="btn btn-primary" onclick="openAddModal('trend')">➕ 新增</button>
+    </div>
+  </div>
+  <div class="p-table-wrap">
+    <table class="p-table">
+      <thead><tr id="thead-trend"></tr></thead>
+      <tbody id="tbody-trend"></tbody>
+    </table>
+  </div>
+</div>
+<div class="p-tab-content" data-tab="staff">
+  <div class="p-action-bar">
+    <div class="p-action-left">
+      <input type="text" class="p-search" id="searchStaff" placeholder="搜索..." oninput="filterData('staff')" />
+    </div>
+    <div class="p-action-right">
+      <button class="btn btn-primary" onclick="openAddModal('staff')">➕ 新增</button>
+    </div>
+  </div>
+  <div class="p-table-wrap">
+    <table class="p-table">
+      <thead><tr id="thead-staff"></tr></thead>
+      <tbody id="tbody-staff"></tbody>
+    </table>
+  </div>
+</div>
+<div class="p-tab-content" data-tab="product">
+  <div class="p-action-bar">
+    <div class="p-action-left">
+      <input type="text" class="p-search" id="searchProduct" placeholder="搜索..." oninput="filterData('product')" />
+    </div>
+    <div class="p-action-right">
+      <button class="btn btn-primary" onclick="openAddModal('product')">➕ 新增</button>
+    </div>
+  </div>
+  <div class="p-table-wrap">
+    <table class="p-table">
+      <thead><tr id="thead-product"></tr></thead>
+      <tbody id="tbody-product"></tbody>
+    </table>
+  </div>
+</div>
+<div class="p-tab-content" data-tab="profit">
+  <div class="p-action-bar">
+    <div class="p-action-left">
+      <input type="text" class="p-search" id="searchProfit" placeholder="搜索..." oninput="filterData('profit')" />
+    </div>
+    <div class="p-action-right">
+      <button class="btn btn-primary" onclick="openAddModal('profit')">➕ 新增</button>
+    </div>
+  </div>
+  <div class="p-table-wrap">
+    <table class="p-table">
+      <thead><tr id="thead-profit"></tr></thead>
+      <tbody id="tbody-profit"></tbody>
+    </table>
+  </div>
+</div>
+
+    </div>
+  </div>
+  <div class="mobile-bottom-nav">
+    <div class="mobile-nav-item" data-page="overview" onclick="navigateBottomNav('index.html')">
+      <span class="nav-icon">🏠</span>
+      <span data-i18n="nav.overview">总览</span>
+    </div>
+    <div class="mobile-nav-item active" data-page="checkout" onclick="navigateBottomNav('checkout.html')">
+      <span class="nav-icon">🧾</span>
+      <span data-i18n="nav.checkout">开单</span>
+    </div>
+    <div class="mobile-nav-item" data-page="booking" onclick="navigateBottomNav('booking.html')">
+      <span class="nav-icon">📅</span>
+      <span data-i18n="nav.appointment">预约</span>
+    </div>
+    <div class="mobile-nav-item" data-page="products" onclick="navigateBottomNav('products.html')">
+      <span class="nav-icon">📦</span>
+      <span>商品</span>
+    </div>
+    <div class="mobile-nav-item" onclick="toggleMobileMenu()">
+      <span class="nav-icon">☰</span>
+
+  <div class="theme-overlay" id="holdOverlay" onclick="closeHoldPanel()"></div>
+
+  <!-- ========== 会员选择弹窗 ========== -->
+  <div class="modal-overlay" id="memberOverlay" onclick="closeMemberSelect()"></div>
+  <div class="modal" id="memberModal">
+    <div class="modal-header">
+      <span data-i18n="selectMember">选择会员</span>
+      <button onclick="closeMemberSelect()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="text" class="modal-search" placeholder="搜索姓名 / 手机号..."
+             oninput="filterMembers(this.value)" data-i18n-placeholder="memberSearchPlaceholder" />
+      <div id="memberList"></div>
+    </div>
+  </div>
+
+  <!-- ========== 主题面板 ========== -->
+  <div class="theme-panel" id="themePanel">
+    <div class="theme-panel-header">
+      <span data-i18n="theme.title">切换主题</span>
+      <button onclick="toggleThemePanel()">✕</button>
+    </div>
+    <div class="theme-list">
+      <div class="theme-group-label">✦ 浅色侧边栏</div>
+      <div class="theme-option active" data-theme="aurora-blue" onclick="setTheme('aurora-blue')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#1677FF,#69B1FF)"></div>
+        <span data-i18n="theme.auroraBlue">极光蓝</span>
+      </div>
+      <div class="theme-option" data-theme="twilight-purple" onclick="setTheme('twilight-purple')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#722ED1,#B37FEB)"></div>
+        <span data-i18n="theme.twilightPurple">暮光紫</span>
+      </div>
+      <div class="theme-option" data-theme="teal-green" onclick="setTheme('teal-green')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#00A76F,#66D9A8)"></div>
+        <span data-i18n="theme.tealGreen">松石绿</span>
+      </div>
+      <div class="theme-option" data-theme="lava-orange" onclick="setTheme('lava-orange')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#FF5C00,#FF9A6C)"></div>
+        <span data-i18n="theme.lavaOrange">熔岩橙</span>
+      </div>
+      <div class="theme-group-label">✦ 深色侧边栏</div>
+      <div class="theme-option" data-theme="deep-blue" onclick="setTheme('deep-blue')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#1A2A4A,#4096FF)"></div>
+        <span data-i18n="theme.deepBlue">深海蓝</span>
+      </div>
+      <div class="theme-option" data-theme="royal-purple" onclick="setTheme('royal-purple')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#2D1B69,#9D6BFF)"></div>
+        <span data-i18n="theme.royalPurple">尊贵紫</span>
+      </div>
+      <div class="theme-option" data-theme="forest-green" onclick="setTheme('forest-green')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#064E3B,#34D399)"></div>
+        <span data-i18n="theme.forestGreen">墨林绿</span>
+      </div>
+      <div class="theme-option" data-theme="sunset-orange" onclick="setTheme('sunset-orange')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#7C2D12,#F97316)"></div>
+        <span data-i18n="theme.sunsetOrange">落日橙</span>
+      </div>
+      <div class="theme-group-label">✦ 方案九·十二</div>
+      <div class="theme-option" data-theme="golden" onclick="setTheme('golden')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#2C1810,#B8860B)"></div>
+        <span data-i18n="theme.golden">黄金满地</span>
+      </div>
+      <div class="theme-option" data-theme="festive-red" onclick="setTheme('festive-red')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#3E1212,#C62828)"></div>
+        <span data-i18n="theme.festiveRed">恭贺欣喜</span>
+      </div>
+      <div class="theme-option" data-theme="marble" onclick="setTheme('marble')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#2A2A36,#7A7A8A)"></div>
+        <span data-i18n="theme.marble">大理石</span>
+      </div>
+      <div class="theme-option" data-theme="ink-wash" onclick="setTheme('ink-wash')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#1A1A1A,#2C2C2C)"></div>
+        <span data-i18n="theme.inkWash">宣纸水墨</span>
+      </div>
+    </div>
+  </div>
+  <div class="theme-overlay" id="themeOverlay" onclick="toggleThemePanel()"></div>
+
+
+  <!-- Modal overlay -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal()"></div>
+  <!-- Edit Modal -->
+  <div class="p-modal" id="editModal">
+    <div class="p-modal-header">
+      <span id="modalTitle">新增</span>
+      <span class="p-modal-close" onclick="closeModal()">✕</span>
+    </div>
+    <div class="p-modal-body" id="modalBody"></div>
+    <div class="p-modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveData()">保存</button>
+    </div>
+  </div>
+</div>
+<style>
+/* page specific styles */
+.p-global-bar { padding: 12px 24px; font-size: 14px; background: var(--bg-card); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; }
+.p-global-left { font-weight: 600; color: var(--text-primary); }
+.p-global-right { color: var(--text-tertiary); }
+.p-tab-item { padding: 10px 20px; cursor: pointer; color: var(--text-secondary); border-bottom: 2px solid transparent; margin-bottom: -2px; font-size: 14px; white-space: nowrap; }
+.p-tab-item.active { color: var(--color-primary); border-bottom-color: var(--color-primary); font-weight: 600; }
+.p-tab-content { display: none; }
+.p-tab-content.active { display: block; }
+.p-action-bar { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; gap: 12px; flex-wrap: wrap; }
+.p-action-left { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.p-action-right { display: flex; gap: 8px; }
+.p-search { padding: 6px 12px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: var(--bg-card); color: var(--text-primary); width: 200px; }
+.p-table-wrap { padding: 0 24px 24px; overflow-x: auto; }
+.p-table { width: 100%; border-collapse: collapse; }
+.p-table th, .p-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; }
+.p-table th { background: var(--bg-body); color: var(--text-tertiary); font-weight: 600; white-space: nowrap; }
+.p-table td { color: var(--text-primary); }
+.p-table tbody tr:hover { background: var(--color-primary-light); }
+.p-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: var(--bg-card); border-radius: var(--radius); box-shadow: 0 8px 40px rgba(0,0,0,0.15); width: 480px; max-width: 90vw; max-height: 80vh; overflow-y: auto; z-index: 1002; }
+.p-modal.open { display: block; }
+.p-modal-header { padding: 16px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 16px; }
+.p-modal-close { cursor: pointer; font-size: 20px; color: var(--text-tertiary); }
+.p-modal-body { padding: 16px 24px; }
+.p-modal-footer { padding: 12px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 8px; }
+.form-group { margin-bottom: 12px; }
+.form-group label { display: block; margin-bottom: 4px; font-size: 13px; color: var(--text-secondary); }
+.form-input { width: 100%; padding: 8px 10px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: var(--bg-card); color: var(--text-primary); box-sizing: border-box; }
+.form-input:focus { outline: none; border-color: var(--color-primary); }
+.status-badge { padding: 2px 10px; border-radius: 10px; font-size: 12px; }
+.status-badge.active { background: var(--color-success-bg); color: var(--color-success); }
+.status-badge.inactive { background: var(--color-danger-bg); color: var(--color-danger); }
+.status-badge.warning { background: var(--color-warning-bg); color: var(--color-warning); }
+.btn-sm { padding: 4px 10px; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 12px; }
+@media (max-width:768px) { .p-table-wrap { padding: 0 12px 12px; } .p-action-bar { padding: 12px; } .p-tab-item { padding: 8px 12px; font-size: 12px; } .p-global-bar { padding: 8px 12px; } }
+</style>
+<script>
+// ========== Reports Mock Data ==========
+var mockDaily = [
+  {date:'2025-05-03',orders:28,revenue:8560,avgTicket:305.71,services:42,staff:'张三,李四,王五'},
+  {date:'2025-05-02',orders:32,revenue:10240,avgTicket:320.00,services:48,staff:'张三,李四,赵六'},
+  {date:'2025-05-01',orders:25,revenue:7800,avgTicket:312.00,services:38,staff:'李四,王五'},
+  {date:'2025-04-30',orders:35,revenue:11200,avgTicket:320.00,services:52,staff:'张三,王五,赵六'},
+  {date:'2025-04-29',orders:30,revenue:9200,avgTicket:306.67,services:45,staff:'李四,赵六'},
+  {date:'2025-04-28',orders:22,revenue:6800,avgTicket:309.09,services:35,staff:'张三,李四'},
+];
+var mockMonthly = [
+  {month:'2025-04',orders:820,revenue:268000,cost:120600,profit:147400,yoy:'+12.5%',qoq:'+5.2%'},
+  {month:'2025-03',orders:750,revenue:245000,cost:112500,profit:132500,yoy:'+8.3%',qoq:'-2.1%'},
+  {month:'2025-02',orders:680,revenue:228000,cost:105800,profit:122200,yoy:'+6.8%',qoq:'-8.5%'},
+  {month:'2025-01',orders:780,revenue:256000,cost:118000,profit:138000,yoy:'+15.2%',qoq:'+10.3%'},
+  {month:'2024-12',orders:720,revenue:238000,cost:110500,profit:127500,yoy:'+9.0%',qoq:'+3.5%'},
+];
+var mockTrend = [
+  {date:'04/28',orders:22,revenue:6800},{date:'04/29',orders:30,revenue:9200},{date:'04/30',orders:35,revenue:11200},
+  {date:'05/01',orders:25,revenue:7800},{date:'05/02',orders:32,revenue:10240},{date:'05/03',orders:28,revenue:8560},
+];
+var mockStaff = [
+  {name:'张三',services:128,sales:38400,commission:3840,rank:1},
+  {name:'李四',services:98,sales:28800,commission:2880,rank:2},
+  {name:'王五',services:85,sales:25200,commission:2520,rank:3},
+  {name:'赵六',services:72,sales:21600,commission:2160,rank:4},
+  {name:'孙七',services:45,sales:13500,commission:1350,rank:5},
+];
+var mockProdRank = [
+  {name:'经络推拿',count:186,revenue:31248},{name:'电针治疗',count:145,revenue:26100},{name:'全身按摩推拿',count:128,revenue:30464},
+  {name:'骨盆定位',count:98,revenue:31360},{name:'火龙灸',count:86,revenue:12900},{name:'小儿推拿',count:78,revenue:9984},
+  {name:'拔罐套装',count:65,revenue:4420},{name:'精油-薰衣草',count:52,revenue:6656},{name:'中频理疗',count:48,revenue:4704},
+  {name:'艾条',count:40,revenue:1000},
+];
+var mockProfit = [
+  {month:'2025-01',revenue:256000,cost:88000,labor:68000,rent:18000,netProfit:82000},
+  {month:'2025-02',revenue:228000,cost:75800,labor:62000,rent:18000,netProfit:72200},
+  {month:'2025-03',revenue:245000,cost:82500,labor:66000,rent:18000,netProfit:78500},
+  {month:'2025-04',revenue:268000,cost:90600,labor:72000,rent:18000,netProfit:87400},
+];
+
+// Tab definitions
+var tabDefs = {
+  daily: {cols:['日期','订单数','营收(¥)','客单价(¥)','服务数','服务员工'],fields:['date','orders','revenue','avgTicket','services','staff']},
+  monthly: {cols:['月份','订单数','营收(¥)','成本(¥)','利润(¥)','同比','环比'],fields:['month','orders','revenue','cost','profit','yoy','qoq']},
+  trend: {cols:['日期','订单数','营收(¥)'],fields:['date','orders','revenue']},
+  staff: {cols:['排名','姓名','服务数','销售额(¥)','提成(¥)'],fields:['rank','name','services','sales','commission']},
+  product: {cols:['排名','项目/商品','服务数','营收(¥)'],fields:['idx','name','count','revenue']},
+  profit: {cols:['月份','营收(¥)','材料成本(¥)','人工(¥)','租金(¥)','净利润(¥)'],fields:['month','revenue','cost','labor','rent','netProfit']},
+};
+
+var dataMap = {daily:mockDaily,monthly:mockMonthly,trend:mockTrend,staff:mockStaff,product:mockProdRank,profit:mockProfit};
+
+function switchTab(tab){
+  document.querySelectorAll('.p-tab-item').forEach(function(t){t.classList.remove('active')});
+  document.querySelectorAll('.p-tab-content').forEach(function(c){c.classList.remove('active')});
+  document.querySelector('.p-tab-item[data-tab="'+tab+'"]').classList.add('active');
+  document.querySelector('.p-tab-content[data-tab="'+tab+'"]').classList.add('active');
+  currentTab = tab;
+  renderTab(tab);
+}
+
+function renderTab(tab){
+  var def = tabDefs[tab];
+  var d = dataMap[tab]||[];
+  // Render header
+  var thead = document.getElementById('thead-'+tab);
+  if(tab==='product') def.cols[0]='排名';
+  thead.innerHTML = def.cols.map(function(c){return '<th>'+c+'</th>'}).join('')+'<th>操作</th>';
+  // Render body
+  var tbody = document.getElementById('tbody-'+tab);
+  tbody.innerHTML = d.map(function(row,i){
+    var cells = def.fields.map(function(f){
+      var v = row[f];
+      if(f==='revenue'||f==='cost'||f==='profit'||f==='sales'||f==='commission'||f==='avgTicket'||f==='netProfit'||f==='labor'||f==='rent'){
+        return '¥'+Number(v).toLocaleString();
+      }
+      if(f==='idx') return (i+1);
+      return v;
+    });
+    return '<tr>'+cells.map(function(c){return '<td>'+c+'</td>'}).join('')+'<td><button class="btn-sm btn-outline" onclick="alert('查看详情')">📋</button></td></tr>';
+  }).join('')||'<tr><td colspan="99" style="text-align:center;color:var(--text-tertiary)">暂无数据</td></tr>';
+}
+
+function filterData(tab){
+  renderTab(tab);
+}
+
+function openAddModal(tab){alert('报表页面不支持新增，请查看已有数据');}
+function saveData(){alert('保存成功');}
+function closeModal(){}
+function closeAllModals(){}
+
+document.addEventListener('DOMContentLoaded',function(){renderTab('daily')});
+</script>
+</body>
+</html>

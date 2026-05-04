@@ -1,0 +1,256 @@
+/* ========== 通用卡片式菜单布局（用于所有一级菜单页面） ========== */
+
+.menu-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: #f5f6fa;
+  min-width: 0;
+  overflow: auto;
+}
+
+/* ====== 顶部栏 ====== */
+.menu-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.menu-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-topbar-icon {
+  font-size: 22px;
+}
+
+.menu-topbar h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.menu-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.menu-search {
+  position: relative;
+}
+
+.menu-search .search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.menu-search input {
+  padding: 6px 12px 6px 30px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  font-size: 13px;
+  width: 200px;
+  outline: none;
+  background: #fafafa;
+}
+
+.menu-search input:focus {
+  border-color: #1677FF;
+  background: #fff;
+}
+
+.menu-user {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #666;
+}
+
+.menu-logout {
+  margin-left: 8px;
+  cursor: pointer;
+  color: #999;
+  font-size: 12px;
+}
+
+.menu-logout:hover {
+  color: #ff4d4f;
+}
+
+/* ====== 通知条 ====== */
+.menu-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 24px;
+  background: #fffbe6;
+  border-bottom: 1px solid #ffe58f;
+  font-size: 13px;
+  color: #8c6e00;
+}
+
+.menu-notice-icon {
+  font-size: 16px;
+}
+
+/* ====== 卡片网格 ====== */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 24px;
+  max-width: 960px;
+}
+
+/* ====== 分类大卡片 ====== */
+.menu-card-group {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.menu-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.menu-card-header-icon {
+  font-size: 18px;
+}
+
+.menu-card-header-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+/* ====== 功能入口列表 ====== */
+.menu-card-items {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.menu-card-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.menu-card-item:hover {
+  background: #f0f5ff;
+}
+
+.menu-item-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e6f7ff;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #13c2c2;
+}
+
+.menu-item-label {
+  font-size: 14px;
+  color: #333;
+}
+
+/* ====== 四图标布局（用于商品管理常用功能） ====== */
+.menu-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.menu-icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 8px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.2s;
+  text-align: center;
+}
+
+.menu-icon-item:hover {
+  background: #f0f5ff;
+}
+
+.menu-icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e6f7ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #13c2c2;
+}
+
+.menu-icon-label {
+  font-size: 12px;
+  color: #333;
+  white-space: nowrap;
+}
+
+/* ====== 移动端适配 ====== */
+@media (max-width: 768px) {
+  .menu-grid {
+    grid-template-columns: 1fr;
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .menu-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .menu-topbar-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .menu-search input {
+    width: 140px;
+  }
+
+  .menu-notice {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .menu-icon-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

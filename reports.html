@@ -1,0 +1,59 @@
+     1|<!DOCTYPE html>
+     2|<html lang="zh-CN">
+     3|<head>
+     4|  <meta charset="UTF-8" />
+     5|  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+     6|  <title>收银系统 - 营业报表</title>
+     7|  <link rel="stylesheet" href="styles.css?v=20260427" />
+     8|  <link rel="stylesheet" href="menu-common.css?v=1" />
+     9|  <script src="shared-data.js?v=20260427"></script>
+    10|  <script src="app.js?v=20260427"></script>
+    11|</head>
+    12|<body>
+    13|<div id="app" data-theme="aurora-blue">
+    14|  <header class="header">...</header>
+    15|  <div class="main-layout" style="margin-top:var(--header-height);">
+    16|    <nav class="sidebar">
+    17|      <div class="nav-item" onclick="window.location.href='index.html'">🏠 总览</div>
+    18|      <div class="nav-item" onclick="window.location.href='checkout.html'">🧾 快速开单</div>
+    19|      <div class="nav-item" onclick="window.location.href='booking.html'">📅 预约管理</div>
+    20|      <div class="nav-item" onclick="window.location.href='products.html'">📦 商品管理</div>
+    21|      <div class="nav-item" onclick="window.location.href='inventory.html'">📋 库存管理</div>
+    22|      <div class="nav-item" onclick="window.location.href='orders.html'">📝 订单管理</div>
+    23|      <div class="nav-item" onclick="window.location.href='members.html'">👥 会员管理</div>
+    24|      <div class="nav-item active" onclick="window.location.href='reports.html'">📊 营业报表</div>
+    25|      <div class="nav-item" onclick="window.location.href='marketing.html'">🎫 优惠营销</div>
+    26|      <div class="nav-item" onclick="window.location.href='settings.html'">⚙️ 系统设置</div>
+    27|    </nav>
+    28|    <div class="menu-page">
+    29|      <div class="menu-topbar"><div class="menu-topbar-left"><span class="menu-topbar-icon">📊</span><h1>营业报表</h1></div><div class="menu-topbar-right"><div class="menu-search"><span class="search-icon">🔍</span><input type="text" placeholder="搜索功能..." /></div></div></div>
+    30|      <div class="menu-grid">
+    31|        <div class="menu-card-group">
+    32|          <div class="menu-card-header"><span class="menu-card-header-icon">📊</span><span class="menu-card-header-title">营业数据</span></div>
+    33|          <div class="menu-icon-grid">
+    34|            <div class="menu-icon-item" onclick="alert('日报表 - 即将上线')"><div class="menu-icon-circle">📅</div><div class="menu-icon-label">日报表</div></div>
+    35|            <div class="menu-icon-item" onclick="alert('月报表 - 即将上线')"><div class="menu-icon-circle">📆</div><div class="menu-icon-label">月报表</div></div>
+    36|            <div class="menu-icon-item" onclick="alert('年报表 - 即将上线')"><div class="menu-icon-circle">📈</div><div class="menu-icon-label">年报表</div></div>
+    37|            <div class="menu-icon-item" onclick="alert('自定义报表 - 即将上线')"><div class="menu-icon-circle">📊</div><div class="menu-icon-label">自定义报表</div></div>
+    38|          </div>
+    39|        </div>
+    40|        <div class="menu-card-group">
+    41|          <div class="menu-card-header"><span class="menu-card-header-icon">📈</span><span class="menu-card-header-title">统计分析</span></div>
+    42|          <div class="menu-card-items">
+    43|            <div class="menu-card-item" onclick="alert('营业趋势 - 即将上线')"><div class="menu-item-icon">📈</div><div class="menu-item-label">营业趋势</div></div>
+    44|            <div class="menu-card-item" onclick="alert('项目排行 - 即将上线')"><div class="menu-item-icon">🏆</div><div class="menu-item-label">项目排行</div></div>
+    45|            <div class="menu-card-item" onclick="alert('员工业绩 - 即将上线')"><div class="menu-item-icon">👤</div><div class="menu-item-label">员工业绩</div></div>
+    46|          </div>
+    47|        </div>
+    48|      </div>
+    49|    </div>
+    50|  </div>
+    51|  <div class="theme-panel" id="themePanel"><div class="theme-panel-header"><span data-i18n="theme.title">切换主题</span><button onclick="toggleThemePanel()">✕</button></div><div class="theme-list"><div class="theme-group-label">✦ 浅色侧边栏</div><div class="theme-option active" data-theme="aurora-blue" onclick="setTheme("aurora-blue")"><div class="theme-preview" style="background:linear-gradient(135deg,#1677FF,#69B1FF)"></div><span data-i18n="theme.auroraBlue">极光蓝</span></div><div class="theme-option" data-theme="twilight-purple" onclick="setTheme("twilight-purple")"><div class="theme-preview" style="background:linear-gradient(135deg,#722ED1,#B37FEB)"></div><span data-i18n="theme.twilightPurple">暮光紫</span></div><div class="theme-option" data-theme="teal-green" onclick="setTheme("teal-green")"><div class="theme-preview" style="background:linear-gradient(135deg,#00A76F,#66D9A8)"></div><span data-i18n="theme.tealGreen">松石绿</span></div><div class="theme-option" data-theme="lava-orange" onclick="setTheme("lava-orange")"><div class="theme-preview" style="background:linear-gradient(135deg,#FF5C00,#FF9A6C)"></div><span data-i18n="theme.lavaOrange">熔岩橙</span></div><div class="theme-group-label">✦ 深色侧边栏</div><div class="theme-option" data-theme="deep-blue" onclick="setTheme("deep-blue")"><div class="theme-preview" style="background:linear-gradient(135deg,#1A2A4A,#3B5998)"></div><span data-i18n="theme.deepBlue">深海蓝</span></div><div class="theme-option" data-theme="royal-purple" onclick="setTheme("royal-purple")"><div class="theme-preview" style="background:linear-gradient(135deg,#2D1B4E,#6B3FA0)"></div><span data-i18n="theme.royalPurple">尊贵紫</span></div><div class="theme-option" data-theme="forest-green" onclick="setTheme("forest-green")"><div class="theme-preview" style="background:linear-gradient(135deg,#1A3A2A,#2D8A5E)"></div><span data-i18n="theme.forestGreen">墨林绿</span></div><div class="theme-option" data-theme="sunset-orange" onclick="setTheme("sunset-orange")"><div class="theme-preview" style="background:linear-gradient(135deg,#4A1A0A,#C74B20)"></div><span data-i18n="theme.sunsetOrange">落日橙</span></div><div class="theme-group-label">✦ 特色主题</div><div class="theme-option" data-theme="golden" onclick="setTheme("golden")"><div class="theme-preview" style="background:linear-gradient(135deg,#7A5A00,#D4A017)"></div><span data-i18n="theme.golden">黄金满地</span></div><div class="theme-option" data-theme="festive-red" onclick="setTheme("festive-red")"><div class="theme-preview" style="background:linear-gradient(135deg,#5C1010,#C41E3A)"></div><span data-i18n="theme.festiveRed">恭贺欣喜</span></div><div class="theme-option" data-theme="marble" onclick="setTheme("marble")"><div class="theme-preview" style="background:linear-gradient(135deg,#8B8B8B,#D4D4D4)"></div><span data-i18n="theme.marble">大理石</span></div><div class="theme-option" data-theme="ink-wash" onclick="setTheme("ink-wash")"><div class="theme-preview" style="background:linear-gradient(135deg,#1A1A2E,#4A4A6A)"></div><span data-i18n="theme.inkWash">宣纸水墨</span></div></div></div>
+    52|  <div class="modal-overlay" id="themeOverlay" onclick="toggleThemePanel()"></div>
+    53|  <div class="mobile-bottom-nav">...</div>
+    54|  <script src="app.js?v=20260427b"></script>
+    55|  <script>setMobileNavActive('reports');</script>
+    56|</div>
+    57|</body>
+    58|</html>
+    59|

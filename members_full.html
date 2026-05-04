@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>收银系统 - 会员管理</title>
+  <link rel="stylesheet" href="styles.css?v=20260427" />
+  <link rel="stylesheet" href="checkout.css?v=20260427" />
+  <script src="shared-data.js?v=20260427"></script>
+<script src="app.js?v=20260427"></script>
+</head>
+<body>
+<div id="app" data-theme="aurora-blue">
+
+  <!-- ========== 顶部栏 ========== -->
+  <header class="header">
+    <div class="header-left">
+      <button class="mobile-back-btn" onclick="goBack()">‹</button>
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+      <div class="logo">🏪 <span data-i18n="brand">收银通</span></div>
+      <span class="version">v2.0</span>
+    </div>
+    <div class="header-right">
+      <button class="lang-switch" onclick="toggleLang()">EN / 中文</button>
+      <button class="theme-btn" onclick="toggleThemePanel()">🎨</button>
+      <div class="notification-badge">🔔 <span class="badge">3</span></div>
+      <div class="user-avatar">👤 <span data-i18n="admin">管理员</span></div>
+    </div>
+  </header>
+
+  <!-- ========== 主布局 ========== -->
+  <div class="main-layout" style="margin-top:var(--header-height);">
+
+    <!-- ====== 侧边栏 ====== -->
+    <nav class="sidebar">
+      <div class="nav-item" onclick="window.location.href='index.html'">
+        <span class="nav-icon">🏠</span>
+        <span data-i18n="nav.overview">总览</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='checkout.html'">
+        <span class="nav-icon">🧾</span>
+        <span data-i18n="nav.checkout">快速开单</span>
+      </div>
+      <!-- 预约管理（二级菜单） -->
+      <div class="nav-group">
+        <div class="nav-item group-header" data-page="booking.html" onclick="toggleNavGroup(this)">
+          <span class="nav-icon">📅</span>
+          <span data-i18n="nav.appointment">预约管理</span>
+          <span class="group-arrow">▼</span>
+        </div>
+        <div class="sub-nav">
+          <div class="sub-nav-item" onclick="window.location.href='booking.html'">
+            <span class="sub-dot">📋</span>
+            <span data-i18n="nav.appt.records">预约记录</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='booking.html'">
+            <span class="sub-dot">🗓️</span>
+            <span data-i18n="nav.appt.board">预约看板</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='booking.html'">
+            <span class="sub-dot">📊</span>
+            <span data-i18n="nav.appt.data">预约数据</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='booking.html'">
+            <span class="sub-dot">👥</span>
+            <span data-i18n="nav.appt.staff">可约员工</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='booking.html'">
+            <span class="sub-dot">⚙️</span>
+            <span data-i18n="nav.appt.params">预约参数</span>
+          </div>
+        </div>
+      </div>
+      <!-- 商品管理（二级菜单） -->
+      <div class="nav-group">
+        <div class="nav-item group-header" data-page="products.html" onclick="toggleNavGroup(this)">
+          <span class="nav-icon">📦</span>
+          <span data-i18n="nav.products">商品管理</span>
+          <span class="group-arrow">▼</span>
+        </div>
+        <div class="sub-nav">
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">🏠</span>
+            <span data-i18n="nav.products.home">商品主页</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">📦</span>
+            <span data-i18n="nav.products.product">产品管理</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">📄</span>
+            <span data-i18n="nav.products.project">项目管理</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">📦</span>
+            <span data-i18n="nav.products.package">套餐管理</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">💳</span>
+            <span data-i18n="nav.products.card">储值卡管理</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">🎁</span>
+            <span data-i18n="nav.products.gift">积分礼品</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">🏷️</span>
+            <span data-i18n="nav.products.type">产品类型</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">🏷️</span>
+            <span data-i18n="nav.products.brand">产品品牌</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">📐</span>
+            <span data-i18n="nav.products.spec">产品规格</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">🔖</span>
+            <span data-i18n="nav.products.tag">自定义标签</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">📁</span>
+            <span data-i18n="nav.products.category">项目类别</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">📏</span>
+            <span data-i18n="nav.products.unit">销售单位</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">🎴</span>
+            <span data-i18n="nav.products.handCard">手牌管理</span>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item" onclick="window.location.href='inventory.html'">
+        <span class="nav-icon">📦</span>
+        <span data-i18n="nav.inventory">库存管理</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='members.html'">
+        <span class="nav-icon">📋</span>
+        <span data-i18n="nav.orders">订单管理</span>
+      </div>
+      <div class="nav-item active" onclick="window.location.href='members.html'">
+        <span class="nav-icon">👥</span>
+        <span data-i18n="nav.members">会员管理</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='reports.html'">
+        <span class="nav-icon">📊</span>
+        <span data-i18n="nav.reports">营业报表</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='marketing.html'">
+        <span class="nav-icon">🎫</span>
+        <span data-i18n="nav.promotion">优惠营销</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='settings.html'">
+        <span class="nav-icon">⚙️</span>
+        <span data-i18n="nav.settings">系统设置</span>
+      </div>
+      <div class="sidebar-footer">
+        <span class="store-name" data-i18n="storeName">旗舰店</span>
+        <span class="store-id">#001</span>
+      </div>
+    </nav>
+
+    <!-- ====== 主内容区 ====== -->
+    <div class="p-content">
+
+      <!-- 全局信息栏 -->
+      <div class="p-global-bar">
+        <div class="p-global-left">🏪 <span data-i18n="storeName">旗舰店</span></div>
+        <div class="p-global-right">
+          <span class="p-global-stat">👥 会员: <strong id="memberTotalCount">--</strong></span>
+          <span class="p-global-stat">🏅 等级: <strong>4</strong></span>
+          <span class="p-global-stat">💰 总余额: <strong id="totalBalance">--</strong></span>
+        </div>
+      </div>
+
+      <!-- ====== 标签页导航 ====== -->
+      <div class="m-tab-nav">
+        <div class="m-tab-item active" data-tab="list" onclick="switchMemberTab('list')">
+          <span class="m-tab-icon">👥</span>
+          <span data-i18n="member.tab.list">会员列表</span>
+        </div>
+        <div class="m-tab-item" data-tab="level" onclick="switchMemberTab('level')">
+          <span class="m-tab-icon">🏅</span>
+          <span data-i18n="member.tab.level">等级管理</span>
+        </div>
+        <div class="m-tab-item" data-tab="points" onclick="switchMemberTab('points')">
+          <span class="m-tab-icon">⭐</span>
+          <span data-i18n="member.tab.points">积分规则</span>
+        </div>
+        <div class="m-tab-item" data-tab="recharge" onclick="switchMemberTab('recharge')">
+          <span class="m-tab-icon">💰</span>
+          <span data-i18n="member.tab.recharge">充值记录</span>
+        </div>
+        <div class="m-tab-item" data-tab="card" onclick="switchMemberTab('card')">
+          <span class="m-tab-icon">💳</span>
+          <span data-i18n="member.tab.card">储值卡</span>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB 1: 会员列表 -->
+      <!-- ============================================================ -->
+      <div class="m-tab-content active" data-tab="list">
+        <div class="p-action-bar">
+          <div class="p-action-left">
+            <input type="text" class="p-filter p-search" id="memberSearchInput" placeholder="搜索姓名 / 手机号..." oninput="filterMemberList()" />
+            <select class="p-filter" id="memberLevelFilter" onchange="filterMemberList()">
+              <option value="">全部等级</option>
+              <option>普通会员</option>
+              <option>银卡会员</option>
+              <option>金卡会员</option>
+              <option>钻石会员</option>
+            </select>
+            <button class="btn btn-primary" onclick="filterMemberList()">🔍 查询</button>
+            <button class="btn btn-outline" onclick="resetMemberFilter()">重置</button>
+          </div>
+          <div class="p-action-right">
+            <button class="btn btn-primary" onclick="openMemberModal()">➕ 新增会员</button>
+          </div>
+        </div>
+        <div class="p-table-wrap">
+          <table class="p-table">
+            <thead>
+              <tr>
+                <th style="width:36px"><input type="checkbox" onchange="toggleMemberAll(this)" /></th>
+                <th data-i18n="member.avatar">头像</th>
+                <th data-i18n="member.name">姓名</th>
+                <th data-i18n="member.phone">手机号</th>
+                <th data-i18n="member.level">等级</th>
+                <th data-i18n="member.points">积分</th>
+                <th data-i18n="member.balance">余额</th>
+                <th data-i18n="member.visitCount">消费次数</th>
+                <th data-i18n="member.registerTime">注册时间</th>
+                <th data-i18n="member.action" style="width:160px">操作</th>
+              </tr>
+            </thead>
+            <tbody id="memberTableBody"></tbody>
+          </table>
+        </div>
+        <div class="p-table-footer">
+          <span data-i18n="total">共</span> <span id="memberTotal">0</span> <span data-i18n="items">条</span>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB 2: 等级管理 -->
+      <!-- ============================================================ -->
+      <div class="m-tab-content" data-tab="level">
+        <div class="p-action-bar">
+          <div class="p-action-left"></div>
+          <div class="p-action-right">
+            <button class="btn btn-primary" onclick="openLevelModal()">➕ 新增等级</button>
+          </div>
+        </div>
+        <div class="p-table-wrap">
+          <table class="p-table">
+            <thead>
+              <tr>
+                <th data-i18n="member.levelName">等级名称</th>
+                <th data-i18n="member.levelIcon">图标</th>
+                <th data-i18n="member.discountRate">折扣率</th>
+                <th data-i18n="member.upgradeCondition">升级条件（累计消费）</th>
+                <th data-i18n="member.memberCount">会员数</th>
+                <th data-i18n="member.action" style="width:160px">操作</th>
+              </tr>
+            </thead>
+            <tbody id="levelTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB 3: 积分规则 -->
+      <!-- ============================================================ -->
+      <div class="m-tab-content" data-tab="points">
+        <div class="p-action-bar">
+          <div class="p-action-left"></div>
+          <div class="p-action-right">
+            <button class="btn btn-primary" onclick="openPointsRuleModal()">➕ 新增规则</button>
+          </div>
+        </div>
+        <div class="p-table-wrap">
+          <table class="p-table">
+            <thead>
+              <tr>
+                <th data-i18n="member.ruleName">规则名称</th>
+                <th data-i18n="member.ruleRatio">消费积分比例</th>
+                <th data-i18n="member.exchangeRatio">积分兑换比例（积分:元）</th>
+                <th data-i18n="member.ruleScope">适用范围</th>
+                <th data-i18n="member.ruleStatus">状态</th>
+                <th data-i18n="member.action" style="width:160px">操作</th>
+              </tr>
+            </thead>
+            <tbody id="pointsRuleTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB 4: 充值记录 -->
+      <!-- ============================================================ -->
+      <div class="m-tab-content" data-tab="recharge">
+        <div class="p-action-bar">
+          <div class="p-action-left">
+            <input type="text" class="p-filter p-search" id="rechargeSearchInput" placeholder="搜索会员..." oninput="filterRechargeList()" />
+            <button class="btn btn-primary" onclick="filterRechargeList()">🔍 查询</button>
+          </div>
+          <div class="p-action-right">
+            <button class="btn btn-primary" onclick="openRechargeModal()">➕ 新增充值</button>
+          </div>
+        </div>
+        <div class="p-table-wrap">
+          <table class="p-table">
+            <thead>
+              <tr>
+                <th data-i18n="member.rechargeTime">充值时间</th>
+                <th data-i18n="member.memberName">会员</th>
+                <th data-i18n="member.rechargeAmount">充值金额</th>
+                <th data-i18n="member.rechargeGift">赠送金额</th>
+                <th data-i18n="member.rechargeMethod">充值方式</th>
+                <th data-i18n="member.operator">操作人</th>
+                <th data-i18n="member.action" style="width:100px">操作</th>
+              </tr>
+            </thead>
+            <tbody id="rechargeTableBody"></tbody>
+          </table>
+        </div>
+        <div class="p-table-footer">
+          <span data-i18n="total">共</span> <span id="rechargeTotal">0</span> <span data-i18n="items">条</span>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB 5: 储值卡 -->
+      <!-- ============================================================ -->
+      <div class="m-tab-content" data-tab="card">
+        <div class="p-action-bar">
+          <div class="p-action-left">
+            <input type="text" class="p-filter p-search" id="cardSearchInput" placeholder="搜索卡号 / 会员..." oninput="filterCardList()" />
+            <select class="p-filter" id="cardStatusFilter" onchange="filterCardList()">
+              <option value="">全部状态</option>
+              <option>正常</option>
+              <option>已挂失</option>
+              <option>已冻结</option>
+              <option>已注销</option>
+            </select>
+            <button class="btn btn-primary" onclick="filterCardList()">🔍 查询</button>
+          </div>
+          <div class="p-action-right">
+            <button class="btn btn-primary" onclick="openCardModal()">➕ 发行储值卡</button>
+          </div>
+        </div>
+        <div class="p-table-wrap">
+          <table class="p-table">
+            <thead>
+              <tr>
+                <th data-i18n="member.cardNo">卡号</th>
+                <th data-i18n="member.memberName">会员</th>
+                <th data-i18n="member.balance">余额</th>
+                <th data-i18n="member.cardStatus">状态</th>
+                <th data-i18n="member.issueDate">发行日期</th>
+                <th data-i18n="member.action" style="width:160px">操作</th>
+              </tr>
+            </thead>
+            <tbody id="cardTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /p-content -->
+  </div><!-- /main-layout -->
+
+  <!-- ========== 移动端底部导航 ========== -->
+  <div class="mobile-bottom-nav">
+    <div class="mobile-nav-item" data-page="overview" onclick="navigateBottomNav('index.html')">
+      <span class="nav-icon">🏠</span>
+      <span data-i18n="nav.overview">总览</span>
+    </div>
+    <div class="mobile-nav-item" data-page="checkout" onclick="navigateBottomNav('checkout.html')">
+      <span class="nav-icon">🧾</span>
+      <span data-i18n="nav.checkout">开单</span>
+    </div>
+    <div class="mobile-nav-item" data-page="booking" onclick="navigateBottomNav('booking.html')">
+      <span class="nav-icon">📅</span>
+      <span data-i18n="nav.appointment">预约</span>
+    </div>
+    <div class="mobile-nav-item" data-page="products" onclick="navigateBottomNav('products.html')">
+      <span class="nav-icon">📦</span>
+      <span>商品</span>
+    </div>
+    <div class="mobile-nav-item active" onclick="toggleMobileMenu()">
+      <span class="nav-icon">☰</span>
+      <span>更多</span>
+    </div>
+  </div>
+
+  <!-- ========== 弹窗遮罩 ========== -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeAllModals()"></div>
+
+  <!-- ========== 会员新增/编辑弹窗 ========== -->
+  <div class="modal" id="memberModal">
+    <div class="modal-header">
+      <span id="memberModalTitle" data-i18n="member.addMember">新增会员</span>
+      <span class="modal-close" onclick="closeMemberModal()">✕</span>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="memberEditId" />
+      <div class="form-group">
+        <label data-i18n="member.name">姓名</label>
+        <input type="text" id="memberFormName" class="form-input" placeholder="请输入姓名" />
+      </div>
+      <div class="form-group">
+        <label data-i18n="member.phone">手机号</label>
+        <input type="text" id="memberFormPhone" class="form-input" placeholder="请输入手机号" />
+      </div>
+      <div class="form-group">
+        <label data-i18n="member.level">等级</label>
+        <select id="memberFormLevel" class="form-input">
+          <option>普通会员</option>
+          <option>银卡会员</option>
+          <option>金卡会员</option>
+          <option>钻石会员</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label data-i18n="member.points">积分</label>
+        <input type="number" id="memberFormPoints" class="form-input" value="0" />
+      </div>
+      <div class="form-group">
+        <label data-i18n="member.balance">余额</label>
+        <input type="number" id="memberFormBalance" class="form-input" value="0" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeMemberModal()" data-i18n="cancel">取消</button>
+      <button class="btn btn-primary" onclick="saveMember()" data-i18n="save">保存</button>
+    </div>
+  </div>
+
+  <!-- ========== 等级新增/编辑弹窗 ========== -->
+  <div class="modal" id="levelModal">
+    <div class="modal-header">
+      <span id="levelModalTitle" data-i18n="member.addLevel">新增等级</span>
+      <span class="modal-close" onclick="closeLevelModal()">✕</span>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="levelEditId" />
+      <div class="form-group">
+        <label data-i18n="member.levelName">等级名称</label>
+        <input type="text" id="levelFormName" class="form-input" placeholder="请输入等级名称" />
+      </div>
+      <div class="form-group">
+        <label data-i18n="member.levelIcon">图标</label>
+        <input type="text" id="levelFormIcon" class="form-input" value="🥇" />
+      </div>
+      <div class="form-group">
+        <label data-i18n="member.discountRate">折扣率 (%)</label>
+        <input type="number" id="levelFormDiscount" class="form-input" value="100" min="0" max="100" />
+      </div>
+      <div class="form-group">
+        <label data-i18n="member.upgradeCondition">升级条件（累计消费额）</label>
+        <input type="number" id="levelFormUpgrade" class="form-input" value="0" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeLevelModal()" data-i18n="cancel">取消</button>
+      <button class="btn btn-primary" onclick="saveLevel()" data-i18n="save">保存</button>
+    </div>
+  </div>
+
+  <!-- ========== 积分规则弹窗 ========== -->
+  <div class="modal" id="pointsRuleModal">
+    <div class="modal-header">
+      <span id="pointsRuleModalTitle" data-i18n="member.addRule">新增规则</span>
+      <span class="modal-close" onclick="closePointsRuleModal()">✕</span>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="pointsRuleEditId" />
+      <div class="form-group">
+        <label data-i18n="member.ruleName">规则名称</label>
+        <input type="text" id="pointsRuleFormName" class="form-input" placeholder="例如：消费积分" />
+      </div>
+      <div class="form-group">
+        <label data-i18n="member.ruleRatio">消费积分比例 (每元得积分)</label>
+        <input type="number" id="pointsRuleFormRatio" class="form-input" value="1" step="0.1" />
+      </div>
+      <div class="form-group">
+        <label data-i18n="member.exchangeRatio">积分兑换比例 (积分:元)</label>
+        <input type="text" id="pointsRuleFormExchange" class="form-input" value="100:1" placeholder="例如：100:1" />
+      </div>
+      <div class="form-group">
+        <label data-i18n="member.ruleScope">适用范围</label>
+        <select id="pointsRuleFormScope" class="form-input">
+          <option>全部项目</option>
+          <option>仅服务项目</option>
+          <option>仅零售产品</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label data-i18n="member.ruleStatus">状态</label>
+        <select id="pointsRuleFormStatus" class="form-input">
+          <option>启用</option>
+          <option>停用</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closePointsRuleModal()" data-i18n="cancel">取消</button>
+      <button class="btn btn-primary" onclick="savePointsRule()" data-i18n="save">保存</button>
+    </div>
+  </div>
+
+  <!-- ========== 新增充值弹窗 ========== -->
+  <div class="modal" id="rechargeModal">
+    <div class="modal-header">
+      <span id="rechargeModalTitle" data-i18n="member.addRecharge">新增充值</span>
+      <span class="modal-close" onclick="closeRechargeModal()">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label data-i18n="member.memberName">会员</label>
+        <select id="rechargeFormMember" class="form-input"></select>
+      </div>
+      <div class="form-group">
+        <label data-i18n="member.rechargeAmount">充值金额</label>
+        <input type="number" id="rechargeFormAmount" class="form-input" value="100" min="1" />
+      </div>
+      <div class="form-group">
+        <label data-i18n="member.rechargeGift">赠送金额</label>
+        <input type="number" id="rechargeFormGift" class="form-input" value="0" min="0" />
+      </div>
+      <div class="form-group">
+        <label data-i18n="member.rechargeMethod">充值方式</label>
+        <select id="rechargeFormMethod" class="form-input">
+          <option>现金</option>
+          <option>微信</option>
+          <option>支付宝</option>
+          <option>银行卡</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeRechargeModal()" data-i18n="cancel">取消</button>
+      <button class="btn btn-primary" onclick="saveRecharge()" data-i18n="save">保存</button>
+    </div>
+  </div>
+
+  <!-- ========== 储值卡弹窗 ========== -->
+  <div class="modal" id="cardModal">
+    <div class="modal-header">
+      <span id="cardModalTitle" data-i18n="member.issueCard">发行储值卡</span>
+      <span class="modal-close" onclick="closeCardModal()">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label data-i18n="member.cardNo">卡号</label>
+        <input type="text" id="cardFormNo" class="form-input" placeholder="自动生成或手动输入" />
+      </div>
+      <div class="form-group">
+        <label data-i18n="member.memberName">会员</label>
+        <select id="cardFormMember" class="form-input"></select>
+      </div>
+      <div class="form-group">
+        <label data-i18n="member.balance">初始余额</label>
+        <input type="number" id="cardFormBalance" class="form-input" value="0" min="0" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeCardModal()" data-i18n="cancel">取消</button>
+      <button class="btn btn-primary" onclick="saveCard()" data-i18n="save">保存</button>
+    </div>
+  </div>
+
+  <!-- ========== 删除确认弹窗 ========== -->
+  <div class="modal" id="confirmModal">
+    <div class="modal-header">
+      <span data-i18n="confirm">确认</span>
+      <span class="modal-close" onclick="closeConfirmModal()">✕</span>
+    </div>
+    <div class="modal-body">
+      <p id="confirmMessage" data-i18n="member.confirmDelete">确认删除该记录？</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeConfirmModal()" data-i18n="cancel">取消</button>
+      <button class="btn btn-danger" id="confirmDeleteBtn" onclick="confirmDelete()" data-i18n="delete">删除</button>
+    </div>
+  </div>
+
+  <!-- ========== 主题面板（复用 app.js 的） ========== -->
+  <div class="theme-overlay" id="themeOverlay" onclick="closeThemePanel()"></div>
+  <div class="theme-panel" id="themePanel">
+    <div class="theme-panel-header">
+      <span data-i18n="theme.title">选择主题</span>
+      <span class="theme-panel-close" onclick="closeThemePanel()">✕</span>
+    </div>
+    <div class="theme-options" id="themeOptions">
+      <div class="theme-option active" data-theme="aurora-blue" onclick="setTheme('aurora-blue')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#1677FF,#4096FF)"></div>
+        <span data-i18n="theme.aurora">极光蓝</span>
+      </div>
+      <div class="theme-option" data-theme="twilight-purple" onclick="setTheme('twilight-purple')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#722ED1,#9254DE)"></div>
+        <span data-i18n="theme.twilight">暮光紫</span>
+      </div>
+      <div class="theme-option" data-theme="midnight-dark" onclick="setTheme('midnight-dark')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#1a1a2e,#16213e)"></div>
+        <span data-i18n="theme.midnight">暗夜黑</span>
+      </div>
+      <div class="theme-option" data-theme="forest-green" onclick="setTheme('forest-green')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#52C41A,#73D13D)"></div>
+        <span data-i18n="theme.forest">森林绿</span>
+      </div>
+      <div class="theme-option" data-theme="sunset-orange" onclick="setTheme('sunset-orange')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#FA8C16,#FFA940)"></div>
+        <span data-i18n="theme.sunset">日落橙</span>
+      </div>
+      <div class="theme-option" data-theme="rose-red" onclick="setTheme('rose-red')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#F53F3F,#FF7A7A)"></div>
+        <span data-i18n="theme.rose">玫瑰红</span>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+const mockMembers = [
+  {id:1,name:'张三',phone:'13800138001',level:'钻石会员',points:5800,balance:3680,visits:86,regDate:'2024-01-15',avatar:'🧑'},
+  {id:2,name:'李四',phone:'13800138002',level:'金卡会员',points:3200,balance:1500,visits:52,regDate:'2024-03-20',avatar:'👨'},
+  {id:3,name:'王五',phone:'13800138003',level:'银卡会员',points:1200,balance:500,visits:28,regDate:'2024-06-10',avatar:'👩'},
+  {id:4,name:'赵六',phone:'13800138004',level:'普通会员',points:350,balance:0,visits:8,regDate:'2024-09-05',avatar:'🧔'},
+  {id:5,name:'孙七',phone:'13800138005',level:'金卡会员',points:2500,balance:1200,visits:45,regDate:'2024-04-18',avatar:'👴'},
+  {id:6,name:'周八',phone:'13800138006',level:'钻石会员',points:7200,balance:5000,visits:120,regDate:'2023-11-01',avatar:'👵'},
+  {id:7,name:'吴九',phone:'13800138007',level:'银卡会员',points:800,balance:200,visits:15,regDate:'2024-08-22',avatar:'👱'},
+  {id:8,name:'郑十',phone:'13800138008',level:'普通会员',points:100,balance:0,visits:3,regDate:'2024-12-01',avatar:'🧑'},
+];
+const mockLevels = [
+  {id:1,name:'普通会员',icon:'🥉',discount:100,upgradeCondition:0,color:'#86909C'},
+  {id:2,name:'银卡会员',icon:'🥈',discount:95,upgradeCondition:1000,color:'#C0C0C0'},
+  {id:3,name:'金卡会员',icon:'🥇',discount:90,upgradeCondition:5000,color:'#FFD700'},
+  {id:4,name:'钻石会员',icon:'💎',discount:85,upgradeCondition:20000,color:'#B9F2FF'},
+];
+const mockPointsRules = [
+  {id:1,name:'服务消费积分',ratio:1,exchange:'100:1',scope:'仅服务项目',status:'启用'},
+  {id:2,name:'产品消费积分',ratio:0.5,exchange:'100:1',scope:'仅零售产品',status:'启用'},
+  {id:3,name:'充值赠送积分',ratio:0.2,exchange:'100:1',scope:'全部项目',status:'启用'},
+  {id:4,name:'生日双倍积分',ratio:2,exchange:'100:1',scope:'全部项目',status:'停用'},
+];
+const mockRecharges = [
+  {id:1,member:'张三',amount:2000,gift:200,method:'微信',operator:'管理员',date:'2025-04-28 14:30'},
+  {id:2,member:'李四',amount:1000,gift:100,method:'支付宝',operator:'管理员',date:'2025-04-25 10:15'},
+  {id:3,member:'周八',amount:5000,gift:600,method:'银行卡',operator:'管理员',date:'2025-04-20 16:45'},
+  {id:4,member:'王五',amount:500,gift:0,method:'现金',operator:'管理员',date:'2025-04-18 09:30'},
+  {id:5,member:'孙七',amount:1000,gift:100,method:'微信',operator:'管理员',date:'2025-04-15 11:20'},
+  {id:6,member:'张三',amount:1000,gift:50,method:'支付宝',operator:'管理员',date:'2025-04-10 14:00'},
+];
+const mockCards = [
+  {id:1,no:'VIP20250001',member:'张三',balance:3680,status:'正常',issueDate:'2024-01-15'},
+  {id:2,no:'VIP20250002',member:'李四',balance:1500,status:'正常',issueDate:'2024-03-20'},
+  {id:3,no:'VIP20250003',member:'周八',balance:5000,status:'正常',issueDate:'2023-11-01'},
+  {id:4,no:'VIP20250004',member:'王五',balance:500,status:'已挂失',issueDate:'2024-06-10'},
+  {id:5,no:'VIP20250005',member:'孙七',balance:1200,status:'正常',issueDate:'2024-04-18'},
+  {id:6,no:'VIP20250006',member:'赵六',balance:0,status:'已注销',issueDate:'2024-09-05'},
+];
+
+let members=JSON.parse(JSON.stringify(mockMembers));
+let levels=JSON.parse(JSON.stringify(mockLevels));
+let pointsRules=JSON.parse(JSON.stringify(mockPointsRules));
+let recharges=JSON.parse(JSON.stringify(mockRecharges));
+let cards=JSON.parse(JSON.stringify(mockCards));
+
+function switchMemberTab(tab){
+  document.querySelectorAll('.m-tab-item').forEach(function(t){t.classList.remove('active')});
+  document.querySelectorAll('.m-tab-content').forEach(function(c){c.classList.remove('active')});
+  document.querySelector('.m-tab-item[data-tab="'+tab+'"]').classList.add('active');
+  document.querySelector('.m-tab-content[data-tab="'+tab+'"]').classList.add('active');
+  if(tab==='list')renderMemberList();
+  else if(tab==='level')renderLevelList();
+  else if(tab==='points')renderPointsRules();
+  else if(tab==='recharge')renderRechargeList();
+  else if(tab==='card')renderCardList();
+}
+
+function renderMemberList(list){
+  var data=list||members;
+  document.getElementById('memberTotalCount').textContent=data.length;
+  var tb=0;data.forEach(function(m){tb+=m.balance});
+  document.getElementById('totalBalance').textContent=tb.toFixed(2);
+  document.getElementById('memberTableBody').innerHTML=data.map(function(m){
+    var l=levels.find(function(x){return x.name===m.level});
+    var c=l?l.color:'#86909C';
+    return '<tr><td><span style="font-size:24px">'+m.avatar+'</span></td><td>'+m.name+'</td><td>'+m.phone+'</td><td><span class="level-badge" style="background:'+c+'20;color:'+c+'">'+m.level+'</span></td><td>'+m.points+'</td><td>¥'+m.balance.toFixed(2)+'</td><td>'+m.visits+'</td><td>'+m.regDate+'</td><td><button class="btn-sm btn-outline" onclick="editMember('+m.id+')">✏️</button><button class="btn-sm btn-danger" onclick="showDelete('+m.id+',\'member\')">🗑️</button></td></tr>';
+  }).join('');
+}
+function filterMemberList(){
+  var q=document.getElementById('memberSearchInput').value.toLowerCase();
+  renderMemberList(members.filter(function(m){return m.name.includes(q)||m.phone.includes(q)}));
+}
+function renderLevelList(){
+  document.getElementById('levelTableBody').innerHTML=levels.map(function(l){
+    return '<tr><td><span style="font-size:24px">'+l.icon+'</span></td><td>'+l.name+'</td><td>'+l.discount+'%</td><td>¥'+l.upgradeCondition+'</td><td><button class="btn-sm btn-outline" onclick="editLevel('+l.id+')">✏️</button><button class="btn-sm btn-danger" onclick="showDelete('+l.id+',\'level\')">🗑️</button></td></tr>';
+  }).join('');
+}
+function renderPointsRules(){
+  document.getElementById('pointsRuleTableBody').innerHTML=pointsRules.map(function(r){
+    var cls=r.status==='启用'?'active':'inactive';
+    return '<tr><td>'+r.name+'</td><td>'+r.ratio+' 积分/元</td><td>'+r.exchange+'</td><td>'+r.scope+'</td><td><span class="status-badge '+cls+'">'+r.status+'</span></td><td><button class="btn-sm btn-outline" onclick="editPointsRule('+r.id+')">✏️</button><button class="btn-sm btn-danger" onclick="showDelete('+r.id+',\'pointsRule\')">🗑️</button></td></tr>';
+  }).join('');
+}
+function renderRechargeList(){
+  document.getElementById('rechargeTableBody').innerHTML=recharges.map(function(r){
+    return '<tr><td>'+r.date+'</td><td>'+r.member+'</td><td>¥'+r.amount.toFixed(2)+'</td><td>¥'+r.gift.toFixed(2)+'</td><td>¥'+(r.amount+r.gift).toFixed(2)+'</td><td>'+r.method+'</td><td>'+r.operator+'</td></tr>';
+  }).join('');
+}
+function renderCardList(){
+  document.getElementById('cardTableBody').innerHTML=cards.map(function(c){
+    var cls=c.status==='正常'?'active':c.status==='已挂失'?'warning':'inactive';
+    return '<tr><td><code>'+c.no+'</code></td><td>'+c.member+'</td><td>¥'+c.balance.toFixed(2)+'</td><td><span class="status-badge '+cls+'">'+c.status+'</span></td><td>'+c.issueDate+'</td><td><button class="btn-sm btn-outline" onclick="editCard('+c.id+')">✏️</button><button class="btn-sm btn-danger" onclick="showDelete('+c.id+',\'card\')">🗑️</button></td></tr>';
+  }).join('');
+}
+function filterCardList(){
+  var q=document.getElementById('cardSearchInput').value.toLowerCase();
+  var s=document.getElementById('cardStatusFilter').value;
+  var f=cards.filter(function(c){return c.no.includes(q)||c.member.includes(q)});
+  if(s)f=f.filter(function(c){return c.status===s});
+  renderCardList();
+}
+
+var editId=null;
+function openMemberModal(){
+  editId=null;
+  document.getElementById('memberModalTitle').textContent='新增会员';
+  document.getElementById('memberFormName').value='';
+  document.getElementById('memberFormPhone').value='';
+  document.getElementById('memberFormLevel').value='普通会员';
+  document.getElementById('memberFormPoints').value=0;
+  document.getElementById('memberFormBalance').value=0;
+  document.getElementById('memberModal').classList.add('open');
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function editMember(id){
+  var m=members.find(function(x){return x.id===id});
+  if(!m)return;
+  editId=id;
+  document.getElementById('memberModalTitle').textContent='编辑会员';
+  document.getElementById('memberFormName').value=m.name;
+  document.getElementById('memberFormPhone').value=m.phone;
+  document.getElementById('memberFormLevel').value=m.level;
+  document.getElementById('memberFormPoints').value=m.points;
+  document.getElementById('memberFormBalance').value=m.balance;
+  document.getElementById('memberModal').classList.add('open');
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function saveMember(){
+  var n=document.getElementById('memberFormName').value.trim();
+  var p=document.getElementById('memberFormPhone').value.trim();
+  var lvl=document.getElementById('memberFormLevel').value;
+  var pts=parseInt(document.getElementById('memberFormPoints').value)||0;
+  var bal=parseFloat(document.getElementById('memberFormBalance').value)||0;
+  if(!n||!p){alert('请填写姓名和手机号');return;}
+  if(editId){
+    var m=members.find(function(x){return x.id===editId});
+    if(m){m.name=n;m.phone=p;m.level=lvl;m.points=pts;m.balance=bal;}
+  }else{
+    members.push({id:Date.now(),name:n,phone:p,level:lvl,points:pts,balance:bal,visits:0,regDate:new Date().toISOString().slice(0,10),avatar:'🧑'});
+  }
+  document.getElementById('memberModal').classList.remove('open');
+  document.getElementById('modalOverlay').classList.remove('open');
+  renderMemberList();
+}
+
+function openLevelModal(){
+  editId=null;
+  document.getElementById('levelModalTitle').textContent='新增等级';
+  document.getElementById('levelFormName').value='';
+  document.getElementById('levelFormIcon').value='🥇';
+  document.getElementById('levelFormDiscount').value=100;
+  document.getElementById('levelFormUpgrade').value=0;
+  document.getElementById('levelModal').classList.add('open');
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function editLevel(id){
+  var l=levels.find(function(x){return x.id===id});
+  if(!l)return;editId=id;
+  document.getElementById('levelModalTitle').textContent='编辑等级';
+  document.getElementById('levelFormName').value=l.name;
+  document.getElementById('levelFormIcon').value=l.icon;
+  document.getElementById('levelFormDiscount').value=l.discount;
+  document.getElementById('levelFormUpgrade').value=l.upgradeCondition;
+  document.getElementById('levelModal').classList.add('open');
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function saveLevel(){
+  var n=document.getElementById('levelFormName').value.trim();
+  var i=document.getElementById('levelFormIcon').value.trim();
+  var d=parseInt(document.getElementById('levelFormDiscount').value)||100;
+  var u=parseInt(document.getElementById('levelFormUpgrade').value)||0;
+  if(!n){alert('请填写等级名称');return;}
+  if(editId){
+    var l=levels.find(function(x){return x.id===editId});
+    if(l){l.name=n;l.icon=i;l.discount=d;l.upgradeCondition=u;}
+  }else{levels.push({id:Date.now(),name:n,icon:i,discount:d,upgradeCondition:u,color:'#86909C'});}
+  document.getElementById('levelModal').classList.remove('open');
+  document.getElementById('modalOverlay').classList.remove('open');
+  renderLevelList();
+}
+
+function openPointsRuleModal(){
+  editId=null;
+  document.getElementById('pointsRuleFormName').value='';
+  document.getElementById('pointsRuleFormRatio').value=1;
+  document.getElementById('pointsRuleFormExchange').value='100:1';
+  document.getElementById('pointsRuleFormScope').value='全部项目';
+  document.getElementById('pointsRuleFormStatus').value='启用';
+  document.getElementById('pointsRuleModal').classList.add('open');
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function editPointsRule(id){
+  var r=pointsRules.find(function(x){return x.id===id});
+  if(!r)return;editId=id;
+  document.getElementById('pointsRuleFormName').value=r.name;
+  document.getElementById('pointsRuleFormRatio').value=r.ratio;
+  document.getElementById('pointsRuleFormExchange').value=r.exchange;
+  document.getElementById('pointsRuleFormScope').value=r.scope;
+  document.getElementById('pointsRuleFormStatus').value=r.status;
+  document.getElementById('pointsRuleModal').classList.add('open');
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function savePointsRule(){
+  var n=document.getElementById('pointsRuleFormName').value.trim();
+  var r=parseFloat(document.getElementById('pointsRuleFormRatio').value)||0;
+  var e=document.getElementById('pointsRuleFormExchange').value.trim();
+  var s=document.getElementById('pointsRuleFormScope').value;
+  var st=document.getElementById('pointsRuleFormStatus').value;
+  if(!n){alert('请填写规则名称');return;}
+  if(editId){
+    var rule=pointsRules.find(function(x){return x.id===editId});
+    if(rule){rule.name=n;rule.ratio=r;rule.exchange=e;rule.scope=s;rule.status=st;}
+  }else{pointsRules.push({id:Date.now(),name:n,ratio:r,exchange:e,scope:s,status:st});}
+  document.getElementById('pointsRuleModal').classList.remove('open');
+  document.getElementById('modalOverlay').classList.remove('open');
+  renderPointsRules();
+}
+
+function openRechargeModal(){
+  document.getElementById('rechargeFormAmount').value=100;
+  document.getElementById('rechargeFormGift').value=0;
+  var s=document.getElementById('rechargeFormMember');
+  s.innerHTML=members.map(function(m){return '<option value="'+m.name+'">'+m.name+'</option>'}).join('');
+  document.getElementById('rechargeModal').classList.add('open');
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function saveRecharge(){
+  var m=document.getElementById('rechargeFormMember').value;
+  var a=parseFloat(document.getElementById('rechargeFormAmount').value)||0;
+  var g=parseFloat(document.getElementById('rechargeFormGift').value)||0;
+  var mt=document.getElementById('rechargeFormMethod').value;
+  if(a<=0){alert('请输入有效充值金额');return;}
+  recharges.push({id:Date.now(),member:m,amount:a,gift:g,method:mt,operator:'管理员',date:new Date().toLocaleString('zh-CN')});
+  document.getElementById('rechargeModal').classList.remove('open');
+  document.getElementById('modalOverlay').classList.remove('open');
+  renderRechargeList();
+}
+
+function openCardModal(){
+  document.getElementById('cardFormNo').value='VIP'+Date.now();
+  document.getElementById('cardFormBalance').value=0;
+  var s=document.getElementById('cardFormMember');
+  s.innerHTML=members.map(function(m){return '<option value="'+m.name+'">'+m.name+'</option>'}).join('');
+  document.getElementById('cardModal').classList.add('open');
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function saveCard(){
+  var n=document.getElementById('cardFormNo').value.trim();
+  var m=document.getElementById('cardFormMember').value;
+  var b=parseFloat(document.getElementById('cardFormBalance').value)||0;
+  if(!n){alert('请填写卡号');return;}
+  cards.push({id:Date.now(),no:n,member:m,balance:b,status:'正常',issueDate:new Date().toISOString().slice(0,10)});
+  document.getElementById('cardModal').classList.remove('open');
+  document.getElementById('modalOverlay').classList.remove('open');
+  renderCardList();
+}
+
+var delTarget=null;
+function showDelete(id,type){
+  delTarget={id:id,type:type};
+  document.getElementById('confirmModal').classList.add('open');
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function confirmDelete(){
+  if(!delTarget)return;
+  if(delTarget.type==='member')members=members.filter(function(x){return x.id!==delTarget.id});
+  else if(delTarget.type==='level')levels=levels.filter(function(x){return x.id!==delTarget.id});
+  else if(delTarget.type==='pointsRule')pointsRules=pointsRules.filter(function(x){return x.id!==delTarget.id});
+  else if(delTarget.type==='card')cards=cards.filter(function(x){return x.id!==delTarget.id});
+  document.getElementById('confirmModal').classList.remove('open');
+  document.getElementById('modalOverlay').classList.remove('open');
+  delTarget=null;
+}
+function closeConfirmModal(){
+  document.getElementById('confirmModal').classList.remove('open');
+  document.getElementById('modalOverlay').classList.remove('open');delTarget=null;
+}
+function closeAllModals(){
+  ['memberModal','levelModal','pointsRuleModal','rechargeModal','cardModal','confirmModal','themePanel'].forEach(function(m){
+    var el=document.getElementById(m);if(el)el.classList.remove('open');
+  });
+  var ov=document.getElementById('modalOverlay');if(ov)ov.classList.remove('open');
+}
+document.addEventListener('DOMContentLoaded',function(){switchMemberTab('list')});
+</script>
+</body>
+</html>

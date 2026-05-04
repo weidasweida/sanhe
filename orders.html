@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>收银系统 - 预约管理</title>
+  <title>收银系统 - 订单管理</title>
   <link rel="stylesheet" href="styles.css?v=20260427" />
   <link rel="stylesheet" href="menu-common.css?v=1" />
   <script src="shared-data.js?v=20260427"></script>
@@ -29,10 +29,10 @@
     <nav class="sidebar">
       <div class="nav-item" onclick="window.location.href='index.html'"><span class="nav-icon">🏠</span><span data-i18n="nav.overview">总览</span></div>
       <div class="nav-item" onclick="window.location.href='checkout.html'"><span class="nav-icon">🧾</span><span data-i18n="nav.checkout">快速开单</span></div>
-      <div class="nav-item active" onclick="window.location.href='booking.html'"><span class="nav-icon">📅</span><span data-i18n="nav.appointment">预约管理</span></div>
+      <div class="nav-item" onclick="window.location.href='booking.html'"><span class="nav-icon">📅</span><span data-i18n="nav.appointment">预约管理</span></div>
       <div class="nav-item" onclick="window.location.href='products.html'"><span class="nav-icon">📦</span><span data-i18n="nav.products">商品管理</span></div>
       <div class="nav-item" onclick="window.location.href='inventory.html'"><span class="nav-icon">📋</span><span data-i18n="nav.inventory">库存管理</span></div>
-      <div class="nav-item" onclick="window.location.href='orders.html'"><span class="nav-icon">📝</span><span data-i18n="nav.orders">订单管理</span></div>
+      <div class="nav-item active" onclick="window.location.href='orders.html'"><span class="nav-icon">📝</span><span data-i18n="nav.orders">订单管理</span></div>
       <div class="nav-item" onclick="window.location.href='members.html'"><span class="nav-icon">👥</span><span data-i18n="nav.members">会员管理</span></div>
       <div class="nav-item" onclick="window.location.href='reports.html'"><span class="nav-icon">📊</span><span data-i18n="nav.reports">营业报表</span></div>
       <div class="nav-item" onclick="window.location.href='marketing.html'"><span class="nav-icon">🎫</span><span data-i18n="nav.promotion">优惠营销</span></div>
@@ -40,30 +40,35 @@
     </nav>
     <div class="menu-page">
       <div class="menu-topbar">
-        <div class="menu-topbar-left"><span class="menu-topbar-icon">📅</span><h1 data-i18n="nav.appointment">预约管理</h1></div>
-        <div class="menu-topbar-right"><div class="menu-search"><span class="search-icon">🔍</span><input type="text" placeholder="搜索功能..." /></div></div>
+        <div class="menu-topbar-left">
+          <span class="menu-topbar-icon">📝</span>
+          <h1 data-i18n="nav.orders">订单管理</h1>
+        </div>
+        <div class="menu-topbar-right">
+          <div class="menu-search"><span class="search-icon">🔍</span><input type="text" placeholder="搜索功能..." /></div>
+        </div>
       </div>
       <div class="menu-grid">
         <div class="menu-card-group">
-          <div class="menu-card-header"><span class="menu-card-header-icon">📋</span><span class="menu-card-header-title">预约管理</span></div>
-          <div class="menu-card-items">
-            <div class="menu-card-item" onclick="window.location.href='booking_full.html'"><div class="menu-item-icon">📋</div><div class="menu-item-label">预约记录</div></div>
-            <div class="menu-card-item" onclick="window.location.href='booking_full.html#board'"><div class="menu-item-icon">🗓️</div><div class="menu-item-label">预约看板</div></div>
-            <div class="menu-card-item" onclick="window.location.href='booking_full.html#data'"><div class="menu-item-icon">📊</div><div class="menu-item-label">预约数据</div></div>
+          <div class="menu-card-header"><span class="menu-card-header-icon">📋</span><span class="menu-card-header-title">订单管理</span></div>
+          <div class="menu-icon-grid">
+            <div class="menu-icon-item" onclick="alert('订单列表 - 即将上线')"><div class="menu-icon-circle">📋</div><div class="menu-icon-label">订单列表</div></div>
+            <div class="menu-icon-item" onclick="alert('挂单管理 - 即将上线')"><div class="menu-icon-circle">📌</div><div class="menu-icon-label">挂单管理</div></div>
+            <div class="menu-icon-item" onclick="alert('退款管理 - 即将上线')"><div class="menu-icon-circle">💰</div><div class="menu-icon-label">退款管理</div></div>
+            <div class="menu-icon-item" onclick="alert('历史订单 - 即将上线')"><div class="menu-icon-circle">📂</div><div class="menu-icon-label">历史订单</div></div>
           </div>
         </div>
         <div class="menu-card-group">
-          <div class="menu-card-header"><span class="menu-card-header-icon">👥</span><span class="menu-card-header-title">员工与参数</span></div>
+          <div class="menu-card-header"><span class="menu-card-header-icon">⚙️</span><span class="menu-card-header-title">订单设置</span></div>
           <div class="menu-card-items">
-            <div class="menu-card-item" onclick="window.location.href='booking_full.html#staff'"><div class="menu-item-icon">👥</div><div class="menu-item-label">可约员工</div></div>
-            <div class="menu-card-item" onclick="window.location.href='booking_full.html#params'"><div class="menu-item-icon">⚙️</div><div class="menu-item-label">预约参数</div></div>
+            <div class="menu-card-item" onclick="alert('订单参数 - 即将上线')"><div class="menu-item-icon">⚙️</div><div class="menu-item-label">订单参数</div></div>
+            <div class="menu-card-item" onclick="alert('打印设置 - 即将上线')"><div class="menu-item-icon">🖨️</div><div class="menu-item-label">打印设置</div></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 主题面板 -->
   <div class="theme-panel" id="themePanel">
     <div class="theme-panel-header"><span data-i18n="theme.title">切换主题</span><button onclick="toggleThemePanel()">✕</button></div>
     <div class="theme-list">
@@ -94,7 +99,7 @@
     <div class="mobile-nav-item" onclick="toggleMobileMenu()">☰<span>更多</span></div>
   </div>
   <script src="app.js?v=20260427b"></script>
-  <script>setMobileNavActive('booking');</script>
+  <script>setMobileNavActive('orders');</script>
 </div>
 </body>
 </html>

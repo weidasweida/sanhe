@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>收银系统 - 商品管理</title>
+  <link rel="stylesheet" href="styles.css?v=20260427" />
+  <link rel="stylesheet" href="products.css?v=20260427" />
+  <script src="shared-data.js?v=20260427"></script>
+</head>
+<body>
+<div id="app" data-theme="aurora-blue">
+
+  <!-- ========== 顶部栏 ========== -->
+  <header class="header">
+    <div class="header-left">
+      <button class="mobile-back-btn" onclick="goBack()">‹</button>
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+      <div class="logo">🏪 <span data-i18n="brand">收银通</span></div>
+      <span class="version">v2.0</span>
+    </div>
+    <div class="header-right">
+      <button class="lang-switch" onclick="toggleLang()">EN / 中文</button>
+      <button class="theme-btn" onclick="toggleThemePanel()">🎨</button>
+      <div class="notification-badge">🔔 <span class="badge">3</span></div>
+      <div class="user-avatar">👤 <span data-i18n="admin">管理员</span></div>
+    </div>
+  </header>
+
+<!-- ========== 主布局 ========== -->
+  <div class="main-layout" style="margin-top:var(--header-height);">
+
+    <!-- ====== 1. 一级导航 ====== -->
+    <nav class="sidebar">
+      <div class="nav-item" onclick="window.location.href='index.html'">
+        <span class="nav-icon">🏠</span>
+        <span data-i18n="nav.overview">总览</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='checkout.html'">
+        <span class="nav-icon">🧾</span>
+        <span data-i18n="nav.checkout">快速开单</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='booking.html'">
+        <span class="nav-icon">📅</span>
+        <span data-i18n="nav.appointment">预约管理</span>
+      </div>
+      <div class="nav-item active" onclick="window.location.href='products.html'">
+        <span class="nav-icon">📦</span>
+        <span data-i18n="nav.products">商品管理</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='inventory.html'">
+        <span class="nav-icon">📦</span>
+        <span data-i18n="nav.inventory">库存管理</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='members.html'">
+        <span class="nav-icon">📋</span>
+        <span data-i18n="nav.orders">订单管理</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='members.html'">
+        <span class="nav-icon">👥</span>
+        <span data-i18n="nav.members">会员管理</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='reports.html'">
+        <span class="nav-icon">📊</span>
+        <span data-i18n="nav.reports">营业报表</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='marketing.html'">
+        <span class="nav-icon">🎫</span>
+        <span data-i18n="nav.promotion">优惠营销</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='settings.html'">
+        <span class="nav-icon">⚙️</span>
+        <span data-i18n="nav.settings">系统设置</span>
+      </div>
+      <div class="sidebar-footer">
+        <span class="store-name" data-i18n="storeName">旗舰店</span>
+        <span class="store-id">#001</span>
+      </div>
+    </nav>
+
+    <!-- ====== 3. 主内容 ====== -->
+    <div class="p-content">
+
+      <!-- 全局信息栏 -->
+      <div class="p-global-bar">
+        <div class="p-global-left">🏪 三合堂001店</div>
+        <div class="p-global-right">
+          <span class="p-global-stat">📦 商品: <strong>128</strong></span>
+          <span class="p-global-stat">📄 项目: <strong>36</strong></span>
+          <span class="p-global-stat">📦 套餐: <strong>12</strong></span>
+          <span class="p-global-stat">💳 储值卡: <strong>8</strong></span>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB 1: 商品主页（首页） -->
+      <!-- ============================================================ -->
+      <div class="p-tab-content active" data-tab="home">
+        <div class="p-big-section">
+          <div class="p-section-title" data-i18n="products.infoSection">商品信息</div>
+          <div class="p-card-grid">
+            <div class="p-big-card" onclick="switchProductTab('product')">
+              <div class="p-big-icon blue">📦</div>
+              <div class="p-big-label" data-i18n="products.product">产品</div>
+            </div>
+            <div class="p-big-card" onclick="switchProductTab('project')">
+              <div class="p-big-icon green">📄</div>
+              <div class="p-big-label" data-i18n="products.project">项目</div>
+            </div>
+            <div class="p-big-card" onclick="switchProductTab('package')">
+              <div class="p-big-icon orange">📦</div>
+              <div class="p-big-label" data-i18n="products.package">套餐</div>
+            </div>
+            <div class="p-big-card" onclick="switchProductTab('gift')">
+              <div class="p-big-icon purple">🎁</div>
+              <div class="p-big-label" data-i18n="products.gift">积分礼品</div>
+            </div>
+            <div class="p-big-card" onclick="switchProductTab('card')">
+              <div class="p-big-icon red">💳</div>
+              <div class="p-big-label" data-i18n="products.card">储值卡</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-big-section">
+          <div class="p-section-title" data-i18n="products.configSection">基础配置</div>
+          <div class="p-card-grid p-card-grid-sm">
+            <div class="p-sm-card" onclick="switchProductTab('params')">
+              <div class="p-sm-icon">📋</div>
+              <div class="p-sm-label">产品参数</div>
+            </div>
+            <div class="p-sm-card" onclick="switchProductTab('scope')">
+              <div class="p-sm-icon">📍</div>
+              <div class="p-sm-label" data-i18n="products.scope">适用范围</div>
+            </div>
+            <div class="p-sm-card" onclick="switchProductTab('tag')">
+              <div class="p-sm-icon">🔖</div>
+              <div class="p-sm-label" data-i18n="products.tag">产品/项目标签</div>
+            </div>
+            <div class="p-sm-card" onclick="switchProductTab('project-category')">
+              <div class="p-sm-icon">📂</div>
+              <div class="p-sm-label" data-i18n="products.projectCategory">项目类别</div>
+            </div>
+<div class="p-sm-card" onclick="switchProductTab('room-bed')">
+              <div class="p-sm-icon">🛏️</div>
+              <div class="p-sm-label" data-i18n="products.roomBed">房间床位</div>
+            </div>
+            <div class="p-sm-card" onclick="switchProductTab('hand-card')">
+              <div class="p-sm-icon">✋</div>
+              <div class="p-sm-label" data-i18n="products.handCard">手牌管理</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB 2: 产品管理 -->
+      <!-- ============================================================ -->
+      <div class="p-tab-content" data-tab="product">
+        <div class="p-action-bar">
+          <div class="p-action-left">
+            <select class="p-filter" id="productFilterCategory"><option value="">全部分类</option></select>
+            <select class="p-filter" id="productFilterStatus"><option value="">全部状态</option><option>启用</option><option>停用</option></select>
+            <select class="p-filter" id="productFilterScope"><option value="">全部适用范围</option><option>全身</option><option>局部</option><option>—</option></select>
+            <input type="text" class="p-filter p-search" id="productFilterName" placeholder="产品名称" />
+            <button class="btn btn-primary" onclick="filterProductTable()">🔍 查询</button>
+            <button class="btn btn-outline" onclick="resetProductFilter()">重置</button>
+          </div>
+          <div class="p-action-right">
+            <button class="btn btn-outline" onclick="batchDeleteProducts()">批量删除</button>
+            <button class="btn btn-primary" onclick="openProductModal()">➕ 新增产品</button>
+          </div>
+        </div>
+        <div class="p-table-wrap">
+          <table class="p-table">
+            <thead>
+              <tr>
+                <th style="width:36px"><input type="checkbox" onchange="toggleProductAll(this)" /></th>
+                <th>产品名称</th>
+                <th>产品规格 <span style="font-weight:normal;font-size:11px;color:var(--color-text-secondary)">(单位>细项)</span></th>
+                <th>产品类型</th>
+                <th>产品状态</th>
+                <th>适用范围</th>
+                <th>标签</th>
+                <th>所属品牌</th>
+                <th>适用部位</th>
+                <th>是否可为赠品</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="productTableBody"></tbody>
+          </table>
+        </div>
+        <div class="p-pagination">
+          <span id="productTotalInfo">共 0 条数据</span>
+          <div class="p-page-controls">
+            <button class="page-btn" disabled>‹</button>
+            <span class="p-page-info">1/1</span>
+            <button class="page-btn" disabled>›</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB 3: 项目管理 -->
+      <!-- ============================================================ -->
+      <div class="p-tab-content" data-tab="project">
+        <div class="p-action-bar">
+          <div class="p-action-left">
+            <select class="p-filter"><option data-i18n="products.allCategories">全部分类</option></select>
+            <select class="p-filter"><option data-i18n="products.allStatus">全部状态</option></select>
+            <input type="text" class="p-filter p-search" placeholder="项目名称" data-i18n-placeholder="products.projectName" />
+            <button class="btn btn-primary">🔍 <span data-i18n="booking.query">查询</span></button>
+            <button class="btn btn-outline"><span data-i18n="common.reset">重置</span></button>
+          </div>
+          <div class="p-action-right">
+            <button class="btn btn-primary">➕ <span data-i18n="products.addProject">新增项目</span></button>
+          </div>
+        </div>
+        <div class="p-table-wrap">
+          <table class="p-table">
+            <thead>
+              <tr>
+                <th style="width:36px"><input type="checkbox" /></th>
+                <th data-i18n="products.projectName">项目名称</th>
+                <th data-i18n="products.category">所属类别</th>
+                <th data-i18n="products.availableTimes">可用次数</th>
+                <th data-i18n="products.status">状态</th>
+                <th data-i18n="products.salesPrice">销售价</th>
+                <th data-i18n="products.costPrice">成本价</th>
+                <th data-i18n="products.salesCount">销量</th>
+                <th data-i18n="booking.action">操作</th>
+              </tr>
+            </thead>
+            <tbody id="projectTableBody"></tbody>
+          </table>
+        </div>
+        <div class="p-pagination">
+          <span data-i18n="products.totalRecords2">共 36 条数据</span>
+          <div class="p-page-controls">
+            <button class="page-btn" disabled>‹</button>
+            <span class="p-page-info">1/3</span>
+            <button class="page-btn">›</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB 4: 套餐管理 -->
+      <!-- ============================================================ -->
+      <div class="p-tab-content" data-tab="package">
+        <div class="p-action-bar">
+          <div class="p-action-left">
+            <select class="p-filter"><option data-i18n="products.allCategories">全部分类</option></select>
+            <select class="p-filter"><option data-i18n="products.allStatus">全部状态</option></select>
+            <select class="p-filter"><option data-i18n="products.allType">全部类型</option></select>
+            <input type="text" class="p-filter p-search" placeholder="套餐名称" data-i18n-placeholder="products.packageName" />
+            <button class="btn btn-primary">🔍 <span data-i18n="booking.query">查询</span></button>
+            <button class="btn btn-outline"><span data-i18n="common.reset">重置</span></button>
+          </div>
+          <div class="p-action-right">
+            <button class="btn btn-primary">➕ <span data-i18n="products.addPackage">新增套餐</span></button>
+          </div>
+        </div>
+        <div class="p-table-wrap">
+          <table class="p-table">
+            <thead>
+              <tr>
+                <th style="width:36px"><input type="checkbox" /></th>
+                <th data-i18n="products.packageName">套餐名称</th>
+                <th data-i18n="products.packageDesc">套餐说明</th>
+                <th data-i18n="products.salesPrice">销售价</th>
+                <th data-i18n="products.costPrice">成本价</th>
+                <th data-i18n="products.packageStatus">套餐状态</th>
+                <th data-i18n="products.validity">有效期</th>
+                <th data-i18n="products.packageType">套餐类型</th>
+                <th data-i18n="products.shelfStatus">商品上下架</th>
+                <th data-i18n="booking.action">操作</th>
+              </tr>
+            </thead>
+            <tbody id="packageTableBody"></tbody>
+          </table>
+        </div>
+        <div class="p-pagination">
+          <span data-i18n="products.totalRecords3">共 12 条数据</span>
+          <div class="p-page-controls">
+            <button class="page-btn" disabled>‹</button>
+            <span class="p-page-info">1/1</span>
+            <button class="page-btn" disabled>›</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB 5: 储值卡管理 -->
+      <!-- ============================================================ -->
+      <div class="p-tab-content" data-tab="card">
+        <div class="p-action-bar">
+          <div class="p-action-left">
+            <select class="p-filter"><option data-i18n="products.allCategories">全部分类</option></select>
+            <select class="p-filter"><option data-i18n="products.allStatus">全部状态</option></select>
+            <select class="p-filter"><option data-i18n="products.allShelf">全部上下架</option></select>
+            <input type="text" class="p-filter p-search" placeholder="商品名称" data-i18n-placeholder="products.goodsName" />
+            <button class="btn btn-primary">🔍 <span data-i18n="booking.query">查询</span></button>
+            <button class="btn btn-outline"><span data-i18n="common.reset">重置</span></button>
+          </div>
+          <div class="p-action-right">
+            <button class="btn btn-primary">➕ <span data-i18n="products.addCard">新增兑换卡</span></button>
+          </div>
+        </div>
+        <div class="p-table-wrap">
+          <table class="p-table">
+            <thead>
+              <tr>
+                <th style="width:36px"><input type="checkbox" /></th>
+                <th data-i18n="products.goodsName">商品名称</th>
+                <th data-i18n="products.validity">有效期</th>
+                <th data-i18n="products.category">所属分类</th>
+                <th data-i18n="products.cardStatus">兑换卡状态</th>
+                <th data-i18n="products.shelfStatus">同城上下架</th>
+                <th data-i18n="booking.action">操作</th>
+              </tr>
+            </thead>
+            <tbody id="cardTableBody"></tbody>
+          </table>
+        </div>
+        <div class="p-pagination">
+          <span data-i18n="products.totalRecords4">共 8 条数据</span>
+          <div class="p-page-controls">
+            <button class="page-btn" disabled>‹</button>
+            <span class="p-page-info">1/1</span>
+            <button class="page-btn" disabled>›</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB 6: 积分礼品（简单表格） -->
+      <!-- ============================================================ -->
+      <div class="p-tab-content" data-tab="gift">
+        <div class="p-action-bar">
+          <div class="p-action-left">
+            <input type="text" class="p-filter p-search" placeholder="礼品名称" data-i18n-placeholder="products.giftName" />
+            <button class="btn btn-primary">🔍 <span data-i18n="booking.query">查询</span></button>
+          </div>
+          <div class="p-action-right">
+            <button class="btn btn-primary">➕ <span data-i18n="products.addGift">新增礼品</span></button>
+          </div>
+        </div>
+        <div class="p-table-wrap">
+          <table class="p-table">
+            <thead>
+              <tr>
+                <th style="width:36px"><input type="checkbox" /></th>
+                <th data-i18n="products.giftName">礼品名称</th>
+                <th data-i18n="products.requiredPoints">所需积分</th>
+                <th data-i18n="products.giftStock">库存</th>
+                <th data-i18n="products.status">状态</th>
+                <th data-i18n="booking.action">操作</th>
+              </tr>
+            </thead>
+            <tbody id="giftTableBody"></tbody>
+          </table>
+        </div>
+        <div class="p-pagination">
+          <span data-i18n="products.totalRecords5">共 6 条数据</span>
+          <div class="p-page-controls">
+            <button class="page-btn" disabled>‹</button>
+            <span class="p-page-info">1/1</span>
+            <button class="page-btn" disabled>›</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB: 产品参数（product type + brand + spec/unit 合并） -->
+      <!-- ============================================================ -->
+      <div class="p-tab-content" data-tab="params">
+        <!-- 子导航 -->
+        <div style="display:flex;gap:8px;margin-bottom:16px;border-bottom:1px solid var(--border-color);padding-bottom:0;">
+          <button class="p-subtab-btn active" data-params-tab="type" onclick="switchParamsSubTab('type')">📋 产品类型</button>
+          <button class="p-subtab-btn" data-params-tab="brand" onclick="switchParamsSubTab('brand')">⭐ 产品品牌</button>
+          <button class="p-subtab-btn" data-params-tab="spec" onclick="switchParamsSubTab('spec')">📐 规格/单位</button>
+          <button class="p-subtab-btn" data-params-tab="scope" onclick="switchParamsSubTab('scope')">📍 适用部位</button>
+        </div>
+
+        <!-- === 子页面：产品类型 === -->
+        <div class="p-params-subpage active" data-params-tab="type">
+          <div class="p-action-bar">
+            <div class="p-action-left">
+              <input type="text" class="p-filter p-search" id="typeSearchInput" placeholder="系列名称" oninput="filterTypeTable()" />
+              <button class="btn btn-primary" onclick="filterTypeTable()">🔍 查询</button>
+              <button class="btn btn-outline" onclick="resetTypeFilter()">重置</button>
+            </div>
+            <div class="p-action-right">
+              <button class="btn btn-primary" onclick="openTypeModal()">➕ 新增分类</button>
+            </div>
+          </div>
+          <div class="p-table-wrap">
+            <table class="p-table">
+              <thead>
+                <tr>
+                  <th style="width:36px"><input type="checkbox" onchange="toggleTypeAll(this)" /></th>
+                  <th>系列名称</th>
+                  <th>排序</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="typeTableBody"></tbody>
+            </table>
+          </div>
+          <div class="p-pagination">
+            <span id="typeTotalInfo">共 0 条数据</span>
+            <div class="p-page-controls">
+              <button class="page-btn" disabled>‹</button>
+              <span class="p-page-info">1/1</span>
+              <button class="page-btn" disabled>›</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- === 子页面：产品品牌 === -->
+        <div class="p-params-subpage" data-params-tab="brand">
+          <div class="p-action-bar">
+            <div class="p-action-left">
+              <input type="text" id="brandSearchInput" class="p-input" placeholder="品牌名称搜索" style="width:200px" onkeydown="if(event.key==='Enter')filterBrandTable()" />
+              <button class="btn btn-primary" onclick="filterBrandTable()">🔍 查询</button>
+              <select class="p-filter" id="brandStatusFilter" onchange="filterBrandTable()">
+                <option value="">全部状态</option>
+                <option value="启用">启用</option>
+                <option value="停用">停用</option>
+              </select>
+              <button class="btn btn-outline" onclick="resetBrandFilter()">重置</button>
+            </div>
+            <div class="p-action-right">
+              <button class="btn btn-primary" onclick="openBrandModal()">➕ 新增品牌</button>
+            </div>
+          </div>
+          <div class="p-table-wrap">
+            <table class="p-table">
+              <thead>
+                <tr>
+                  <th>品牌名称</th>
+                  <th>状态</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="brandTableBody"></tbody>
+            </table>
+          </div>
+          <div class="p-pagination">
+            <span id="brandTotalInfo">共 0 条数据</span>
+            <div class="p-page-controls">
+              <button class="page-btn" disabled>‹</button>
+              <span class="p-page-info">1/1</span>
+              <button class="page-btn">›</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- === 子页面：规格/单位 === -->
+        <div class="p-params-subpage" data-params-tab="spec">
+          <div style="display:flex;gap:24px;align-items:stretch;">
+            <div style="flex:0 0 280px;">
+              <div class="p-action-bar" style="padding:8px;">
+                <div class="p-action-left" style="display:flex;gap:8px;">
+                  <input type="text" id="specUnitSearchInput" class="p-input" placeholder="搜索单位" style="width:130px" onkeydown="if(event.key==='Enter')filterSpecUnits()" />
+                  <button class="btn btn-primary" onclick="filterSpecUnits()" style="padding:6px 12px;font-size:13px;">🔍</button>
+                </div>
+                <div class="p-action-right">
+                  <button class="btn btn-primary" onclick="openSpecUnitModal()" style="padding:6px 12px;font-size:13px;">➕ 单位</button>
+                </div>
+              </div>
+              <div style="border:1px solid var(--border-color);border-radius:8px;overflow:auto;max-height:500px;">
+                <div id="specUnitList" style="min-height:200px;"></div>
+              </div>
+            </div>
+            <div style="flex:1;min-width:0;">
+              <div class="p-action-bar">
+                <div class="p-action-left">
+                  <span id="specUnitTitle" style="font-weight:600;font-size:15px;color:var(--text-primary);"></span>
+                  <input type="text" id="specSearchInput" class="p-input" placeholder="搜索规格" style="width:140px;display:none;" onkeydown="if(event.key==='Enter')filterSpecs()" />
+                </div>
+                <div class="p-action-right">
+                  <button class="btn btn-primary" onclick="openSpecModal()">➕ 新增规格</button>
+                </div>
+              </div>
+              <div class="p-table-wrap">
+                <table class="p-table">
+                  <thead>
+                    <tr>
+                      <th>规格名称</th>
+                      <th>排序</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="specTableBody"></tbody>
+                </table>
+              </div>
+              <div class="p-pagination">
+                <span id="specTotalInfo">共 0 条数据</span>
+                <div class="p-page-controls">
+                  <button class="page-btn" disabled>‹</button>
+                  <span class="p-page-info">1/1</span>
+                  <button class="page-btn">›</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- === 子页面：适用部位 === -->
+        <div class="p-params-subpage" data-params-tab="scope">
+          <div class="p-action-bar">
+            <div class="p-action-left">
+              <input type="text" class="p-filter p-search" id="pScopeSearchInput" placeholder="部位名称" oninput="filterPScopeTable()" />
+              <button class="btn btn-primary" onclick="filterPScopeTable()">🔍 查询</button>
+              <button class="btn btn-outline" onclick="resetPScopeFilter()">重置</button>
+            </div>
+            <div class="p-action-right">
+              <button class="btn btn-primary" onclick="openScopeModal()">➕ 新增部位</button>
+            </div>
+          </div>
+          <div class="p-table-wrap">
+            <table class="p-table">
+              <thead>
+                <tr>
+                  <th>部位名称</th>
+                  <th>状态</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="pScopeTableBody"></tbody>
+            </table>
+          </div>
+          <div class="p-pagination">
+            <span id="pScopeTotalInfo">共 0 条数据</span>
+            <div class="p-page-controls">
+              <button class="page-btn" disabled>‹</button>
+              <span class="p-page-info">1/1</span>
+              <button class="page-btn">›</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB: 适用范围（独立 tab，从 SQLite 读取） -->
+      <!-- ============================================================ -->
+      <div class="p-tab-content" data-tab="scope">
+        <div class="p-action-bar">
+          <div class="p-action-left">
+            <input type="text" class="p-filter p-search" id="scopeSearchInput" placeholder="部位名称" oninput="filterScopeTable()" />
+            <button class="btn btn-primary" onclick="filterScopeTable()">🔍 查询</button>
+            <button class="btn btn-outline" onclick="resetScopeFilter()">重置</button>
+          </div>
+          <div class="p-action-right">
+            <button class="btn btn-primary" onclick="openScopeModal()">➕ 新增部位</button>
+          </div>
+        </div>
+        <div class="p-table-wrap">
+          <table class="p-table">
+            <thead>
+              <tr>
+                <th>部位名称</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="scopeTableBody"></tbody>
+          </table>
+        </div>
+        <div class="p-pagination">
+          <span id="scopeTotalInfo">共 0 条数据</span>
+          <div class="p-page-controls">
+            <button class="page-btn" disabled>‹</button>
+            <span class="p-page-info">1/1</span>
+            <button class="page-btn">›</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== 单位弹窗（新增/编辑单位名称） ========== -->
+      <div class="p-modal-overlay" id="specUnitModalOverlay" onmousedown="if(event.target===this)closeSpecUnitModal()">
+        <div class="p-modal" onclick="event.stopPropagation()">
+          <div class="p-modal-header">
+            <span id="specUnitModalTitle">新增单位</span>
+            <button class="p-modal-close" onclick="closeSpecUnitModal()">✕</button>
+          </div>
+          <div class="p-modal-body">
+            <div class="p-form-group">
+              <label>单位名称 <span style="color:red">*</span></label>
+              <input type="text" id="specUnitInputName" class="p-input" placeholder="请输入单位名称" />
+            </div>
+          </div>
+          <div class="p-modal-footer">
+            <button class="btn btn-outline" onclick="closeSpecUnitModal()">取消</button>
+            <button class="btn btn-primary" onclick="saveSpecUnit()">确认</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== 规格弹窗（新增/编辑规格） ========== -->
+      <div class="p-modal-overlay" id="specModalOverlay" onmousedown="if(event.target===this)closeSpecModal()">
+        <div class="p-modal" onclick="event.stopPropagation()">
+          <div class="p-modal-header">
+            <span id="specModalTitle">新增规格</span>
+            <button class="p-modal-close" onclick="closeSpecModal()">✕</button>
+          </div>
+          <div class="p-modal-body">
+            <div class="p-form-group">
+              <label>规格名称 <span style="color:red">*</span></label>
+              <input type="text" id="specInputName" class="p-input" placeholder="请输入规格名称" />
+            </div>
+            <div class="p-form-group">
+              <label>排序 <span style="color:red">*</span></label>
+              <input type="number" id="specInputSort" class="p-input" placeholder="请输入排序数字" value="1" min="1" />
+            </div>
+          </div>
+          <div class="p-modal-footer">
+            <button class="btn btn-outline" onclick="closeSpecModal()">取消</button>
+            <button class="btn btn-primary" onclick="saveSpec()">确认</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-tab-content" data-tab="tag">
+        <div class="p-action-bar">
+          <div class="p-action-left">
+            <button class="btn btn-primary" onclick="openTagModal()">➕ 创建标签</button>
+          </div>
+        </div>
+        <div class="p-table-wrap">
+          <table class="p-table">
+            <thead>
+              <tr>
+                <th style="width:36px"><input type="checkbox" /></th>
+                <th>标签名称</th>
+                <th>排序</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="tagTableBody"></tbody>
+          </table>
+        </div>
+        <div class="p-pagination">
+          <span id="tagTotalInfo">共 6 条数据</span>
+          <div class="p-page-controls">
+            <button class="page-btn" disabled>‹</button>
+            <span class="p-page-info">1/1</span>
+            <button class="page-btn" disabled>›</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-tab-content" data-tab="project-category">
+        <div class="p-action-bar">
+          <div class="p-action-left">
+            <button class="btn btn-primary" onclick="openCategoryModal()">➕ 新增分类</button>
+          </div>
+        </div>
+        <div class="p-table-wrap">
+          <table class="p-table">
+            <thead>
+              <tr>
+                <th style="width:36px"><input type="checkbox" /></th>
+                <th>我的分类</th>
+                <th>排序</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+              <tbody id="projectCategoryTableBody"></tbody>
+          </table>
+        </div>
+        <div class="p-pagination">
+          <span id="projectCategoryTotalInfo">共 6 条数据</span>
+          <div class="p-page-controls">
+            <button class="page-btn" disabled>‹</button>
+            <span class="p-page-info">1/1</span>
+            <button class="page-btn" disabled>›</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-tab-content" data-tab="room-bed">
+        <div class="p-action-bar">
+          <div class="p-action-left">
+            <button class="btn btn-primary">➕ 新增房间</button>
+            <button class="btn btn-outline">批量删除</button>
+          </div>
+        </div>
+        <div class="p-table-wrap">
+          <table class="p-table">
+            <thead>
+              <tr>
+                <th style="width:36px"><input type="checkbox" /></th>
+                <th>房间号</th>
+                <th>老房</th>
+                <th>分组</th>
+                <th>所属门店</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="roomBedTableBody"></tbody>
+          </table>
+        </div>
+        <div class="p-pagination">
+          <span>共 3 条数据</span>
+          <div class="p-page-controls">
+            <button class="page-btn" disabled>‹</button>
+            <span class="p-page-info">1/1</span>
+            <button class="page-btn" disabled>›</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-tab-content" data-tab="hand-card">
+        <div class="p-action-bar">
+          <div class="p-action-left">
+            <input type="text" class="p-filter p-search" placeholder="手牌编号" />
+            <button class="btn btn-primary" onclick="showToast('查询功能暂未开放')">🔍 查询</button>
+            <button class="btn btn-primary" onclick="openHandCardBatchModal()">📋 批量添加</button>
+            <button class="btn btn-outline" onclick="batchDeleteHandCards()">批量删除</button>
+          </div>
+          <div class="p-action-right">
+          </div>
+        </div>
+        <div class="p-table-wrap">
+          <table class="p-table">
+            <thead>
+              <tr>
+                <th style="width:36px"><input type="checkbox" onchange="toggleHandCardAll(this)" /></th>
+                <th>编号</th>
+                <th>编码</th>
+                <th>前置门店</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="handCardTableBody"></tbody>
+          </table>
+        </div>
+        <div class="p-pagination">
+          <span id="handCardTotalInfo">共 101 条数据</span>
+          <div class="p-page-controls">
+            <button class="page-btn" disabled>‹</button>
+            <span class="p-page-info">1/2</span>
+            <button class="page-btn">›</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /p-content -->
+  </div><!-- /main-layout -->
+
+  <!-- ========== 主题面板 ========== -->
+  <div class="theme-panel" id="themePanel">
+    <div class="theme-panel-header">
+      <span data-i18n="theme.title">切换主题</span>
+      <button onclick="toggleThemePanel()">✕</button>
+    </div>
+    <div class="theme-list">
+      <div class="theme-group-label">✦ 浅色侧边栏</div>
+      <div class="theme-option active" data-theme="aurora-blue" onclick="setTheme('aurora-blue')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#1677FF,#69B1FF)"></div>
+        <span data-i18n="theme.auroraBlue">极光蓝</span>
+      </div>
+      <div class="theme-option" data-theme="twilight-purple" onclick="setTheme('twilight-purple')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#722ED1,#B37FEB)"></div>
+        <span data-i18n="theme.twilightPurple">暮光紫</span>
+      </div>
+      <div class="theme-option" data-theme="teal-green" onclick="setTheme('teal-green')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#00A76F,#66D9A8)"></div>
+        <span data-i18n="theme.tealGreen">松石绿</span>
+      </div>
+      <div class="theme-option" data-theme="lava-orange" onclick="setTheme('lava-orange')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#FF5C00,#FF9A6C)"></div>
+        <span data-i18n="theme.lavaOrange">熔岩橙</span>
+      </div>
+      <div class="theme-group-label">✦ 深色侧边栏</div>
+      <div class="theme-option" data-theme="deep-blue" onclick="setTheme('deep-blue')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#1A2A4A,#4096FF)"></div>
+        <span data-i18n="theme.deepBlue">深海蓝</span>
+      </div>
+      <div class="theme-option" data-theme="royal-purple" onclick="setTheme('royal-purple')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#2D1B69,#9D6BFF)"></div>
+        <span data-i18n="theme.royalPurple">尊贵紫</span>
+      </div>
+      <div class="theme-option" data-theme="forest-green" onclick="setTheme('forest-green')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#064E3B,#34D399)"></div>
+        <span data-i18n="theme.forestGreen">墨林绿</span>
+      </div>
+      <div class="theme-option" data-theme="sunset-orange" onclick="setTheme('sunset-orange')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#7C2D12,#F97316)"></div>
+        <span data-i18n="theme.sunsetOrange">落日橙</span>
+      </div>
+      <div class="theme-group-label">✦ 方案九·十二</div>
+      <div class="theme-option" data-theme="golden" onclick="setTheme('golden')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#2C1810,#B8860B)"></div>
+        <span data-i18n="theme.golden">黄金满地</span>
+      </div>
+      <div class="theme-option" data-theme="festive-red" onclick="setTheme('festive-red')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#3E1212,#C62828)"></div>
+        <span data-i18n="theme.festiveRed">恭贺欣喜</span>
+      </div>
+      <div class="theme-option" data-theme="marble" onclick="setTheme('marble')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#2A2A36,#7A7A8A)"></div>
+        <span data-i18n="theme.marble">大理石</span>
+      </div>
+      <div class="theme-option" data-theme="ink-wash" onclick="setTheme('ink-wash')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#1A1A1A,#2C2C2C)"></div>
+        <span data-i18n="theme.inkWash">宣纸水墨</span>
+      </div>
+    </div>
+  </div>
+  <div class="theme-overlay" id="themeOverlay" onclick="toggleThemePanel()"></div>
+
+  <!-- ========== 移动端侧边栏抽屉 ========== -->
+  <div class="mobile-sidebar-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-sidebar-drawer" id="mobileDrawer">
+    <div class="mobile-drawer-header">
+      <span class="logo">🏪 <span data-i18n="brand">收银通</span></span>
+      <button class="mobile-drawer-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <div class="mobile-drawer-items">
+      <div class="mobile-drawer-item" onclick="window.location.href='index.html';closeMobileMenu()">
+        <span>🏠</span> <span data-i18n="nav.overview">总览</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="window.location.href='checkout.html';closeMobileMenu()">
+        <span>🧾</span> <span data-i18n="nav.checkout">快速开单</span>
+      </div>
+      <div class="mobile-drawer-section">📅 预约管理</div>
+      <div class="mobile-drawer-sub">
+        <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>📋</span> 预约记录</div>
+        <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>🗓️</span> 预约看板</div>
+        <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>📊</span> 预约数据</div>
+        <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>👥</span> 可约员工</div>
+        <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>⚙️</span> 预约参数</div>
+      </div>
+      <div class="mobile-drawer-item active" onclick="window.location.href='products.html';closeMobileMenu()">
+        <span>📦</span> <span data-i18n="nav.products">商品管理</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="window.location.href='inventory.html';closeMobileMenu()">
+        <span>📊</span> <span data-i18n="nav.inventory">库存管理</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>📋</span> <span data-i18n="nav.orders">订单管理</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>👥</span> <span data-i18n="nav.members">会员管理</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>📊</span> <span data-i18n="nav.reports">营业报表</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>🎫</span> <span data-i18n="nav.promotion">优惠营销</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>⚙️</span> <span data-i18n="nav.settings">系统设置</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 移动端底部导航 ========== -->
+  <div class="mobile-bottom-nav">
+    <div class="mobile-nav-item" data-page="overview" onclick="window.location.href='index.html'">
+      <span class="nav-icon">🏠</span>
+      <span data-i18n="nav.overview">总览</span>
+    </div>
+    <div class="mobile-nav-item" data-page="checkout" onclick="window.location.href='checkout.html'">
+      <span class="nav-icon">🧾</span>
+      <span data-i18n="nav.checkout">开单</span>
+    </div>
+    <div class="mobile-nav-item" data-page="booking" onclick="window.location.href='booking.html'">
+      <span class="nav-icon">📅</span>
+      <span data-i18n="nav.appointment">预约</span>
+    </div>
+    <div class="mobile-nav-item active" data-page="products" onclick="goToProductHome()">
+      <span class="nav-icon">📦</span>
+      <span>商品</span>
+    </div>
+    <div class="mobile-nav-item" onclick="toggleMobileMenu()">
+      <span class="nav-icon">☰</span>
+      <span>更多</span>
+    </div>
+  </div>
+
+  <!-- ========== 产品类型弹窗（放在 app 外面） ========== -->
+  <div class="p-modal-overlay" id="typeModalOverlay" onmousedown="if(event.target===this)closeTypeModal()">
+    <div class="p-modal" onclick="event.stopPropagation()">
+      <div class="p-modal-header">
+        <span id="typeModalTitle">新增分类</span>
+        <button class="p-modal-close" onclick="closeTypeModal()">✕</button>
+      </div>
+      <div class="p-modal-body">
+        <div class="p-form-group">
+          <label>系列名称 <span style="color:red">*</span></label>
+          <input type="text" id="typeInputName" class="p-input" placeholder="请输入系列名称" />
+        </div>
+        <div class="p-form-group">
+          <label>排序 <span style="color:red">*</span></label>
+          <input type="number" id="typeInputSort" class="p-input" placeholder="请输入排序数字" value="1" min="1" />
+        </div>
+      </div>
+      <div class="p-modal-footer">
+        <button class="btn btn-outline" onclick="closeTypeModal()">取消</button>
+        <button class="btn btn-primary" id="typeModalSaveBtn" onclick="saveType()">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 产品品牌弹窗 ========== -->
+  <div class="p-modal-overlay" id="brandModalOverlay" onmousedown="if(event.target===this)closeBrandModal()">
+    <div class="p-modal" onclick="event.stopPropagation()">
+      <div class="p-modal-header">
+        <span id="brandModalTitle">新增品牌</span>
+        <button class="p-modal-close" onclick="closeBrandModal()">✕</button>
+      </div>
+      <div class="p-modal-body">
+        <div class="p-form-group">
+          <label>品牌名称 <span style="color:red">*</span></label>
+          <input type="text" id="brandInputName" class="p-input" placeholder="请输入品牌名称" />
+        </div>
+        <div class="p-form-group">
+          <label>状态</label>
+          <select id="brandInputStatus" class="p-input">
+            <option value="启用">启用</option>
+            <option value="停用">停用</option>
+          </select>
+        </div>
+      </div>
+      <div class="p-modal-footer">
+        <button class="btn btn-outline" onclick="closeBrandModal()">取消</button>
+        <button class="btn btn-primary" onclick="saveBrand()">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 适用部位弹窗 ========== -->
+  <div class="p-modal-overlay" id="scopeModalOverlay" onmousedown="if(event.target===this)closeScopeModal()">
+    <div class="p-modal" onclick="event.stopPropagation()">
+      <div class="p-modal-header">
+        <span id="scopeModalTitle">新增部位</span>
+        <button class="p-modal-close" onclick="closeScopeModal()">✕</button>
+      </div>
+      <div class="p-modal-body">
+        <div class="p-form-group">
+          <label>部位名称 <span style="color:red">*</span></label>
+          <input type="text" id="scopeInputName" class="p-input" placeholder="请输入部位名称" />
+        </div>
+        <div class="p-form-group">
+          <label>状态</label>
+          <select id="scopeInputStatus" class="p-input">
+            <option value="启用">启用</option>
+            <option value="停用">停用</option>
+          </select>
+        </div>
+      </div>
+      <div class="p-modal-footer">
+        <button class="btn btn-outline" onclick="closeScopeModal()">取消</button>
+        <button class="btn btn-primary" onclick="saveScope()">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 产品规格弹窗 ========== -->
+  <div class="p-modal-overlay" id="specModalOverlay" onmousedown="if(event.target===this)closeSpecModal()">
+    <div class="p-modal" onclick="event.stopPropagation()">
+      <div class="p-modal-header">
+        <span id="specModalTitle">新增规格</span>
+        <button class="p-modal-close" onclick="closeSpecModal()">✕</button>
+      </div>
+      <div class="p-modal-body">
+        <div class="p-form-group">
+          <label>规格名称 <span style="color:red">*</span></label>
+          <input type="text" id="specInputName" class="p-input" placeholder="请输入规格名称" />
+        </div>
+        <div class="p-form-group">
+          <label>排序 <span style="color:red">*</span></label>
+          <input type="number" id="specInputSort" class="p-input" placeholder="请输入排序数字" value="1" min="1" />
+        </div>
+      </div>
+      <div class="p-modal-footer">
+        <button class="btn btn-outline" onclick="closeSpecModal()">取消</button>
+        <button class="btn btn-primary" onclick="saveSpec()">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 项目分类弹窗 ========== -->
+  <div class="p-modal-overlay" id="categoryModalOverlay" onmousedown="if(event.target===this)closeCategoryModal()">
+    <div class="p-modal" onclick="event.stopPropagation()">
+      <div class="p-modal-header">
+        <span id="categoryModalTitle">新增分类</span>
+        <button class="p-modal-close" onclick="closeCategoryModal()">✕</button>
+      </div>
+      <div class="p-modal-body">
+        <div class="p-form-group">
+          <label>分类名称 <span style="color:red">*</span></label>
+          <input type="text" id="categoryInputName" class="p-input" placeholder="请输入分类名称" />
+        </div>
+        <div class="p-form-group">
+          <label>排序 <span style="color:red">*</span></label>
+          <input type="number" id="categoryInputSort" class="p-input" placeholder="请输入排序数字" value="1" min="1" />
+        </div>
+      </div>
+      <div class="p-modal-footer">
+        <button class="btn btn-outline" onclick="closeCategoryModal()">取消</button>
+        <button class="btn btn-primary" onclick="saveCategory()">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 自定义标签弹窗 ========== -->
+  <div class="p-modal-overlay" id="tagModalOverlay" onmousedown="if(event.target===this)closeTagModal()">
+    <div class="p-modal" onclick="event.stopPropagation()">
+      <div class="p-modal-header">
+        <span id="tagModalTitle">创建标签</span>
+        <button class="p-modal-close" onclick="closeTagModal()">✕</button>
+      </div>
+      <div class="p-modal-body">
+        <div class="p-form-group">
+          <label>标签名称 <span style="color:red">*</span></label>
+          <input type="text" id="tagInputName" class="p-input" placeholder="请输入标签名称" />
+        </div>
+        <div class="p-form-group">
+          <label>排序 <span style="color:red">*</span></label>
+          <input type="number" id="tagInputSort" class="p-input" placeholder="请输入排序数字" value="1" min="1" />
+        </div>
+      </div>
+      <div class="p-modal-footer">
+        <button class="btn btn-outline" onclick="closeTagModal()">取消</button>
+        <button class="btn btn-primary" onclick="saveTag()">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 手牌弹窗 ========== -->
+  <div class="p-modal-overlay" id="handCardModalOverlay" onmousedown="if(event.target===this)closeHandCardModal()">
+    <div class="p-modal" onclick="event.stopPropagation()">
+      <div class="p-modal-header">
+        <span id="handCardModalTitle">新增手牌</span>
+        <button class="p-modal-close" onclick="closeHandCardModal()">✕</button>
+      </div>
+      <div class="p-modal-body">
+        <div class="p-form-group">
+          <label>手牌编码 <span style="color:red">*</span></label>
+          <input type="text" id="handCardInputCode" class="p-input" placeholder="如 sh11" />
+        </div>
+        <div class="p-form-group">
+          <label>前置门店</label>
+          <input type="text" id="handCardInputStore" class="p-input" placeholder="默认三合900店" />
+        </div>
+      </div>
+      <div class="p-modal-footer">
+        <button class="btn btn-outline" onclick="closeHandCardModal()">取消</button>
+        <button class="btn btn-primary" onclick="saveHandCard()">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 手牌批量添加弹窗 ========== -->
+  <div class="p-modal-overlay" id="handCardBatchOverlay" onmousedown="if(event.target===this)closeHandCardBatchModal()">
+    <div class="p-modal" onclick="event.stopPropagation()">
+      <div class="p-modal-header">
+        <span id="handCardBatchTitle">批量添加手牌</span>
+        <button class="p-modal-close" onclick="closeHandCardBatchModal()">✕</button>
+      </div>
+      <div class="p-modal-body">
+        <div class="p-batch-form">
+          <div class="p-form-row">
+            <div class="p-form-group" style="flex:2">
+              <label>前缀 <span style="color:red">*</span></label>
+              <input type="text" id="batchPrefix" class="p-input" placeholder="如 sh" value="sh" />
+            </div>
+            <div class="p-form-group" style="flex:1">
+              <label>起始编号</label>
+              <input type="number" id="batchStart" class="p-input" value="101" min="1" />
+            </div>
+            <div class="p-form-group" style="flex:1">
+              <label>数量 <span style="color:red">*</span></label>
+              <input type="number" id="batchCount" class="p-input" value="10" min="1" max="1000" />
+            </div>
+            <div class="p-form-group" style="flex:2">
+              <label>后缀</label>
+              <input type="text" id="batchSuffix" class="p-input" placeholder="可选" />
+            </div>
+          </div>
+          <div class="p-form-group">
+            <label>前置门店</label>
+            <input type="text" id="batchStore" class="p-input" placeholder="默认三合900店" value="三合900店" />
+          </div>
+          <div class="p-batch-preview" id="batchPreview" style="margin-top:10px;padding:10px;background:var(--color-bg-secondary);border-radius:6px;font-size:13px;color:var(--color-text-secondary);line-height:1.6">
+            预览：sh101, sh102, sh103, sh104, sh105, sh106, sh107, sh108, sh109, sh110
+          </div>
+        </div>
+      </div>
+      <div class="p-modal-footer">
+        <button class="btn btn-outline" onclick="closeHandCardBatchModal()">取消</button>
+        <button class="btn btn-primary" onclick="batchAddHandCards()">确认批量添加</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 产品弹窗 ========== -->
+  <div class="p-modal-overlay" id="productModalOverlay" onmousedown="if(event.target===this)closeProductModal()">
+    <div class="p-modal">
+      <div class="p-modal-header">
+        <span id="productModalTitle">新增产品</span>
+        <div style="display:flex;gap:6px;align-items:center">
+          <button class="btn btn-outline modal-header-btn" onclick="closeProductModal()">取消</button>
+          <button class="btn btn-primary modal-header-btn modal-save-btn" onclick="saveProduct()">保存</button>
+          <button class="p-modal-close" onclick="closeProductModal()">✕</button>
+        </div>
+      </div>
+      <div class="p-modal-body">
+        <div class="p-form-row">
+          <div class="p-form-group" style="flex:1">
+            <label>产品名称 <span style="color:red">*</span></label>
+            <input type="text" id="productInputName" class="p-input" placeholder="请输入产品名称" />
+          </div>
+        </div>
+        <div class="p-form-row">
+          <div class="p-form-group" style="flex:1">
+            <label>产品规格 <span style="font-weight:normal;font-size:11px;color:var(--color-text-secondary)">(单位>细项)</span></label>
+            <div style="display:flex;gap:8px">
+              <select id="productSelectSpecUnit" class="p-input" style="flex:1" onchange="updateProductSpecItems()">
+                <option value="">选择单位</option>
+              </select>
+              <select id="productSelectSpecItem" class="p-input" style="flex:1.5">
+                <option value="">选择细项</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="p-form-row">
+          <div class="p-form-group" style="flex:1">
+            <label>产品类型</label>
+            <select id="productSelectType" class="p-input">
+              <option value="">选择类型</option>
+            </select>
+          </div>
+          <div class="p-form-group" style="flex:1">
+            <label>产品状态</label>
+            <select id="productSelectStatus" class="p-input">
+              <option>启用</option>
+              <option>停用</option>
+            </select>
+          </div>
+          <div class="p-form-group" style="flex:1">
+            <label>适用范围</label>
+            <select id="productSelectScope" class="p-input">
+              <option value="">选择适用范围</option>
+            </select>
+          </div>
+        </div>
+        <div class="p-form-row">
+          <div class="p-form-group" style="flex:1">
+            <label>所属品牌</label>
+            <select id="productSelectBrand" class="p-input">
+              <option value="">选择品牌</option>
+            </select>
+          </div>
+          <div class="p-form-group" style="flex:1">
+            <label>适用部位</label>
+            <input type="text" id="productInputPosition" class="p-input" placeholder="适用部位" />
+          </div>
+          <div class="p-form-group" style="flex:1">
+            <label>是否可为赠品</label>
+            <select id="productSelectGift" class="p-input">
+              <option>否</option>
+              <option>是</option>
+            </select>
+          </div>
+        </div>
+        <div class="p-form-row">
+          <div class="p-form-group" style="flex:1">
+            <label>标签 <span style="font-weight:normal;font-size:11px;color:var(--color-text-secondary)">(可多选)</span></label>
+            <div id="productTagCheckboxGroup" style="display:flex;flex-wrap:wrap;gap:8px;padding:4px 0">
+              <!-- 动态生成 -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>setMobileNavActive('products');</script>
+  <script src="products.js?v=20260427"></script>
+</body>
+</html>

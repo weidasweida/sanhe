@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>收银系统 - 预约管理</title>
+  <link rel="stylesheet" href="styles.css?v=20260427b" />
+  <link rel="stylesheet" href="booking.css?v=20260427b" />
+  <script src="shared-data.js?v=20260427b"></script>
+</head>
+<body>
+<div id="app" data-theme="aurora-blue">
+
+  <!-- ========== 顶部栏 ========== -->
+  <header class="header">
+    <div class="header-left">
+      <button class="mobile-back-btn" onclick="goBack()">‹</button>
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+      <div class="logo">🏪 <span data-i18n="brand">收银通</span></div>
+      <span class="version">v2.0</span>
+    </div>
+    <div class="header-right">
+      <button class="lang-switch" onclick="toggleLang()">EN / 中文</button>
+      <button class="theme-btn" onclick="toggleThemePanel()">🎨</button>
+      <div class="notification-badge">🔔 <span class="badge">3</span></div>
+      <div class="user-avatar">👤 <span data-i18n="admin">管理员</span></div>
+    </div>
+  </header>
+
+<!-- ========== 主布局 ========== -->
+  <div class="main-layout" style="margin-top:var(--header-height);">
+
+      <!-- ====== 1. 一级导航（左侧） ====== -->
+    <nav class="sidebar">
+      <div class="nav-item" onclick="window.location.href='index.html'">
+        <span class="nav-icon">🏠</span>
+        <span data-i18n="nav.overview">总览</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='checkout.html'">
+        <span class="nav-icon">🧾</span>
+        <span data-i18n="nav.checkout">快速开单</span>
+      </div>
+      <div class="nav-item active" onclick="window.location.href='booking.html'">
+        <span class="nav-icon">📅</span>
+        <span data-i18n="nav.appointment">预约管理</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='products.html'">
+        <span class="nav-icon">📦</span>
+        <span data-i18n="nav.products">商品管理</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='inventory.html'">
+        <span class="nav-icon">📦</span>
+        <span data-i18n="nav.inventory">库存管理</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='members.html'">
+        <span class="nav-icon">📋</span>
+        <span data-i18n="nav.orders">订单管理</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='members.html'">
+        <span class="nav-icon">👥</span>
+        <span data-i18n="nav.members">会员管理</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='reports.html'">
+        <span class="nav-icon">📊</span>
+        <span data-i18n="nav.reports">营业报表</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='marketing.html'">
+        <span class="nav-icon">🎫</span>
+        <span data-i18n="nav.promotion">优惠营销</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='settings.html'">
+        <span class="nav-icon">⚙️</span>
+        <span data-i18n="nav.settings">系统设置</span>
+      </div>
+      <div class="sidebar-footer">
+        <span class="store-name" data-i18n="storeName">旗舰店</span>
+        <span class="store-id">#001</span>
+      </div>
+    </nav>
+
+    <!-- ====== 内容区域 ====== -->
+    <div class="booking-content" style="flex:1;max-width:100%;width:100%;overflow-x:hidden;">
+
+      <!-- ====== 全局信息栏 (6) ====== -->
+      <div class="global-bar">
+        <div class="global-bar-left">
+          <span class="global-store">
+            🏪 <span data-i18n="booking.currentStore">三合堂001店</span>
+          </span>
+          <span class="global-date">2026-04-26</span>
+        </div>
+        <div class="global-bar-right">
+          <span class="global-stat">📅 <span data-i18n="booking.todayBookings">今日预约</span>: <strong>15</strong></span>
+          <span class="global-stat">✅ <span data-i18n="booking.completed">已完成</span>: <strong>8</strong></span>
+          <span class="global-stat">⏳ <span data-i18n="booking.pending">待消费</span>: <strong>7</strong></span>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB 1: 预约记录 (3+4+5+7) -->
+      <!-- ============================================================ -->
+      <div class="booking-tab-content active" data-tab="records">
+        <!-- 3. 标签页 -->
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchSubTab('records','all')" data-i18n="booking.all">全部</button>
+          <button class="tab-btn" onclick="switchSubTab('records','pending')" data-i18n="booking.pendingConfirm">待确认</button>
+          <button class="tab-btn" onclick="switchSubTab('records','confirmed')" data-i18n="booking.confirmed">已确认</button>
+          <button class="tab-btn" onclick="switchSubTab('records','completed')" data-i18n="booking.completed">已完成</button>
+          <button class="tab-btn" onclick="switchSubTab('records','cancelled')" data-i18n="booking.cancelled">已取消</button>
+          <button class="tab-btn" onclick="switchSubTab('records','expired')" data-i18n="booking.expired">已过期</button>
+        </div>
+
+        <!-- 5. 操作区 -->
+        <div class="action-bar">
+          <div class="action-left">
+            <div class="filter-group">
+              <span data-i18n="booking.dateRange">日期范围</span>
+              <input type="date" class="filter-input" value="2026-04-26" />
+              <span>—</span>
+              <input type="date" class="filter-input" value="2026-04-26" />
+            </div>
+            <input type="text" class="filter-input search-input"
+                   placeholder="顾客姓名 / 手机号" data-i18n-placeholder="booking.searchPlaceholder" />
+            <button class="btn btn-primary" onclick="searchRecords()">🔍 <span data-i18n="booking.query">查询</span></button>
+          </div>
+          <div class="action-right">
+            <button class="btn btn-outline" onclick="exportRecords()">📥 <span data-i18n="booking.export">导出</span></button>
+            <button class="btn btn-outline" onclick="printRecords()">🖨️ <span data-i18n="booking.print">打印</span></button>
+            <button class="btn btn-primary" onclick="addBooking()">➕ <span data-i18n="booking.addBooking">新增预约</span></button>
+          </div>
+        </div>
+
+        <!-- 4. 信息展示（表格） -->
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th data-i18n="booking.bookingTime">预约时间</th>
+                <th data-i18n="booking.bookingItem">预约项目</th>
+                <th data-i18n="booking.room">房间</th>
+                <th data-i18n="booking.staff">预约员工</th>
+                <th data-i18n="booking.customer">预约顾客</th>
+                <th data-i18n="booking.method">预约方式</th>
+                <th data-i18n="booking.paymentStatus">线上支付状态</th>
+                <th data-i18n="booking.createdAt">创建日期</th>
+                <th data-i18n="booking.remarks">备注</th>
+                <th data-i18n="booking.action">操作</th>
+              </tr>
+            </thead>
+            <tbody id="bookingTableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- 7. 页码条 -->
+        <div class="pagination-bar">
+          <div class="pagination-left">
+            <span data-i18n="booking.show">显示</span>
+            <select class="page-size-select">
+              <option>10</option>
+              <option selected>15</option>
+              <option>20</option>
+              <option>50</option>
+            </select>
+            <span data-i18n="booking.perPage">条/页</span>
+          </div>
+          <div class="pagination-right">
+            <span class="page-info" data-i18n="booking.pageInfo">共 15 条，第 1/1 页</span>
+            <button class="page-btn" disabled>‹</button>
+            <button class="page-btn" disabled>›</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB 2: 预约看板 -->
+      <!-- ============================================================ -->
+      <div class="booking-tab-content" data-tab="board">
+        <div class="board-header">
+          <div class="board-header-left">
+            <input type="date" class="filter-input" value="2026-04-26" />
+            <select class="filter-input store-select">
+              <option data-i18n="booking.currentStore">三合堂001店</option>
+            </select>
+            <label class="toggle-label">
+              <input type="checkbox" checked />
+              <span data-i18n="booking.expandAll">展开所有子项</span>
+            </label>
+          </div>
+          <div class="board-header-right">
+            <span class="board-stat" data-i18n="booking.specialPromo">特推单</span>
+            <span class="board-stat pending" data-i18n="booking.pendingConfirm">待确认</span>
+            <span class="board-stat rejected" data-i18n="booking.rejected">已拒绝</span>
+            <span class="board-stat cancelled" data-i18n="booking.cancelled">已取消</span>
+            <span class="board-stat completed" data-i18n="booking.completed">已完成</span>
+            <span class="board-stat closed" data-i18n="booking.closed">已关闭</span>
+          </div>
+        </div>
+
+        <div class="board-timeline">
+          <div class="board-timeline-header">
+            <div class="time-col-header"></div>
+            <div class="staff-col-header" data-i18n="booking.unassigned">未分配</div>
+            <div class="staff-col-header" data-i18n="booking.staff1">传达</div>
+            <div class="staff-col-header" data-i18n="booking.staff2">主餐师</div>
+            <div class="staff-col-header" data-i18n="booking.staff3">店员</div>
+            <div class="staff-col-header" data-i18n="booking.staff4">前台</div>
+            <div class="staff-col-header" data-i18n="booking.staff5">厨房操作</div>
+            <div class="staff-col-header">小龟</div>
+            <div class="staff-col-header">许聪聪</div>
+            <div class="staff-col-header">小六</div>
+          </div>
+          <div class="board-timeline-body" id="boardTimelineBody"></div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB 3: 预约数据 -->
+      <!-- ============================================================ -->
+      <div class="booking-tab-content" data-tab="data">
+        <div class="data-header">
+          <div class="data-header-left">
+            <select class="filter-input">
+              <option data-i18n="booking.currentStore">三合堂001店</option>
+            </select>
+            <input type="date" class="filter-input" value="2026-04-26" />
+            <span>—</span>
+            <input type="date" class="filter-input" value="2026-04-26" />
+          </div>
+          <div class="data-header-right">
+            <button class="tab-btn active" onclick="switchDataView('project')" data-i18n="booking.byProject">按项目</button>
+            <button class="tab-btn" onclick="switchDataView('staff')" data-i18n="booking.byStaff">按员工</button>
+          </div>
+        </div>
+
+        <!-- 统计卡片 -->
+        <div class="data-stats">
+          <div class="data-stat-card">
+            <div class="data-stat-value">81</div>
+            <div class="data-stat-label" data-i18n="booking.totalBookings">预约总数</div>
+          </div>
+          <div class="data-stat-card">
+            <div class="data-stat-value">1</div>
+            <div class="data-stat-label" data-i18n="booking.completed">预约完成</div>
+          </div>
+          <div class="data-stat-card">
+            <div class="data-stat-value">80</div>
+            <div class="data-stat-label" data-i18n="booking.overdue">超时预约</div>
+          </div>
+          <div class="data-stat-card">
+            <div class="data-stat-value">0</div>
+            <div class="data-stat-label" data-i18n="booking.cancelled">预约取消</div>
+          </div>
+          <div class="data-stat-card">
+            <div class="data-stat-value">0%</div>
+            <div class="data-stat-label" data-i18n="booking.conversion">转化率</div>
+          </div>
+        </div>
+
+        <!-- 数据表格 -->
+        <div class="table-wrap">
+          <table class="data-table" id="bookingDataTable">
+            <thead>
+              <tr>
+                <th data-i18n="booking.project">项目</th>
+                <th data-i18n="booking.totalBookings">预约总数</th>
+                <th data-i18n="booking.completed">预约完成</th>
+                <th data-i18n="booking.overdue">超时预约</th>
+                <th data-i18n="booking.cancelled">预约取消</th>
+                <th data-i18n="booking.conversion">转化率</th>
+              </tr>
+            </thead>
+            <tbody id="dataTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB 4: 可约员工 -->
+      <!-- ============================================================ -->
+      <div class="booking-tab-content" data-tab="staff">
+        <div class="action-bar">
+          <div class="action-left">
+            <input type="text" class="filter-input search-input"
+                   placeholder="搜索员工姓名" data-i18n-placeholder="booking.staffSearchPlaceholder" />
+            <button class="btn btn-primary" onclick="searchStaff()">🔍 <span data-i18n="booking.query">查询</span></button>
+          </div>
+          <div class="action-right">
+            <button class="btn btn-primary" onclick="addStaff()">➕ <span data-i18n="booking.addStaff">添加员工</span></button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th data-i18n="booking.sort">排序</th>
+                <th data-i18n="booking.staffName">员工姓名</th>
+                <th data-i18n="booking.keyProject">关键顾客项目</th>
+                <th data-i18n="booking.store">所属门店</th>
+                <th data-i18n="booking.action">操作</th>
+              </tr>
+            </thead>
+            <tbody id="staffTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- TAB 5: 预约参数 -->
+      <!-- ============================================================ -->
+      <div class="booking-tab-content" data-tab="params">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchSubTab('params','global')" data-i18n="booking.globalParams">全局参数</button>
+          <button class="tab-btn" onclick="switchSubTab('params','store')" data-i18n="booking.storeParams">门店参数</button>
+        </div>
+
+        <!-- 全局参数 -->
+        <div class="params-content active" data-subtab="global">
+          <div class="param-section">
+            <h3 class="param-section-title" data-i18n="booking.basicParams">基础参数设置</h3>
+            <div class="param-item">
+              <label data-i18n="booking.interval">预约时间间隔</label>
+              <select class="param-select" id="paramInterval" data-param="interval">
+                <option value="5">5分钟</option>
+                <option value="10">10分钟</option>
+                <option value="15" selected>15分钟</option>
+                <option value="20">20分钟</option>
+                <option value="30">30分钟</option>
+                <option value="60">60分钟</option>
+              </select>
+            </div>
+            <div class="param-item">
+              <label data-i18n="booking.reminder">预约提醒</label>
+              <div class="param-inline-vertical">
+                <div class="param-inline">
+                  <span data-i18n="booking.remindFirstBefore">第一次：提前</span>
+                  <select class="param-select reminder-days">
+                    <option value="1">1</option>
+                    <option value="2" selected>2</option>
+                    <option value="3">3</option>
+                  </select>
+                  <span data-i18n="booking.days">天</span>
+                </div>
+                <div class="param-inline">
+                  <span data-i18n="booking.remindSecondBefore">第二次：提前</span>
+                  <select class="param-select reminder-hours">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="5" selected>5</option>
+                    <option value="12">12</option>
+                    <option value="24">24</option>
+                  </select>
+                  <span data-i18n="booking.hours">小时</span>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="editReminderContent()" data-i18n="booking.editContent">编辑提醒内容</button>
+              </div>
+            </div>
+            <div class="param-item">
+              <label data-i18n="booking.recordLimit">预约记录</label>
+              <div class="param-inline">
+                <span data-i18n="booking.limitPerDay">每人每天最多</span>
+                <input type="number" class="param-input" id="paramRecordLimit" data-param="recordLimit" value="2" style="width:60px" />
+                <span data-i18n="booking.records">条预约记录</span>
+              </div>
+            </div>
+            <div class="param-item">
+              <label class="checkbox-item">
+                <input type="checkbox" id="paramAllowMultiItem" data-param="allowMultiItem" checked />
+                <span data-i18n="booking.allowMultiItem">允许选择多个项目</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="param-section">
+            <h3 class="param-section-title" data-i18n="booking.onlineParams">线上预约参数设置</h3>
+            <div class="param-item">
+              <label class="checkbox-item">
+                <input type="checkbox" id="paramEnableOnline" data-param="enableOnline" checked />
+                <span data-i18n="booking.enableOnline">开启门店线上预约</span>
+              </label>
+            </div>
+            <div class="param-item">
+              <label class="checkbox-item" style="align-items:flex-start;">
+                <input type="checkbox" id="paramSwitchStore" data-param="switchStore" checked />
+                <div>
+                  <span data-i18n="booking.switchStore">预约可切换店铺</span>
+                  <div class="param-checkbox-desc" data-i18n="booking.switchStoreDesc">开启则客户小程序预约可自主切换店铺(含访客及会员)</div>
+                </div>
+              </label>
+            </div>
+            <div class="param-item">
+              <label data-i18n="booking.onlineInterface">线上预约界面</label>
+              <div class="param-radio-group-vertical">
+                <label class="radio-item card-type-radio">
+                  <input type="radio" name="onlineMode" value="service" checked />
+                  <div class="radio-card">
+                    <div class="radio-card-title">📋 <span data-i18n="booking.modeService">约服务</span></div>
+                    <div class="radio-card-desc" data-i18n="booking.modeServiceDesc">可基于服务项目安排预约（先选服务再选时间）</div>
+                  </div>
+                </label>
+                <label class="radio-item card-type-radio">
+                  <input type="radio" name="onlineMode" value="time" />
+                  <div class="radio-card">
+                    <div class="radio-card-title">⏰ <span data-i18n="booking.modeTime">约时间</span></div>
+                    <div class="radio-card-desc" data-i18n="booking.modeTimeDesc">可基于自己空闲时间安排预约（先选时间再选服务）</div>
+                  </div>
+                </label>
+                <label class="radio-item card-type-radio">
+                  <input type="radio" name="onlineMode" value="staff" />
+                  <div class="radio-card">
+                    <div class="radio-card-title">👤 <span data-i18n="booking.modeStaff">约员工</span></div>
+                    <div class="radio-card-desc" data-i18n="booking.modeStaffDesc">可基于自己熟悉的员工安排预约（先选员工再选服务时间）</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 门店参数 -->
+        <div class="params-content" data-subtab="store">
+          <div class="param-section">
+            <div class="param-header-row">
+              <select class="param-select store-param-select">
+                <option data-i18n="booking.currentStore">三合堂001店</option>
+              </select>
+              <button class="btn btn-outline btn-sm" onclick="modifyBookingTime()" data-i18n="booking.modifyTime">修改预约时间</button>
+            </div>
+
+            <!-- 营业时间设置 -->
+            <div class="param-item">
+              <label data-i18n="booking.businessHours">营业时间</label>
+              <div class="param-inline-vertical" style="flex:1;">
+                <div class="param-inline">
+                  <span data-i18n="booking.weekday">工作日</span>
+                  <input type="time" class="param-input time-input" id="bizWeekdayStart" data-param="bizWeekdayStart" value="10:00" />
+                  <span>—</span>
+                  <input type="time" class="param-input time-input" id="bizWeekdayEnd" data-param="bizWeekdayEnd" value="21:00" />
+                </div>
+                <div class="param-inline">
+                  <span data-i18n="booking.weekend">周末</span>
+                  <input type="time" class="param-input time-input" id="bizWeekendStart" data-param="bizWeekendStart" value="10:00" />
+                  <span>—</span>
+                  <input type="time" class="param-input time-input" id="bizWeekendEnd" data-param="bizWeekendEnd" value="18:00" />
+                </div>
+              </div>
+            </div>
+
+            <!-- 预约模式 -->
+            <div class="param-item">
+              <label data-i18n="booking.bookingMode">预约模式</label>
+              <div class="param-inline">
+                <span class="param-badge" data-i18n="booking.simpleMode">简约模式</span>
+                <span class="param-desc" data-i18n="booking.simpleModeDesc">无需排班</span>
+              </div>
+            </div>
+
+            <!-- 可约天数（周一至周日） -->
+            <div class="param-item">
+              <label data-i18n="booking.availableDays">可约天数</label>
+              <div class="param-weekday-grid">
+                <label class="weekday-check"><input type="checkbox" checked /><span data-i18n="booking.mon">周一</span></label>
+                <label class="weekday-check"><input type="checkbox" checked /><span data-i18n="booking.tue">周二</span></label>
+                <label class="weekday-check"><input type="checkbox" checked /><span data-i18n="booking.wed">周三</span></label>
+                <label class="weekday-check"><input type="checkbox" checked /><span data-i18n="booking.thu">周四</span></label>
+                <label class="weekday-check"><input type="checkbox" checked /><span data-i18n="booking.fri">周五</span></label>
+                <label class="weekday-check"><input type="checkbox" checked /><span data-i18n="booking.sat">周六</span></label>
+                <label class="weekday-check"><input type="checkbox" checked /><span data-i18n="booking.sun">周日</span></label>
+              </div>
+            </div>
+
+            <!-- 客户占用时长规则 -->
+            <div class="param-item">
+              <label data-i18n="booking.occDurationRule">客户占用时长规则</label>
+              <div>
+                <div class="param-inline" style="margin-bottom:4px;">
+                  <input type="number" class="param-input" id="paramOccHours" value="0" style="width:60px" />
+                  <span data-i18n="booking.hours">小时</span>
+                  <input type="number" class="param-input" id="paramOccMinutes" value="30" style="width:60px" />
+                  <span data-i18n="booking.minutes">分钟</span>
+                </div>
+                <div class="param-field-desc" data-i18n="booking.occDurationRuleDesc">设置客户在店内的固定占用时长，作为预约时间槽的分配依据</div>
+              </div>
+            </div>
+
+            <!-- 服务时长计算 -->
+            <div class="param-item">
+              <label data-i18n="booking.serviceDuration">服务时长计算</label>
+              <div class="param-inline-vertical">
+                <label class="radio-item">
+                  <input type="radio" name="durationCalc" checked />
+                  <span data-i18n="booking.totalServiceTime">所选项目的总服务时长作为约单时长</span>
+                </label>
+                <label class="radio-item">
+                  <input type="radio" name="durationCalc" />
+                  <span data-i18n="booking.maxSelectedTime">选中的最大时长为每个约单时长</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- 多项目同时预约时长 -->
+            <div class="param-item">
+              <label data-i18n="booking.multiItemDuration">多项目同时预约时长</label>
+              <div>
+                <div class="param-inline" style="margin-bottom:4px;">
+                  <label class="radio-item">
+                    <input type="radio" name="multiDuration" value="accumulate" checked />
+                    <span data-i18n="booking.multiAccumulate">累加</span>
+                  </label>
+                  <label class="radio-item">
+                    <input type="radio" name="multiDuration" value="parallel" />
+                    <span data-i18n="booking.multiParallel">并行</span>
+                  </label>
+                </div>
+                <div class="param-field-desc" data-i18n="booking.multiItemDurationDesc">选择多个项目时，预约时长为各项目时长累加或按最长项目计算</div>
+              </div>
+            </div>
+
+            <!-- 到店分配人数 -->
+            <div class="param-item">
+              <label data-i18n="booking.arrivalAllocation">到店分配人数</label>
+              <div>
+                <div class="param-inline" style="margin-bottom:4px;">
+                  <span data-i18n="booking.perSlot">每个时段可分配</span>
+                  <input type="number" class="param-input" id="paramArrivalCount" value="3" style="width:60px" />
+                  <span data-i18n="booking.people">人</span>
+                </div>
+                <div class="param-field-desc" data-i18n="booking.arrivalAllocationDesc">同时到店人数上限，避免同一时段预约过多顾客</div>
+              </div>
+            </div>
+
+            <!-- 员工接单上限 -->
+            <div class="param-item">
+              <label data-i18n="booking.staffLimit">员工接单上限</label>
+              <div>
+                <div class="param-inline" style="margin-bottom:4px;">
+                  <span data-i18n="booking.maxPerStaff">每位员工最多可接</span>
+                  <input type="number" class="param-input" id="paramStaffMaxOrders" value="1" style="width:60px" />
+                  <span data-i18n="booking.orders">单</span>
+                  <button class="btn btn-outline btn-sm" style="margin-left:8px;" onclick="selectStaff()">👤 <span data-i18n="booking.selectStaff">选择</span></button>
+                </div>
+                <div class="param-field-desc" data-i18n="booking.staffLimitDesc">设置每位员工每个时段最多可接预约数，超出后该时段不可约</div>
+                <div id="paramStaffSelectedHint" class="param-field-desc" style="margin-top:4px;color:var(--color-primary);font-size:12px;">👥 当前对全体员工有效（未选择特定员工则默认全局生效）</div>
+                <div id="paramStaffTags" class="param-staff-tags" style="margin-top:4px;display:none;"></div>
+              </div>
+            </div>
+
+            <!-- 员工提醒 -->
+            <div class="param-item">
+              <label data-i18n="booking.staffReminder">员工提醒</label>
+              <div class="param-inline">
+                <select class="param-select" style="min-width:120px">
+                  <option data-i18n="booking.staff1">传达</option>
+                  <option data-i18n="booking.staff2">主餐师</option>
+                  <option data-i18n="booking.staff3">店员</option>
+                  <option data-i18n="booking.staff4">前台</option>
+                </select>
+                <button class="btn btn-outline btn-sm" onclick="sendStaffReminder()">
+                  📩 <span data-i18n="booking.sendReminder">发送提醒</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 消息通知 -->
+            <div class="param-item">
+              <label data-i18n="booking.notification">消息通知</label>
+              <div class="param-inline" style="gap: 20px;">
+                <label class="checkbox-item">
+                  <input type="checkbox" id="paramSmsNotify" checked />
+                  <span data-i18n="booking.smsNotify">📱 短信通知</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" id="paramWechatNotify" checked />
+                  <span data-i18n="booking.wechatNotify">💬 微信通知</span>
+                </label>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /booking-content -->
+  </div><!-- /main-layout -->
+
+  <!-- ========== 新增预约模态框 ========== -->
+  <div class="modal-overlay" id="bookingModalOverlay" onclick="closeNewBookingDialog()"></div>
+  <div class="modal" id="bookingModal">
+    <div class="modal-header">
+      <span data-i18n="booking.newBooking">新增预约</span>
+      <button onclick="closeNewBookingDialog()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group col-2">
+          <label data-i18n="booking.customerName">顾客姓名 *</label>
+          <input type="text" id="modalCustomer" class="form-input" placeholder="输入姓名" />
+        </div>
+        <div class="form-group col-2">
+          <label data-i18n="booking.phone">手机号 *</label>
+          <input type="tel" id="modalPhone" class="form-input" placeholder="输入手机号" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label data-i18n="booking.bookingTime">预约时间 *</label>
+          <input type="time" id="modalBookingTime" class="form-input" />
+        </div>
+        <div class="form-group">
+          <label data-i18n="booking.duration">时长（分钟）</label>
+          <select id="modalDuration" class="form-input">
+            <option value="15">15 分钟</option>
+            <option value="30" selected>30 分钟</option>
+            <option value="45">45 分钟</option>
+            <option value="60">60 分钟</option>
+            <option value="90">90 分钟</option>
+            <option value="120">120 分钟</option>
+            <option value="180">180 分钟</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label data-i18n="booking.bookingItem">预约项目</label>
+          <select id="modalItems" class="form-input">
+            <option value="">请选择项目</option>
+            <option value="大三通">大三通</option>
+            <option value="宫廷理筋">宫廷理筋</option>
+            <option value="针灸">针灸</option>
+            <option value="拔罐">拔罐</option>
+            <option value="脊柱正骨">脊柱正骨</option>
+            <option value="艾条悬灸">艾条悬灸</option>
+            <option value="经络推拿">经络推拿</option>
+            <option value="电针治疗">电针治疗</option>
+            <option value="全身放松推拿">全身放松推拿</option>
+            <option value="火龙罐">火龙罐</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-2">
+          <label data-i18n="booking.room">房间</label>
+          <select id="modalRoom" class="form-input">
+            <option value="">请选择房间</option>
+            <option value="101房">101房</option>
+            <option value="102房">102房</option>
+            <option value="103房">103房</option>
+            <option value="105房">105房</option>
+            <option value="大堂">大堂</option>
+          </select>
+        </div>
+        <div class="form-group col-2">
+          <label data-i18n="booking.staff">员工</label>
+          <select id="modalStaff" class="form-input">
+            <option value="未分配">未分配</option>
+            <option value="传达">传达</option>
+            <option value="主餐师">主餐师</option>
+            <option value="店员">店员</option>
+            <option value="前台">前台</option>
+            <option value="厨房操作">厨房操作</option>
+            <option value="小龟">小龟</option>
+            <option value="许聪聪">许聪聪</option>
+            <option value="小六">小六</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-2">
+          <label data-i18n="booking.method">预约方式</label>
+          <select id="modalMethod" class="form-input">
+            <option value="线下">线下</option>
+            <option value="线上">线上</option>
+          </select>
+        </div>
+        <div class="form-group col-2">
+          <label data-i18n="booking.remarks">备注</label>
+          <input type="text" id="modalRemark" class="form-input" placeholder="备注信息" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeNewBookingDialog()" data-i18n="booking.cancel">取消</button>
+      <button class="btn btn-primary" onclick="submitNewBooking()" data-i18n="booking.save">保存</button>
+    </div>
+  </div>
+
+  <!-- ========== 看板预约详情弹窗 ========== -->
+  <div class="modal-overlay" id="detailOverlay" onclick="closeBoardCardDetail()"></div>
+  <div class="modal modal-sm" id="detailModal">
+    <div class="modal-header">
+      <span>预约详情</span>
+      <button onclick="closeBoardCardDetail()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-grid">
+        <div class="detail-row">
+          <span class="detail-label">顾客</span>
+          <span class="detail-value" id="detailCustomer">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">手机号</span>
+          <span class="detail-value" id="detailPhone">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">时段</span>
+          <span class="detail-value" id="detailTime">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">员工</span>
+          <span class="detail-value" id="detailStaff">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">项目</span>
+          <span class="detail-value" id="detailItems">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">位置</span>
+          <span class="detail-value" id="detailLocation">—</span>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:16px;">
+        <button class="btn btn-outline" onclick="closeBoardCardDetail()">关闭</button>
+        <button class="btn btn-primary" style="margin-left:8px;" onclick="(function(){var m=document.getElementById('detailModal');openBoardCardEdit(m.dataset.cardTime,m.dataset.cardStaff)})()">编辑</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 看板预约编辑弹窗 ========== -->
+  <div class="modal-overlay" id="editOverlay" onclick="closeBoardCardEdit()"></div>
+  <div class="modal" id="editModal">
+    <div class="modal-header">
+      <span>编辑预约</span>
+      <button onclick="closeBoardCardEdit()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>顾客姓名 *</label>
+          <input type="text" id="editCustomer" class="form-input" />
+        </div>
+        <div class="form-group">
+          <label>手机号 *</label>
+          <input type="tel" id="editPhone" class="form-input" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>预约时间</label>
+          <input type="time" id="editTime" class="form-input" />
+        </div>
+        <div class="form-group">
+          <label>时长（分钟）</label>
+          <select id="editDuration" class="form-input">
+            <option value="15">15 分钟</option>
+            <option value="30">30 分钟</option>
+            <option value="45">45 分钟</option>
+            <option value="60">60 分钟</option>
+            <option value="90">90 分钟</option>
+            <option value="120">120 分钟</option>
+            <option value="180">180 分钟</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>员工</label>
+          <select id="editStaff" class="form-input">
+            <option value="未分配">未分配</option>
+            <option value="传达">传达</option>
+            <option value="主餐师">主餐师</option>
+            <option value="店员">店员</option>
+            <option value="前台">前台</option>
+            <option value="厨房操作">厨房操作</option>
+            <option value="小龟">小龟</option>
+            <option value="许聪聪">许聪聪</option>
+            <option value="小六">小六</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>项目</label>
+          <input type="text" id="editItems" class="form-input" placeholder="预约项目" />
+        </div>
+        <div class="form-group">
+          <label>位置</label>
+          <input type="text" id="editLocation" class="form-input" placeholder="房间号" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeBoardCardEdit()">取消</button>
+      <button class="btn btn-primary" onclick="submitBoardCardEdit()">保存</button>
+    </div>
+  </div>
+
+  <!-- ========== 主题面板 ========== -->
+  <div class="theme-panel" id="themePanel">
+    <div class="theme-panel-header">
+      <span data-i18n="theme.title">切换主题</span>
+      <button onclick="toggleThemePanel()">✕</button>
+    </div>
+    <div class="theme-list">
+      <div class="theme-group-label">✦ 浅色侧边栏</div>
+      <div class="theme-option active" data-theme="aurora-blue" onclick="setTheme('aurora-blue')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#1677FF,#69B1FF)"></div>
+        <span data-i18n="theme.auroraBlue">极光蓝</span>
+      </div>
+      <div class="theme-option" data-theme="twilight-purple" onclick="setTheme('twilight-purple')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#722ED1,#B37FEB)"></div>
+        <span data-i18n="theme.twilightPurple">暮光紫</span>
+      </div>
+      <div class="theme-option" data-theme="teal-green" onclick="setTheme('teal-green')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#00A76F,#66D9A8)"></div>
+        <span data-i18n="theme.tealGreen">松石绿</span>
+      </div>
+      <div class="theme-option" data-theme="lava-orange" onclick="setTheme('lava-orange')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#FF5C00,#FF9A6C)"></div>
+        <span data-i18n="theme.lavaOrange">熔岩橙</span>
+      </div>
+      <div class="theme-group-label">✦ 深色侧边栏</div>
+      <div class="theme-option" data-theme="deep-blue" onclick="setTheme('deep-blue')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#1A2A4A,#4096FF)"></div>
+        <span data-i18n="theme.deepBlue">深海蓝</span>
+      </div>
+      <div class="theme-option" data-theme="royal-purple" onclick="setTheme('royal-purple')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#2D1B69,#9D6BFF)"></div>
+        <span data-i18n="theme.royalPurple">尊贵紫</span>
+      </div>
+      <div class="theme-option" data-theme="forest-green" onclick="setTheme('forest-green')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#064E3B,#34D399)"></div>
+        <span data-i18n="theme.forestGreen">墨林绿</span>
+      </div>
+      <div class="theme-option" data-theme="sunset-orange" onclick="setTheme('sunset-orange')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#7C2D12,#F97316)"></div>
+        <span data-i18n="theme.sunsetOrange">落日橙</span>
+      </div>
+      <div class="theme-group-label">✦ 方案九·十二</div>
+      <div class="theme-option" data-theme="golden" onclick="setTheme('golden')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#2C1810,#B8860B)"></div>
+        <span data-i18n="theme.golden">黄金满地</span>
+      </div>
+      <div class="theme-option" data-theme="festive-red" onclick="setTheme('festive-red')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#3E1212,#C62828)"></div>
+        <span data-i18n="theme.festiveRed">恭贺欣喜</span>
+      </div>
+      <div class="theme-option" data-theme="marble" onclick="setTheme('marble')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#2A2A36,#7A7A8A)"></div>
+        <span data-i18n="theme.marble">大理石</span>
+      </div>
+      <div class="theme-option" data-theme="ink-wash" onclick="setTheme('ink-wash')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#1A1A1A,#2C2C2C)"></div>
+        <span data-i18n="theme.inkWash">宣纸水墨</span>
+      </div>
+    </div>
+  </div>
+  <div class="theme-overlay" id="themeOverlay" onclick="toggleThemePanel()"></div>
+
+  <!-- ========== 移动端侧边栏抽屉 ========== -->
+  <div class="mobile-sidebar-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-sidebar-drawer" id="mobileDrawer">
+    <div class="mobile-drawer-header">
+      <span class="logo">🏪 <span data-i18n="brand">收银通</span></span>
+      <button class="mobile-drawer-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <div class="mobile-drawer-items">
+      <div class="mobile-drawer-item" onclick="window.location.href='index.html';closeMobileMenu()">
+        <span>🏠</span> <span data-i18n="nav.overview">总览</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="window.location.href='checkout.html';closeMobileMenu()">
+        <span>🧾</span> <span data-i18n="nav.checkout">快速开单</span>
+      </div>
+      <div class="mobile-drawer-group expanded">
+        <div class="mobile-drawer-item mobile-drawer-group-header" onclick="toggleDrawerGroup(this)">
+          <span>📅</span> <span data-i18n="nav.appointment">预约管理</span>
+          <span class="group-arrow">▶</span>
+        </div>
+        <div class="mobile-drawer-sub">
+          <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>📋</span> 预约记录</div>
+          <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>🗓️</span> 预约看板</div>
+          <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>📊</span> 预约数据</div>
+          <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>👥</span> 可约员工</div>
+          <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>⚙️</span> 预约参数</div>
+        </div>
+      </div>
+      <div class="mobile-drawer-item" onclick="window.location.href='products.html';closeMobileMenu()">
+        <span>📦</span> <span data-i18n="nav.products">商品管理</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="window.location.href='inventory.html';closeMobileMenu()">
+        <span>📊</span> <span data-i18n="nav.inventory">库存管理</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>📋</span> <span data-i18n="nav.orders">订单管理</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>👥</span> <span data-i18n="nav.members">会员管理</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>📊</span> <span data-i18n="nav.reports">营业报表</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>🎫</span> <span data-i18n="nav.promotion">优惠营销</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>⚙️</span> <span data-i18n="nav.settings">系统设置</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 编辑提醒内容弹窗 ========== -->
+  <div class="modal-overlay" id="reminderContentOverlay" onclick="closeReminderContentDialog()"></div>
+  <div class="modal modal-lg reminder-modal" id="reminderContentModal">
+    <div class="modal-header">
+      <span data-i18n="booking.editContent">📬 编辑提醒内容</span>
+      <button onclick="closeReminderContentDialog()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="reminder-content-section first-reminder">
+        <div class="reminder-section-title">
+          <span class="reminder-badge badge-first">📬 第一次提醒</span>
+          <span class="reminder-timing" data-i18n="booking.remindFirstBefore">提前2天</span>
+        </div>
+        <div class="reminder-lang-row">
+          <div class="reminder-lang-col">
+            <div class="reminder-lang-label">🇨🇳 中文</div>
+            <textarea id="reminderContentFirstCN" class="form-input reminder-textarea" rows="4"
+              placeholder="中文提醒内容">亲爱的{customer}，您好！这里是三合堂。温馨提醒您，您在{time}预约了{items}（时长{duration}分钟），请注意安排好时间，期待您的光临~</textarea>
+          </div>
+          <div class="reminder-lang-col">
+            <div class="reminder-lang-label">🇬🇧 English</div>
+            <textarea id="reminderContentFirstEN" class="form-input reminder-textarea" rows="4"
+              placeholder="English reminder">Dear {customer}, this is Sanhe Hall. A friendly reminder that you have an appointment at {time} for {items} ({duration} min). Please plan your time accordingly. We look forward to seeing you~</textarea>
+          </div>
+        </div>
+        <div class="reminder-hint" data-i18n="booking.reminderHint">💡 可用变量：{customer} 顾客姓名 · {time} 预约时间 · {items} 预约项目 · {duration} 服务时长</div>
+      </div>
+      <div class="reminder-content-section second-reminder">
+        <div class="reminder-section-title">
+          <span class="reminder-badge badge-second">📩 第二次提醒</span>
+          <span class="reminder-timing" data-i18n="booking.remindSecondBefore">提前5小时</span>
+        </div>
+        <div class="reminder-lang-row">
+          <div class="reminder-lang-col">
+            <div class="reminder-lang-label">🇨🇳 中文</div>
+            <textarea id="reminderContentSecondCN" class="form-input reminder-textarea" rows="4"
+              placeholder="中文提醒内容">亲爱的{customer}，您的预约即将开始！{time}的{items}（时长{duration}分钟）马上就到了，请准时到店哦~如有变动请及时联系。</textarea>
+          </div>
+          <div class="reminder-lang-col">
+            <div class="reminder-lang-label">🇬🇧 English</div>
+            <textarea id="reminderContentSecondEN" class="form-input reminder-textarea" rows="4"
+              placeholder="English reminder">Dear {customer}, your appointment is coming up soon! {items} at {time} ({duration} min) is about to start. Please arrive on time~ Contact us if anything changes.</textarea>
+          </div>
+        </div>
+        <div class="reminder-hint" data-i18n="booking.reminderHint">💡 可用变量：{customer} 顾客姓名 · {time} 预约时间 · {items} 预约项目 · {duration} 服务时长</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeReminderContentDialog()" data-i18n="booking.cancel">取消</button>
+      <button class="btn btn-primary" onclick="saveReminderContent()" data-i18n="booking.save">保存</button>
+    </div>
+  </div>
+
+  <!-- ========== 移动端底部导航 ========== -->
+  <div class="mobile-bottom-nav">
+    <div class="mobile-nav-item" data-page="overview" onclick="navigateBottomNav('index.html')">
+      <span class="nav-icon">🏠</span>
+      <span data-i18n="nav.overview">总览</span>
+    </div>
+    <div class="mobile-nav-item" data-page="checkout" onclick="navigateBottomNav('checkout.html')">
+      <span class="nav-icon">🧾</span>
+      <span data-i18n="nav.checkout">开单</span>
+    </div>
+    <div class="mobile-nav-item active" data-page="booking" onclick="navigateBottomNav('booking.html')">
+      <span class="nav-icon">📅</span>
+      <span data-i18n="nav.appointment">预约</span>
+    </div>
+    <div class="mobile-nav-item" data-page="products" onclick="navigateBottomNav('products.html')">
+      <span class="nav-icon">📦</span>
+      <span>商品</span>
+    </div>
+    <div class="mobile-nav-item" onclick="toggleMobileMenu()">
+      <span class="nav-icon">☰</span>
+      <span>更多</span>
+    </div>
+  </div>
+
+  <script src="app.js?v=20260427b"></script>
+  <script src="booking.js?v=20260427b"></script>
+  <script>setMobileNavActive('booking');</script>
+
+  <!-- ========== 员工选择模态框（接单上限） ========== -->
+  <div class="modal-overlay" id="staffSelectOverlay" onclick="closeStaffSelect()"></div>
+  <div class="modal" id="staffSelectModal">
+    <div class="modal-header">
+      <span>选择适用员工</span>
+      <button onclick="closeStaffSelect()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <input type="text" id="staffSearchInput" class="form-input" placeholder="搜索员工姓名..." oninput="filterStaffSelection()" />
+        </div>
+      </div>
+      <div class="param-field-desc" style="margin-bottom:8px;">勾选需要限制接单上限的员工。不选任何员工则规则对全体员工生效。</div>
+      <div id="staffSelectList" style="max-height:300px;overflow-y:auto;"></div>
+    </div>
+    <div class="modal-footer" style="padding:12px 16px;display:flex;justify-content:flex-end;gap:8px;border-top:1px solid var(--color-border);">
+      <button class="btn btn-outline" onclick="clearStaffSelection()">清除选择（全员生效）</button>
+      <button class="btn btn-primary" onclick="confirmStaffSelection()">确定</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

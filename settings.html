@@ -1,0 +1,236 @@
+     1|<!DOCTYPE html>
+     2|<html lang="zh-CN">
+     3|<head>
+     4|  <meta charset="UTF-8" />
+     5|  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+     6|  <title>收银系统 - 系统设置</title>
+     7|  <link rel="stylesheet" href="styles.css?v=20260427" />
+     8|  <link rel="stylesheet" href="menu-common.css?v=1" />
+     9|  <link rel="stylesheet" href="settings.css?v=2" />
+    10|  <script src="shared-data.js?v=20260427"></script>
+    11|  <script src="app.js?v=20260427"></script>
+    12|</head>
+    13|<body>
+    14|<div id="app" data-theme="aurora-blue">
+    15|
+    16|  <!-- ========== 顶部栏 ========== -->
+    17|  <header class="header">
+    18|    <div class="header-left">
+    19|      <button class="mobile-back-btn" onclick="goBack()">‹</button>
+    20|      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+    21|      <div class="logo">🏪 <span data-i18n="brand">收银通</span></div>
+    22|      <span class="version">v2.0</span>
+    23|    </div>
+    24|    <div class="header-right">
+    25|      <button class="lang-switch" onclick="toggleLang()">EN / 中文</button>
+    26|      <button class="theme-btn" onclick="toggleThemePanel()">🎨</button>
+    27|      <div class="notification-badge">🔔 <span class="badge">3</span></div>
+    28|      <div class="user-avatar">👤 <span data-i18n="admin">管理员</span></div>
+    29|    </div>
+    30|  </header>
+    31|
+    32|  <!-- ========== 主区域（没有侧边栏，全屏设置） ========== -->
+    33|  <div class="settings-page">
+    34|
+    35|    <!-- 顶部标题栏 -->
+    36|    <div class="settings-topbar">
+    37|      <div class="settings-topbar-left">
+    38|        <span class="settings-title-icon">⚙️</span>
+    39|        <h1 data-i18n="settings.title">系统设置</h1>
+    40|      </div>
+    41|      <div class="settings-topbar-right">
+    42|        <div class="settings-search">
+    43|          <span class="search-icon">🔍</span>
+    44|          <input type="text" placeholder="搜索..." data-i18n-placeholder="settings.search" />
+    45|        </div>
+    46|        <div class="settings-user">
+    47|          <span>👤</span>
+    48|          <span>admin</span>
+    49|          <span class="settings-logout" onclick="logout()">🚪 退出</span>
+    50|        </div>
+    51|      </div>
+    52|    </div>
+    53|
+    54|    <!-- ====== 通知条 ====== -->
+    55|    <div class="settings-notice">
+    56|      <span class="notice-icon">⚠️</span>
+    57|      <span data-i18n="settings.notice">请确认已安装打印驱动后再进行打印设置，部分功能需管理员权限</span>
+    58|    </div>
+    59|
+    60|    <!-- ====== 设置内容网格 ====== -->
+    61|    <div class="menu-grid settings-page">
+    62|
+    63|      <!-- 模块1: 店铺设置 -->
+    64|      <div class="menu-card-group">
+    65|        <div class="menu-card-header">
+    66|          <span class="menu-card-header-icon">🏪</span>
+    67|          <span class="menu-card-header-title" data-i18n="settings.storeModule">店铺设置</span>
+    68|        </div>
+    69|        <div class="menu-card-items">
+    70|          <div class="menu-card-item" onclick="navigateTo('store-manage')">
+    71|            <div class="menu-item-icon">🏬</div>
+    72|            <div class="menu-item-label" data-i18n="settings.storeManage">门店管理</div>
+    73|          </div>
+    74|          <div class="menu-card-item" onclick="navigateTo('store-notice')">
+    75|            <div class="menu-item-icon">📢</div>
+    76|            <div class="menu-item-label" data-i18n="settings.storeNotice">店内通知</div>
+    77|          </div>
+    78|          <div class="menu-card-item" onclick="navigateTo('store-brand')">
+    79|            <div class="menu-item-icon">🏷️</div>
+    80|            <div class="menu-item-label" data-i18n="settings.storeBrand">所属品牌</div>
+    81|          </div>
+    82|          <div class="menu-card-item" onclick="navigateTo('operation-log')">
+    83|            <div class="menu-item-icon">📋</div>
+    84|            <div class="menu-item-label" data-i18n="settings.operationLog">操作日志</div>
+    85|          </div>
+    86|        </div>
+    87|      </div>
+    88|
+    89|      <!-- 模块2: 员工管理 -->
+    90|      <div class="menu-card-group">
+    91|        <div class="menu-card-header">
+    92|          <span class="menu-card-header-icon">👥</span>
+    93|          <span class="menu-card-header-title" data-i18n="settings.staffModule">员工管理</span>
+    94|        </div>
+    95|        <div class="menu-card-items">
+    96|          <div class="menu-card-item" onclick="navigateTo('account-permission')">
+    97|            <div class="menu-item-icon">🔑</div>
+    98|            <div class="menu-item-label" data-i18n="settings.accountPermission">账号权限</div>
+    99|          </div>
+   100|          <div class="menu-card-item" onclick="navigateTo('commission')">
+   101|            <div class="menu-item-icon">💰</div>
+   102|            <div class="menu-item-label" data-i18n="settings.commission">提成设置</div>
+   103|          </div>
+   104|          <div class="menu-card-item" onclick="navigateTo('scheduling')">
+   105|            <div class="menu-item-icon">📅</div>
+   106|            <div class="menu-item-label" data-i18n="settings.scheduling">排班设置</div>
+   107|          </div>
+   108|          <div class="menu-card-item" onclick="navigateTo('attendance')">
+   109|            <div class="menu-item-icon">⏰</div>
+   110|            <div class="menu-item-label" data-i18n="settings.attendance">考勤汇总</div>
+   111|          </div>
+   112|          <div class="menu-card-item" onclick="navigateTo('staff-goal')">
+   113|            <div class="menu-item-icon">🎯</div>
+   114|            <div class="menu-item-label" data-i18n="settings.staffGoal">员工目标</div>
+   115|          </div>
+   116|        </div>
+   117|      </div>
+   118|
+   119|      <!-- 模块3: 系统参数 -->
+   120|      <div class="menu-card-group">
+   121|        <div class="menu-card-header">
+   122|          <span class="menu-card-header-icon">⚙️</span>
+   123|          <span class="menu-card-header-title" data-i18n="settings.systemModule">系统参数</span>
+   124|        </div>
+   125|        <div class="menu-card-items">
+   126|          <div class="menu-card-item" onclick="navigateTo('consumption')">
+   127|            <div class="menu-item-icon">🔒</div>
+   128|            <div class="menu-item-label" data-i18n="settings.consumption">消费参数</div>
+   129|          </div>
+   130|          <div class="menu-card-item" onclick="navigateTo('message-push')">
+   131|            <div class="menu-item-icon">📧</div>
+   132|            <div class="menu-item-label" data-i18n="settings.messagePush">消息推送设置</div>
+   133|          </div>
+   134|          <div class="menu-card-item" onclick="navigateTo('custom-pay')">
+   135|            <div class="menu-item-icon">🔍</div>
+   136|            <div class="menu-item-label" data-i18n="settings.customPay">自定义支付</div>
+   137|          </div>
+   138|          <div class="menu-card-item" onclick="navigateTo('asset-transfer')">
+   139|            <div class="menu-item-icon">🏧</div>
+   140|            <div class="menu-item-label" data-i18n="settings.assetTransfer">资产转换</div>
+   141|          </div>
+   142|          <div class="menu-card-item" onclick="navigateTo('receipt')">
+   143|            <div class="menu-item-icon">🖨️</div>
+   144|            <div class="menu-item-label" data-i18n="settings.receipt">票据设置</div>
+   145|          </div>
+   146|          <div class="menu-card-item" onclick="navigateTo('distribution')">
+   147|            <div class="menu-item-icon">🔗</div>
+   148|            <div class="menu-item-label" data-i18n="settings.distribution">分销设置</div>
+   149|          </div>
+   150|        </div>
+   151|      </div>
+   152|
+   153|    </div><!-- /settings-grid -->
+   154|
+   155|    <!-- ====== 右侧进度/信息面板 ====== -->
+   156|    <div class="settings-side-info">
+   157|      <div class="progress-card">
+   158|        <div class="progress-circle" style="--p:12;">
+   159|          <span class="progress-value">12%</span>
+   160|        </div>
+   161|        <div class="progress-labels">
+   162|          <span class="progress-item">5.4%</span>
+   163|          <span class="progress-item">3%</span>
+   164|        </div>
+   165|      </div>
+   166|    </div>
+   167|
+   168|  </div><!-- /settings-page -->
+   169|
+   170|  <!-- ========== 主题面板 ========== -->
+   171|  <div class="theme-panel" id="themePanel">
+   172|    <div class="theme-panel-header">
+   173|      <span data-i18n="theme.title">切换主题</span>
+   174|      <button onclick="toggleThemePanel()">✕</button>
+   175|    </div>
+   176|    <div class="theme-list">
+   177|      <div class="theme-group-label">✦ 浅色侧边栏</div>
+   178|      <div class="theme-option active" data-theme="aurora-blue" onclick="setTheme('aurora-blue')">
+   179|        <div class="theme-preview" style="background:linear-gradient(135deg,#1677FF,#69B1FF)"></div>
+   180|        <span data-i18n="theme.auroraBlue">极光蓝</span>
+   181|      </div>
+   182|      <div class="theme-option" data-theme="twilight-purple" onclick="setTheme('twilight-purple')">
+   183|        <div class="theme-preview" style="background:linear-gradient(135deg,#722ED1,#B37FEB)"></div>
+   184|        <span data-i18n="theme.twilightPurple">暮光紫</span>
+   185|      </div>
+   186|      <div class="theme-option" data-theme="teal-green" onclick="setTheme('teal-green')">
+   187|        <div class="theme-preview" style="background:linear-gradient(135deg,#00A76F,#66D9A8)"></div>
+   188|        <span data-i18n="theme.tealGreen">松石绿</span>
+   189|      </div>
+   190|      <div class="theme-option" data-theme="lava-orange" onclick="setTheme('lava-orange')">
+   191|        <div class="theme-preview" style="background:linear-gradient(135deg,#FF5C00,#FF9A6C)"></div>
+   192|        <span data-i18n="theme.lavaOrange">熔岩橙</span>
+   193|      </div>
+   194|      <div class="theme-group-label">✦ 深色侧边栏</div>
+   195|      <div class="theme-option" data-theme="deep-blue" onclick="setTheme('deep-blue')">
+   196|        <div class="theme-preview" style="background:linear-gradient(135deg,#1A2A4A,#3B5998)"></div>
+   197|        <span data-i18n="theme.deepBlue">深海蓝</span>
+   198|      </div>
+   199|      <div class="theme-option" data-theme="royal-purple" onclick="setTheme('royal-purple')">
+   200|        <div class="theme-preview" style="background:linear-gradient(135deg,#2D1B4E,#6B3FA0)"></div>
+   201|        <span data-i18n="theme.royalPurple">尊贵紫</span>
+   202|      </div>
+   203|      <div class="theme-option" data-theme="forest-green" onclick="setTheme('forest-green')">
+   204|        <div class="theme-preview" style="background:linear-gradient(135deg,#1A3A2A,#2D8A5E)"></div>
+   205|        <span data-i18n="theme.forestGreen">墨林绿</span>
+   206|      </div>
+   207|      <div class="theme-option" data-theme="sunset-orange" onclick="setTheme('sunset-orange')">
+   208|        <div class="theme-preview" style="background:linear-gradient(135deg,#4A1A0A,#C74B20)"></div>
+   209|        <span data-i18n="theme.sunsetOrange">落日橙</span>
+   210|      </div>
+   211|      <div class="theme-group-label">✦ 特色主题</div>
+   212|      <div class="theme-option" data-theme="golden" onclick="setTheme('golden')">
+   213|        <div class="theme-preview" style="background:linear-gradient(135deg,#7A5A00,#D4A017)"></div>
+   214|        <span data-i18n="theme.golden">黄金满地</span>
+   215|      </div>
+   216|      <div class="theme-option" data-theme="festive-red" onclick="setTheme('festive-red')">
+   217|        <div class="theme-preview" style="background:linear-gradient(135deg,#5C1010,#C41E3A)"></div>
+   218|        <span data-i18n="theme.festiveRed">恭贺欣喜</span>
+   219|      </div>
+   220|      <div class="theme-option" data-theme="marble" onclick="setTheme('marble')">
+   221|        <div class="theme-preview" style="background:linear-gradient(135deg,#8B8B8B,#D4D4D4)"></div>
+   222|        <span data-i18n="theme.marble">大理石</span>
+   223|      </div>
+   224|      <div class="theme-option" data-theme="ink-wash" onclick="setTheme('ink-wash')">
+   225|        <div class="theme-preview" style="background:linear-gradient(135deg,#1A1A2E,#4A4A6A)"></div>
+   226|        <span data-i18n="theme.inkWash">宣纸水墨</span>
+   227|      </div>
+   228|    </div>
+   229|  </div>
+   230|  <div class="modal-overlay" id="themeOverlay" onclick="toggleThemePanel()"></div>
+   231|
+   232|  <script src="settings.js?v=2"></script>
+   233|</div>
+   234|</body>
+   235|</html>
+   236|

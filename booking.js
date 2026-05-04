@@ -930,6 +930,112 @@ function searchStaff() {
   showToast(currentLang === 'zh' ? '正在搜索...' : 'Searching...', 'info');
 }
 
+// ====== 员工选择（接单上限） ======
+// 已选员工列表（存员工名字）
+let selectedStaffLimit = [];
+
+function selectStaff() {
+  // 读取当前已选员工列表
+  renderStaffSelectList();
+  document.getElementById('staffSelectModal').classList.add('open');
+  document.getElementById('staffSelectOverlay').classList.add('open');
+}
+
+function closeStaffSelect() {
+  document.getElementById('staffSelectModal').classList.remove('open');
+  document.getElementById('staffSelectOverlay').classList.remove('open');
+}
+
+function renderStaffSelectList(filter) {
+  const list = document.getElementById('staffSelectList');
+  // 使用 boardStaff 里的员工（去掉 '未分配'）
+  const staffList = boardStaff.filter(s => s !== '未分配');
+  const filtered = filter
+    ? staffList.filter(s => s.includes(filter))
+    : staffList;
+
+  list.innerHTML = filtered.map(name => {
+    const checked = selectedStaffLimit.includes(name);
+    return `<label class="checkbox-item" style="padding:6px 0;cursor:pointer;">
+      <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleStaffSelectItem('${name}')" />
+      <span>👤 ${name}</span>
+    </label>`;
+  }).join('');
+
+  // 全选按钮
+  if (!filter) {
+    const allChecked = filtered.length > 0 && filtered.every(s => selectedStaffLimit.includes(s));
+    const allBtn = `<div style="padding:8px 0;border-bottom:1px solid var(--color-border);margin-bottom:4px;">
+      <label class="checkbox-item" style="cursor:pointer;">
+        <input type="checkbox" ${allChecked ? 'checked' : ''} onchange="toggleAllStaffSelect(this.checked)" />
+        <span><strong>全选</strong></span>
+      </label>
+    </div>`;
+    list.innerHTML = allBtn + list.innerHTML;
+  }
+}
+
+function filterStaffSelection() {
+  const q = document.getElementById('staffSearchInput').value.trim();
+  renderStaffSelectList(q);
+}
+
+function toggleStaffSelectItem(name) {
+  const idx = selectedStaffLimit.indexOf(name);
+  if (idx >= 0) {
+    selectedStaffLimit.splice(idx, 1);
+  } else {
+    selectedStaffLimit.push(name);
+  }
+}
+
+function toggleAllStaffSelect(checked) {
+  const staffList = boardStaff.filter(s => s !== '未分配');
+  if (checked) {
+    selectedStaffLimit = [...staffList];
+  } else {
+    selectedStaffLimit = [];
+  }
+  // 重新渲染列表
+  const q = document.getElementById('staffSearchInput').value.trim();
+  renderStaffSelectList(q);
+}
+
+function clearStaffSelection() {
+  selectedStaffLimit = [];
+  document.getElementById('staffSearchInput').value = '';
+  renderStaffSelectList();
+}
+
+function confirmStaffSelection() {
+  // 更新 UI 显示
+  const hint = document.getElementById('paramStaffSelectedHint');
+  const tags = document.getElementById('paramStaffTags');
+
+  if (selectedStaffLimit.length === 0) {
+    hint.textContent = '👥 当前对全体员工有效（未选择特定员工则默认全局生效）';
+    hint.style.display = 'block';
+    tags.style.display = 'none';
+  } else {
+    hint.textContent = `👥 已选择 ${selectedStaffLimit.length} 位员工`;
+    hint.style.display = 'block';
+    tags.innerHTML = selectedStaffLimit.map(name =>
+      `<span class="staff-tag">👤 ${name} <span class="staff-tag-remove" onclick="removeStaffFromLimit('${name}')">×</span></span>`
+    ).join('');
+    tags.style.display = 'flex';
+  }
+
+  closeStaffSelect();
+}
+
+function removeStaffFromLimit(name) {
+  const idx = selectedStaffLimit.indexOf(name);
+  if (idx >= 0) {
+    selectedStaffLimit.splice(idx, 1);
+  }
+  confirmStaffSelection(); // 重新渲染
+}
+
 function addStaff() {
   showToast(currentLang === 'zh' ? '打开添加员工弹窗' : 'Add Staff Dialog', 'success');
 }

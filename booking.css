@@ -1185,3 +1185,32 @@ select.form-input {
   border-color: var(--color-primary);
   color: var(--color-primary);
 }
+
+/* ====== 员工选择标签 ====== */
+.param-staff-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.staff-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-primary-bg, rgba(22,119,255,0.1));
+  color: var(--color-primary, #1677FF);
+  border: 1px solid var(--color-primary-border, rgba(22,119,255,0.3));
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  line-height: 22px;
+}
+.staff-tag-remove {
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  opacity: 0.6;
+  margin-left: 2px;
+}
+.staff-tag-remove:hover {
+  opacity: 1;
+}

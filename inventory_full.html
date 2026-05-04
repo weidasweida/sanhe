@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>收银系统 - 库存管理</title>
+  <link rel="stylesheet" href="styles.css?v=20260427" />
+  <link rel="stylesheet" href="inventory.css?v=20260427" />
+  <script src="shared-data.js?v=20260427"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div id="app" data-theme="aurora-blue">
+
+  <!-- ========== 顶部栏 ========== -->
+  <header class="header">
+    <div class="header-left">
+      <button class="mobile-back-btn" onclick="goBack()">‹</button>
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+      <div class="logo">🏪 <span data-i18n="brand">收银通</span></div>
+      <span class="version">v2.0</span>
+    </div>
+    <div class="header-right">
+      <button class="lang-switch" onclick="toggleLang()">EN / 中文</button>
+      <button class="theme-btn" onclick="toggleThemePanel()">🎨</button>
+      <div class="notification-badge">🔔 <span class="badge">3</span></div>
+      <div class="user-avatar">👤 <span data-i18n="admin">管理员</span></div>
+    </div>
+  </header>
+
+  <!-- ========== Mobile Sub Nav ========== -->
+  <div class="mobile-subnav">
+    <div class="mobile-subnav-scroll">
+      <div class="mobile-subnav-item active" onclick="switchMobileSubTab(this,'inventory','overview')">
+        <span class="subnav-bg"></span>
+        <span class="subnav-label">🏠 <span data-i18n="inv.overview">库存总览</span></span>
+      </div>
+      <div class="mobile-subnav-item" onclick="switchMobileSubTab(this,'inventory','inbound')">
+        <span class="subnav-bg"></span>
+        <span class="subnav-label">📥 <span data-i18n="inv.inbound">入库管理</span></span>
+      </div>
+      <div class="mobile-subnav-item" onclick="switchMobileSubTab(this,'inventory','outbound')">
+        <span class="subnav-bg"></span>
+        <span class="subnav-label">📤 <span data-i18n="inv.outbound">出库管理</span></span>
+      </div>
+      <div class="mobile-subnav-item" onclick="switchMobileSubTab(this,'inventory','transfer')">
+        <span class="subnav-bg"></span>
+        <span class="subnav-label">🔄 <span data-i18n="inv.transfer">调拨管理</span></span>
+      </div>
+      <div class="mobile-subnav-item" onclick="switchMobileSubTab(this,'inventory','check')">
+        <span class="subnav-bg"></span>
+        <span class="subnav-label">✅ <span data-i18n="inv.cycleCount">盘点管理</span></span>
+      </div>
+      <div class="mobile-subnav-item" onclick="switchMobileSubTab(this,'inventory','alert')">
+        <span class="subnav-bg"></span>
+        <span class="subnav-label">⚡ <span data-i18n="inv.alert">库存预警</span></span>
+      </div>
+      <div class="mobile-subnav-item" onclick="switchMobileSubTab(this,'inventory','reports')">
+        <span class="subnav-bg"></span>
+        <span class="subnav-label">📊 <span data-i18n="inv.reports">库存报表</span></span>
+      </div>
+      <div class="mobile-subnav-item" onclick="switchMobileSubTab(this,'inventory','warehouse')">
+        <span class="subnav-bg"></span>
+        <span class="subnav-label">🏭 <span data-i18n="inv.warehouse">仓库设置</span></span>
+      </div>
+    </div>
+    <div class="mobile-subnav-back" onclick="goBack()">‹</div>
+  </div>
+
+  <!-- ========== 主布局 ========== -->
+  <div class="main-layout" style="margin-top:var(--header-height);">
+
+    <!-- 左侧主导航 -->
+    <nav class="sidebar">
+      <div class="nav-item" onclick="window.location.href='index.html'">
+        <span class="nav-icon">🏠</span>
+        <span data-i18n="nav.overview">总览</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='checkout.html'">
+        <span class="nav-icon">🧾</span>
+        <span data-i18n="nav.checkout">快速开单</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='booking.html'">
+        <span class="nav-icon">📅</span>
+        <span data-i18n="nav.booking">预约管理</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='products.html'">
+        <span class="nav-icon">📦</span>
+        <span data-i18n="nav.products">商品管理</span>
+      </div>
+      <div class="nav-item active" onclick="window.location.href='inventory.html'">
+        <span class="nav-icon">📊</span>
+        <span data-i18n="nav.inventory">库存管理</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='members.html'">
+        <span class="nav-icon">📋</span>
+        <span data-i18n="nav.orders">订单管理</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='members.html'">
+        <span class="nav-icon">👥</span>
+        <span data-i18n="nav.members">会员管理</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='reports.html'">
+        <span class="nav-icon">📊</span>
+        <span data-i18n="nav.reports">营业报表</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='marketing.html'">
+        <span class="nav-icon">🎫</span>
+        <span data-i18n="nav.promotion">优惠营销</span>
+      </div>
+      <div class="nav-item" onclick="window.location.href='settings.html'">
+        <span class="nav-icon">⚙️</span>
+        <span data-i18n="nav.settings">系统设置</span>
+      </div>
+      <div class="sidebar-footer">
+        <span class="store-name" data-i18n="storeName">旗舰店</span>
+        <span class="store-id">#001</span>
+      </div>
+    </nav>
+
+    <!-- 内容区域：二级侧边栏 + 内容 -->
+    <div style="display:flex;flex:1;overflow:hidden;">
+
+      <!-- 二级侧边栏 -->
+      <div class="i-sub-sidebar">
+        <div class="i-sub-title" data-i18n="nav.inventory">库存管理</div>
+        <div class="i-sub-section-title" data-i18n="inv.operations">库存操作</div>
+        <div class="i-sub-item active" onclick="switchInventoryTab('overview', this)">
+          <span class="i-sub-icon">🏠</span>
+          <span data-i18n="inv.overview">库存总览</span>
+        </div>
+        <div class="i-sub-item" onclick="switchInventoryTab('inbound', this)">
+          <span class="i-sub-icon">📥</span>
+          <span data-i18n="inv.inbound">入库管理</span>
+        </div>
+        <div class="i-sub-item" onclick="switchInventoryTab('outbound', this)">
+          <span class="i-sub-icon">📤</span>
+          <span data-i18n="inv.outbound">出库管理</span>
+        </div>
+        <div class="i-sub-item" onclick="switchInventoryTab('transfer', this)">
+          <span class="i-sub-icon">🔄</span>
+          <span data-i18n="inv.transfer">调拨管理</span>
+        </div>
+        <div class="i-sub-item" onclick="switchInventoryTab('check', this)">
+          <span class="i-sub-icon">✅</span>
+          <span data-i18n="inv.cycleCount">盘点管理</span>
+        </div>
+        <div class="i-sub-section-title" data-i18n="inv.settings">基础配置</div>
+        <div class="i-sub-item" onclick="switchInventoryTab('alert', this)">
+          <span class="i-sub-icon">⚡</span>
+          <span data-i18n="inv.alert">库存预警</span>
+        </div>
+        <div class="i-sub-item" onclick="switchInventoryTab('reports', this)">
+          <span class="i-sub-icon">📊</span>
+          <span data-i18n="inv.reports">库存报表</span>
+        </div>
+        <div class="i-sub-item" onclick="switchInventoryTab('warehouse', this)">
+          <span class="i-sub-icon">🏭</span>
+          <span data-i18n="inv.warehouse">仓库设置</span>
+        </div>
+      </div>
+
+      <!-- 右侧内容区 -->
+      <div class="i-content">
+
+        <!-- 全局顶栏 -->
+        <div class="i-global-bar">
+          <div class="i-global-left">
+            <span data-i18n="inv.stockSummary">库存概况</span>
+          </div>
+          <div class="i-global-right">
+            <span class="i-global-stat">📦 <strong id="invTotalSku">156</strong> <span data-i18n="inv.skuCount">SKU</span></span>
+            <span class="i-global-stat">📥 <strong id="invTotalQty">8,320</strong> <span data-i18n="inv.totalQty">件</span></span>
+            <span class="i-global-stat">⚡ <strong id="invAlertCount" style="color:#FF7D00;">5</strong> <span data-i18n="inv.alertItems">预警</span></span>
+          </div>
+        </div>
+
+        <!-- ===== Tab: 库存总览 ===== -->
+        <div class="i-tab-content active" id="tab-overview">
+          <!-- 四个指标卡片 -->
+          <div class="i-metrics">
+            <div class="i-metric-card">
+              <div class="i-metric-icon" style="background:var(--color-success-bg);">📦</div>
+              <div class="i-metric-body">
+                <div class="i-metric-value">156</div>
+                <div class="i-metric-label" data-i18n="inv.skuCount">SKU总数</div>
+              </div>
+            </div>
+            <div class="i-metric-card">
+              <div class="i-metric-icon" style="background:var(--color-info-bg);">📥</div>
+              <div class="i-metric-body">
+                <div class="i-metric-value">8,320</div>
+                <div class="i-metric-label" data-i18n="inv.totalStock">总库存量</div>
+              </div>
+            </div>
+            <div class="i-metric-card">
+              <div class="i-metric-icon" style="background:var(--color-warning-bg);">💰</div>
+              <div class="i-metric-body">
+                <div class="i-metric-value">¥86,420</div>
+                <div class="i-metric-label" data-i18n="inv.stockValue">库存价值</div>
+              </div>
+            </div>
+            <div class="i-metric-card">
+              <div class="i-metric-icon" style="background:var(--color-danger-bg);">⚡</div>
+              <div class="i-metric-body">
+                <div class="i-metric-value">5</div>
+                <div class="i-metric-label" data-i18n="inv.alertItems">预警项目</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 快捷入口卡片 -->
+          <div class="i-overview-content">
+            <div class="i-card-grid">
+              <div class="i-big-card" onclick="switchInventoryTab('inbound')">
+                <div class="i-big-icon">📥</div>
+                <div class="i-big-label" data-i18n="inv.inbound">入库管理</div>
+                <div class="i-big-desc" data-i18n="inv.inboundDesc">采购入库、退货入库</div>
+              </div>
+              <div class="i-big-card" onclick="switchInventoryTab('outbound')">
+                <div class="i-big-icon">📤</div>
+                <div class="i-big-label" data-i18n="inv.outbound">出库管理</div>
+                <div class="i-big-desc" data-i18n="inv.outboundDesc">销售出库、领用出库</div>
+              </div>
+              <div class="i-big-card" onclick="switchInventoryTab('transfer')">
+                <div class="i-big-icon">🔄</div>
+                <div class="i-big-label" data-i18n="inv.transfer">调拨管理</div>
+                <div class="i-big-desc" data-i18n="inv.transferDesc">仓库间调拨</div>
+              </div>
+              <div class="i-big-card" onclick="switchInventoryTab('check')">
+                <div class="i-big-icon">✅</div>
+                <div class="i-big-label" data-i18n="inv.cycleCount">盘点管理</div>
+                <div class="i-big-desc" data-i18n="inv.cycleCountDesc">定期/临时盘点</div>
+              </div>
+            </div>
+
+            <!-- 最近动态 -->
+            <div>
+              <div class="i-section-title" data-i18n="inv.recentActivity">最近动态</div>
+              <div class="i-recent-list" id="recentActivityList"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== Tab: 入库管理 ===== -->
+        <div class="i-tab-content" id="tab-inbound">
+          <div class="i-action-bar">
+            <div class="i-action-left">
+              <input type="text" class="i-filter i-search" placeholder="搜索入库单号 / 商品..." id="inboundSearch" oninput="filterInbound()" data-i18n-placeholder="inv.searchInbound" />
+              <select class="i-filter" id="inboundTypeFilter" onchange="filterInbound()">
+                <option value="all" data-i18n="inv.allTypes">全部类型</option>
+                <option value="purchase" data-i18n="inv.purchase">采购入库</option>
+                <option value="return" data-i18n="inv.returnIn">退货入库</option>
+                <option value="other" data-i18n="inv.otherIn">其他入库</option>
+              </select>
+              <select class="i-filter" id="inboundStatusFilter" onchange="filterInbound()">
+                <option value="all" data-i18n="inv.allStatus">全部状态</option>
+                <option value="done" data-i18n="inv.completed">已完成</option>
+                <option value="pending" data-i18n="inv.pending">待审核</option>
+              </select>
+            </div>
+            <div class="i-action-right">
+              <button class="btn btn-primary" onclick="openInboundModal()">
+                <span>➕</span> <span data-i18n="inv.newInbound">新增入库</span>
+              </button>
+            </div>
+          </div>
+          <div class="i-table-wrap">
+            <table class="i-table">
+              <thead>
+                <tr>
+                  <th data-i18n="inv.orderNo">入库单号</th>
+                  <th data-i18n="inv.type">类型</th>
+                  <th data-i18n="inv.date">入库日期</th>
+                  <th data-i18n="inv.supplier">供应商</th>
+                  <th data-i18n="inv.items">商品数</th>
+                  <th data-i18n="inv.totalCost">入库金额</th>
+                  <th data-i18n="inv.status">状态</th>
+                  <th data-i18n="inv.operator">操作人</th>
+                  <th data-i18n="inv.actions">操作</th>
+                </tr>
+              </thead>
+              <tbody id="inboundTableBody"></tbody>
+            </table>
+          </div>
+          <div class="i-pagination" id="inboundPagination"></div>
+        </div>
+
+        <!-- ===== Tab: 出库管理 ===== -->
+        <div class="i-tab-content" id="tab-outbound">
+          <div class="i-action-bar">
+            <div class="i-action-left">
+              <input type="text" class="i-filter i-search" placeholder="搜索出库单号 / 商品..." id="outboundSearch" oninput="filterOutbound()" data-i18n-placeholder="inv.searchOutbound" />
+              <select class="i-filter" id="outboundTypeFilter" onchange="filterOutbound()">
+                <option value="all" data-i18n="inv.allTypes">全部类型</option>
+                <option value="sale" data-i18n="inv.saleOut">销售出库</option>
+                <option value="use" data-i18n="inv.useOut">领用出库</option>
+                <option value="other" data-i18n="inv.otherOut">其他出库</option>
+              </select>
+              <select class="i-filter" id="outboundStatusFilter" onchange="filterOutbound()">
+                <option value="all" data-i18n="inv.allStatus">全部状态</option>
+                <option value="done" data-i18n="inv.completed">已完成</option>
+                <option value="pending" data-i18n="inv.pending">待审核</option>
+              </select>
+            </div>
+            <div class="i-action-right">
+              <button class="btn btn-primary" onclick="openOutboundModal()">
+                <span>➕</span> <span data-i18n="inv.newOutbound">新增出库</span>
+              </button>
+            </div>
+          </div>
+          <div class="i-table-wrap">
+            <table class="i-table">
+              <thead>
+                <tr>
+                  <th data-i18n="inv.orderNo">出库单号</th>
+                  <th data-i18n="inv.type">类型</th>
+                  <th data-i18n="inv.date">出库日期</th>
+                  <th data-i18n="inv.department">领用部门</th>
+                  <th data-i18n="inv.items">商品数</th>
+                  <th data-i18n="inv.totalCost">出库金额</th>
+                  <th data-i18n="inv.status">状态</th>
+                  <th data-i18n="inv.operator">操作人</th>
+                  <th data-i18n="inv.actions">操作</th>
+                </tr>
+              </thead>
+              <tbody id="outboundTableBody"></tbody>
+            </table>
+          </div>
+          <div class="i-pagination" id="outboundPagination"></div>
+        </div>
+
+        <!-- ===== Tab: 调拨管理 ===== -->
+        <div class="i-tab-content" id="tab-transfer">
+          <div class="i-action-bar">
+            <div class="i-action-left">
+              <input type="text" class="i-filter i-search" placeholder="搜索调拨单号..." id="transferSearch" oninput="filterTransfer()" data-i18n-placeholder="inv.searchTransfer" />
+              <select class="i-filter" id="transferStatusFilter" onchange="filterTransfer()">
+                <option value="all" data-i18n="inv.allStatus">全部状态</option>
+                <option value="done" data-i18n="inv.completed">已完成</option>
+                <option value="pending" data-i18n="inv.pending">待审核</option>
+                <option value="draft" data-i18n="inv.draft">草稿</option>
+                <option value="cancelled" data-i18n="inv.cancelled">已取消</option>
+              </select>
+            </div>
+            <div class="i-action-right">
+              <button class="btn btn-primary" onclick="openTransferModal()">
+                <span>➕</span> <span data-i18n="inv.newTransfer">新建调拨</span>
+              </button>
+            </div>
+          </div>
+          <div class="i-table-wrap">
+            <table class="i-table">
+              <thead>
+                <tr>
+                  <th data-i18n="inv.orderNo">调拨单号</th>
+                  <th data-i18n="inv.fromWarehouse">调出仓库</th>
+                  <th data-i18n="inv.toWarehouse">调入仓库</th>
+                  <th data-i18n="inv.items">商品数</th>
+                  <th data-i18n="inv.totalQty">调拨数量</th>
+                  <th data-i18n="inv.date">调拨日期</th>
+                  <th data-i18n="inv.status">状态</th>
+                  <th data-i18n="inv.operator">操作人</th>
+                  <th data-i18n="inv.actions">操作</th>
+                </tr>
+              </thead>
+              <tbody id="transferTableBody"></tbody>
+            </table>
+          </div>
+          <div class="i-pagination" id="transferPagination"></div>
+        </div>
+
+        <!-- ===== Tab: 盘点管理 ===== -->
+        <div class="i-tab-content" id="tab-check">
+          <div class="i-action-bar">
+            <div class="i-action-left">
+              <input type="text" class="i-filter i-search" placeholder="搜索盘点单号..." id="checkSearch" oninput="filterCheck()" data-i18n-placeholder="inv.searchCheck" />
+              <select class="i-filter" id="checkStatusFilter" onchange="filterCheck()">
+                <option value="all" data-i18n="inv.allStatus">全部状态</option>
+                <option value="done" data-i18n="inv.completed">已完成</option>
+                <option value="pending" data-i18n="inv.pending">待盘点</option>
+                <option value="draft" data-i18n="inv.draft">草稿</option>
+              </select>
+            </div>
+            <div class="i-action-right">
+              <button class="btn btn-primary" onclick="openCheckModal()">
+                <span>➕</span> <span data-i18n="inv.newCheck">新建盘点</span>
+              </button>
+            </div>
+          </div>
+          <div class="i-table-wrap">
+            <table class="i-table">
+              <thead>
+                <tr>
+                  <th data-i18n="inv.orderNo">盘点单号</th>
+                  <th data-i18n="inv.warehouse">仓库</th>
+                  <th data-i18n="inv.checkType">盘点方式</th>
+                  <th data-i18n="inv.totalItems">盘点商品数</th>
+                  <th data-i18n="inv.diffItems">差异数</th>
+                  <th data-i18n="inv.date">盘点日期</th>
+                  <th data-i18n="inv.status">状态</th>
+                  <th data-i18n="inv.operator">盘点人</th>
+                  <th data-i18n="inv.actions">操作</th>
+                </tr>
+              </thead>
+              <tbody id="checkTableBody"></tbody>
+            </table>
+          </div>
+          <div class="i-pagination" id="checkPagination"></div>
+        </div>
+
+        <!-- ===== Tab: 库存预警 ===== -->
+        <div class="i-tab-content" id="tab-alert">
+          <div class="i-action-bar">
+            <div class="i-action-left">
+              <input type="text" class="i-filter i-search" placeholder="搜索商品..." id="alertSearch" oninput="filterAlert()" data-i18n-placeholder="inv.searchProduct" />
+              <select class="i-filter" id="alertTypeFilter" onchange="filterAlert()">
+                <option value="all" data-i18n="inv.allTypes">全部类型</option>
+                <option value="low" data-i18n="inv.lowStock">库存不足</option>
+                <option value="over" data-i18n="inv.overStock">库存过多</option>
+                <option value="expired" data-i18n="inv.expiringSoon">即将过期</option>
+              </select>
+            </div>
+            <div class="i-action-right">
+              <button class="btn btn-outline" onclick="openAlertSettingsModal()">
+                <span>⚙️</span> <span data-i18n="inv.alertSettings">预警设置</span>
+              </button>
+            </div>
+          </div>
+          <div class="i-table-wrap">
+            <table class="i-table">
+              <thead>
+                <tr>
+                  <th data-i18n="inv.product">商品</th>
+                  <th data-i18n="inv.category">分类</th>
+                  <th data-i18n="inv.currentStock">当前库存</th>
+                  <th data-i18n="inv.minStock">最低库存</th>
+                  <th data-i18n="inv.maxStock">最高库存</th>
+                  <th data-i18n="inv.alertType">预警类型</th>
+                  <th data-i18n="inv.actions">操作</th>
+                </tr>
+              </thead>
+              <tbody id="alertTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ===== Tab: 库存报表 ===== -->
+        <div class="i-tab-content" id="tab-reports">
+          <div class="i-action-bar">
+            <div class="i-action-left">
+              <select class="i-filter" id="reportType" onchange="switchReport()">
+                <option value="inout" data-i18n="inv.inoutReport">出入库汇总</option>
+                <option value="stock" data-i18n="inv.stockReport">库存台账</option>
+                <option value="turnover" data-i18n="inv.turnoverReport">周转分析</option>
+              </select>
+              <input type="date" class="i-filter" id="reportStart" />
+              <span>~</span>
+              <input type="date" class="i-filter" id="reportEnd" />
+            </div>
+            <div class="i-action-right">
+              <button class="btn btn-primary" onclick="exportReport()">
+                <span>📥</span> <span data-i18n="inv.export">导出报表</span>
+              </button>
+            </div>
+          </div>
+          <div class="i-table-wrap">
+            <div id="reportContent" style="padding:20px;text-align:center;color:var(--text-tertiary);font-size:13px;" data-i18n="inv.selectReport">请选择报表类型和日期范围</div>
+          </div>
+        </div>
+
+        <!-- ===== Tab: 仓库设置 ===== -->
+        <div class="i-tab-content" id="tab-warehouse">
+          <div class="i-action-bar">
+            <div class="i-action-left">
+              <input type="text" class="i-filter i-search" placeholder="搜索仓库..." id="warehouseSearch" oninput="filterWarehouse()" data-i18n-placeholder="inv.searchWarehouse" />
+            </div>
+            <div class="i-action-right">
+              <button class="btn btn-primary" onclick="openWarehouseModal()">
+                <span>➕</span> <span data-i18n="inv.addWarehouse">新增仓库</span>
+              </button>
+            </div>
+          </div>
+          <div class="i-table-wrap">
+            <table class="i-table">
+              <thead>
+                <tr>
+                  <th data-i18n="inv.warehouseCode">仓库编码</th>
+                  <th data-i18n="inv.warehouseName">仓库名称</th>
+                  <th data-i18n="inv.warehouseType">仓库类型</th>
+                  <th data-i18n="inv.contact">联系人</th>
+                  <th data-i18n="inv.phone">联系方式</th>
+                  <th data-i18n="inv.status">状态</th>
+                  <th data-i18n="inv.actions">操作</th>
+                </tr>
+              </thead>
+              <tbody id="warehouseTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 主题面板 ========== -->
+  <div class="theme-panel" id="themePanel">
+    <div class="theme-panel-header">
+      <span data-i18n="theme.title">切换主题</span>
+      <button onclick="toggleThemePanel()">✕</button>
+    </div>
+    <div class="theme-list">
+      <div class="theme-group-label">✦ 浅色侧边栏</div>
+      <div class="theme-option active" data-theme="aurora-blue" onclick="setTheme('aurora-blue')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#1677FF,#69B1FF)"></div>
+        <span data-i18n="theme.auroraBlue">极光蓝</span>
+      </div>
+      <div class="theme-option" data-theme="twilight-purple" onclick="setTheme('twilight-purple')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#722ED1,#B37FEB)"></div>
+        <span data-i18n="theme.twilightPurple">暮光紫</span>
+      </div>
+      <div class="theme-option" data-theme="teal-green" onclick="setTheme('teal-green')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#00A76F,#66D9A8)"></div>
+        <span data-i18n="theme.tealGreen">松石绿</span>
+      </div>
+      <div class="theme-option" data-theme="lava-orange" onclick="setTheme('lava-orange')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#FF5C00,#FF9A6C)"></div>
+        <span data-i18n="theme.lavaOrange">熔岩橙</span>
+      </div>
+      <div class="theme-group-label">✦ 深色侧边栏</div>
+      <div class="theme-option" data-theme="deep-blue" onclick="setTheme('deep-blue')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#1A2A4A,#4096FF)"></div>
+        <span data-i18n="theme.deepBlue">深海蓝</span>
+      </div>
+      <div class="theme-option" data-theme="royal-purple" onclick="setTheme('royal-purple')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#2D1B69,#9D6BFF)"></div>
+        <span data-i18n="theme.royalPurple">尊贵紫</span>
+      </div>
+      <div class="theme-option" data-theme="forest-green" onclick="setTheme('forest-green')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#064E3B,#34D399)"></div>
+        <span data-i18n="theme.forestGreen">墨林绿</span>
+      </div>
+      <div class="theme-option" data-theme="sunset-orange" onclick="setTheme('sunset-orange')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#7C2D12,#F97316)"></div>
+        <span data-i18n="theme.sunsetOrange">落日橙</span>
+      </div>
+      <div class="theme-group-label">✦ 方案九·十二</div>
+      <div class="theme-option" data-theme="golden" onclick="setTheme('golden')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#2C1810,#B8860B)"></div>
+        <span data-i18n="theme.golden">黄金满地</span>
+      </div>
+      <div class="theme-option" data-theme="festive-red" onclick="setTheme('festive-red')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#3E1212,#C62828)"></div>
+        <span data-i18n="theme.festiveRed">恭贺欣喜</span>
+      </div>
+      <div class="theme-option" data-theme="marble" onclick="setTheme('marble')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#2A2A36,#7A7A8A)"></div>
+        <span data-i18n="theme.marble">大理石</span>
+      </div>
+      <div class="theme-option" data-theme="ink-wash" onclick="setTheme('ink-wash')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#1A1A1A,#2C2C2C)"></div>
+        <span data-i18n="theme.inkWash">宣纸水墨</span>
+      </div>
+    </div>
+  </div>
+  <div class="theme-overlay" id="themeOverlay" onclick="toggleThemePanel()"></div>
+
+  <!-- ========== 入库弹窗 ========== -->
+  <div class="i-modal-overlay" id="inboundModalOverlay" onclick="closeInboundModal()"></div>
+  <div class="i-modal" id="inboundModal">
+    <div class="i-modal-header">
+      <span data-i18n="inv.newInbound">新增入库</span>
+      <button class="i-modal-close" onclick="closeInboundModal()">✕</button>
+    </div>
+    <div class="i-modal-body">
+      <div class="i-form-group">
+        <label data-i18n="inv.type">入库类型</label>
+        <select id="inboundFormType">
+          <option value="purchase" data-i18n="inv.purchase">采购入库</option>
+          <option value="return" data-i18n="inv.returnIn">退货入库</option>
+          <option value="other" data-i18n="inv.otherIn">其他入库</option>
+        </select>
+      </div>
+      <div class="i-form-group">
+        <label data-i18n="inv.supplier">供应商</label>
+        <input type="text" id="inboundFormSupplier" placeholder="供应商名称" />
+      </div>
+      <div class="i-form-group">
+        <label data-i18n="inv.remark">备注</label>
+        <textarea id="inboundFormRemark" placeholder="备注信息"></textarea>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:var(--text-primary);margin-bottom:8px;border-top:1px solid var(--border-color);padding-top:10px;">
+        📋 <span data-i18n="inv.items">商品明细</span>
+      </div>
+      <div id="inboundFormItems">
+        <div class="i-form-group" style="display:flex;gap:8px;align-items:center;">
+          <select style="flex:2;height:32px;border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:0 8px;font-size:12px;" id="inboundItemSelect">
+            <option value="">选择商品...</option>
+          </select>
+          <input type="number" style="flex:1;height:32px;border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:0 8px;font-size:12px;width:70px;" placeholder="数量" id="inboundItemQty" />
+          <input type="number" style="flex:1;height:32px;border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:0 8px;font-size:12px;width:90px;" placeholder="单价" id="inboundItemPrice" />
+          <button class="btn btn-primary" style="padding:4px 10px;font-size:11px;" onclick="addInboundItem()">+</button>
+        </div>
+        <div id="inboundItemList" style="margin-top:8px;"></div>
+      </div>
+    </div>
+    <div class="i-modal-footer">
+      <button class="btn btn-outline" onclick="closeInboundModal()"><span data-i18n="cancel">取消</span></button>
+      <button class="btn btn-primary" onclick="submitInbound()"><span data-i18n="save">保存入库</span></button>
+    </div>
+  </div>
+
+  <script src="app.js?v=20260427"></script>
+  <script src="inventory.js?v=20260427"></script>
+
+  <!-- ========== 移动端侧边栏抽屉 ========== -->
+  <div class="mobile-sidebar-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-sidebar-drawer" id="mobileDrawer">
+    <div class="mobile-drawer-header">
+      <span class="logo">🏪 <span data-i18n="brand">收银通</span></span>
+      <button class="mobile-drawer-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <div class="mobile-drawer-items">
+      <div class="mobile-drawer-item" onclick="window.location.href='index.html';closeMobileMenu()">
+        <span>🏠</span> <span data-i18n="nav.overview">总览</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="window.location.href='checkout.html';closeMobileMenu()">
+        <span>🧾</span> <span data-i18n="nav.checkout">快速开单</span>
+      </div>
+      <div class="mobile-drawer-group">
+        <div class="mobile-drawer-item mobile-drawer-group-header" onclick="toggleDrawerGroup(this)">
+          <span>📅</span> <span data-i18n="nav.appointment">预约管理</span>
+          <span class="group-arrow">▶</span>
+        </div>
+        <div class="mobile-drawer-sub">
+          <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>📋</span> 预约记录</div>
+          <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>🗓️</span> 预约看板</div>
+          <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>📊</span> 预约数据</div>
+          <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>👥</span> 可约员工</div>
+          <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>⚙️</span> 预约参数</div>
+        </div>
+      </div>
+      <div class="mobile-drawer-item" onclick="window.location.href='products.html';closeMobileMenu()">
+        <span>📦</span> <span data-i18n="nav.products">商品管理</span>
+      </div>
+      <div class="mobile-drawer-item active" onclick="window.location.href='inventory.html';closeMobileMenu()">
+        <span>📊</span> <span data-i18n="nav.inventory">库存管理</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>📋</span> <span data-i18n="nav.orders">订单管理</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>👥</span> <span data-i18n="nav.members">会员管理</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>📊</span> <span data-i18n="nav.reports">营业报表</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>🎫</span> <span data-i18n="nav.promotion">优惠营销</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>⚙️</span> <span data-i18n="nav.settings">系统设置</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 移动端底部导航 ========== -->
+  <div class="mobile-bottom-nav">
+    <div class="mobile-nav-item" data-page="overview" onclick="navigateBottomNav('index.html')">
+      <span class="nav-icon">🏠</span>
+      <span data-i18n="nav.overview">总览</span>
+    </div>
+    <div class="mobile-nav-item" data-page="checkout" onclick="navigateBottomNav('checkout.html')">
+      <span class="nav-icon">🧾</span>
+      <span data-i18n="nav.checkout">开单</span>
+    </div>
+    <div class="mobile-nav-item" data-page="booking" onclick="navigateBottomNav('booking.html')">
+      <span class="nav-icon">📅</span>
+      <span data-i18n="nav.appointment">预约</span>
+    </div>
+    <div class="mobile-nav-item" data-page="products" onclick="navigateBottomNav('products.html')">
+      <span class="nav-icon">📦</span>
+      <span>商品</span>
+    </div>
+    <div class="mobile-nav-item active" onclick="toggleMobileMenu()">
+      <span class="nav-icon">☰</span>
+      <span>更多</span>
+    </div>
+  </div>
+
+  <script>setMobileNavActive('inventory');</script>
+</div>
+</body>
+</html>
