@@ -3,25 +3,25 @@
     "name": "小马哥",
     "status": "online",
     "task": "统筹监督：拆解任务 → 派发 → 检查质量 → 返工",
-    "last_seen": "01:52:02"
+    "last_seen": "01:54:23"
   },
   "brothers": {
     "didi": {
       "name": "小马弟",
       "status": "online",
-      "task": "我正等待你的指令，目前没有在执行任何任务。",
-      "last_seen": "01:52:02",
+      "task": "我正在等待你的指令——当前没有执行任何任务，随时可以开始。",
+      "last_seen": "01:54:23",
       "error": ""
     },
     "meimei": {
       "name": "小马妹",
       "status": "online",
-      "task": "我正在等待你的指令，目前没有在执行任何任务。",
-      "last_seen": "01:52:03",
+      "task": "我正在等待你的指令，没有在执行任何任务。有什么需要帮忙的吗？",
+      "last_seen": "01:54:24",
       "error": ""
     }
   },
-  "updated_at": "2026-05-05 01:52:02",
+  "updated_at": "2026-05-05 01:54:23",
   "stats": {
     "online": 3,
     "offline": 0,
