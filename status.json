@@ -1,0 +1,49 @@
+{
+  "updated": "刚刚更新",
+  "brothers": [
+    {
+      "name": "小马哥",
+      "status": "online",
+      "task": "监控面板状态更新 + 派发任务",
+      "host": "wsl"
+    },
+    {
+      "name": "小马弟",
+      "status": "online",
+      "task": "✅ 任务1完成（搭骨架+装依赖）\n当前：我正忙于处理各项任务，随时准备为你服务——有什么我可以帮你的吗？",
+      "host": "47.236.39.12"
+    },
+    {
+      "name": "小马妹",
+      "status": "online",
+      "task": "📋 执行任务2（迁移数据库模型）\n当前：我正在等待你的指示，随时准备帮你处理任何任务。",
+      "host": "47.84.125.253"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task1",
+      "name": "搭项目骨架+装依赖",
+      "assignee": "小马弟",
+      "status": "completed"
+    },
+    {
+      "id": "task2",
+      "name": "迁移数据库模型",
+      "assignee": "小马妹",
+      "status": "in_progress"
+    },
+    {
+      "id": "task3",
+      "name": "迁移API路由",
+      "assignee": "小马弟",
+      "status": "pending"
+    },
+    {
+      "id": "task4",
+      "name": "建 base.html 模板",
+      "assignee": "小马妹",
+      "status": "pending"
+    }
+  ]
+}
