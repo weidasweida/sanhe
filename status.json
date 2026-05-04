@@ -1,23 +1,27 @@
 {
-  "updated": "刚刚更新",
+  "updated": "2026-05-05 01:24:26",
+  "updated_ts": 1777915466.936862,
   "brothers": [
     {
       "name": "小马哥",
       "status": "online",
-      "task": "监控面板状态更新 + 派发任务",
-      "host": "wsl"
+      "task": "总管监控+任务分发",
+      "host": "WSL",
+      "ping": "ok"
     },
     {
       "name": "小马弟",
       "status": "online",
-      "task": "✅ 任务1完成（搭骨架+装依赖）\n当前：我正忙于处理各项任务，随时准备为你服务——有什么我可以帮你的吗？",
-      "host": "47.236.39.12"
+      "task": "小马弟",
+      "host": "47.236.39.12",
+      "ping": "ok"
     },
     {
       "name": "小马妹",
       "status": "online",
-      "task": "📋 执行任务2（迁移数据库模型）\n当前：我正在等待你的指示，随时准备帮你处理任何任务。",
-      "host": "47.84.125.253"
+      "task": "小马妹",
+      "host": "47.84.125.253",
+      "ping": "ok"
     }
   ],
   "tasks": [
@@ -37,7 +41,7 @@
       "id": "task3",
       "name": "迁移API路由",
       "assignee": "小马弟",
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "task4",
