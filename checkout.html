@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>收银系统 - 快速开单</title>
+  <link rel="stylesheet" href="styles.css?v=20260427" />
+  <link rel="stylesheet" href="checkout.css?v=20260427" />
+  <script src="shared-data.js?v=20260427"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div id="app" data-theme="aurora-blue">
+
+  <!-- ========== 顶部栏 ========== -->
+  <header class="header">
+    <div class="header-left">
+      <button class="mobile-back-btn" onclick="goBack()">‹</button>
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+      <div class="logo">🏪 <span data-i18n="brand">收银通</span></div>
+      <span class="version">v2.0</span>
+    </div>
+    <div class="header-right">
+      <button class="lang-switch" onclick="toggleLang()">EN / 中文</button>
+      <button class="theme-btn" onclick="toggleThemePanel()">🎨</button>
+      <div class="notification-badge">🔔 <span class="badge">3</span></div>
+      <div class="user-avatar">👤 <span data-i18n="admin">管理员</span></div>
+    </div>
+  </header>
+
+  <!-- ========== 主区域（收银布局） ========== -->
+  <div class="main-layout" style="margin-top:var(--header-height);">
+
+    <!-- 左侧导航 -->
+    <nav class="sidebar">
+      <div class="nav-item" onclick="window.location.href='index.html'">
+        <span class="nav-icon">🏠</span>
+        <span data-i18n="nav.overview">总览</span>
+      </div>
+      <div class="nav-item active" onclick="window.location.href='checkout.html'">
+        <span class="nav-icon">🧾</span>
+        <span data-i18n="nav.checkout">快速开单</span>
+      </div>
+      <!-- 预约管理（二级菜单） -->
+      <div class="nav-group">
+        <div class="nav-item group-header" data-page="booking.html" onclick="toggleNavGroup(this)">
+          <span class="nav-icon">📅</span>
+          <span data-i18n="nav.appointment">预约管理</span>
+          <span class="group-arrow">▼</span>
+        </div>
+        <div class="sub-nav">
+          <div class="sub-nav-item" onclick="window.location.href='booking.html'">
+            <span class="sub-dot">📋</span>
+            <span data-i18n="nav.appt.records">预约记录</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='booking.html'">
+            <span class="sub-dot">🗓️</span>
+            <span data-i18n="nav.appt.board">预约看板</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='booking.html'">
+            <span class="sub-dot">📊</span>
+            <span data-i18n="nav.appt.data">预约数据</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='booking.html'">
+            <span class="sub-dot">👥</span>
+            <span data-i18n="nav.appt.staff">可约员工</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='booking.html'">
+            <span class="sub-dot">⚙️</span>
+            <span data-i18n="nav.appt.params">预约参数</span>
+          </div>
+        </div>
+      </div>
+      <!-- 商品管理（二级菜单） -->
+      <div class="nav-group">
+        <div class="nav-item group-header" data-page="products.html" onclick="toggleNavGroup(this)">
+          <span class="nav-icon">📦</span>
+          <span data-i18n="nav.products">商品管理</span>
+          <span class="group-arrow">▼</span>
+        </div>
+        <div class="sub-nav">
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">🏠</span>
+            <span data-i18n="nav.products.home">商品主页</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">📦</span>
+            <span data-i18n="nav.products.product">产品管理</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">📄</span>
+            <span data-i18n="nav.products.project">项目管理</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">📦</span>
+            <span data-i18n="nav.products.package">套餐管理</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">💳</span>
+            <span data-i18n="nav.products.card">储值卡管理</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">🎁</span>
+            <span data-i18n="nav.products.gift">积分礼品</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">🏷️</span>
+            <span data-i18n="nav.products.type">产品类型</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">🏷️</span>
+            <span data-i18n="nav.products.brand">产品品牌</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">📐</span>
+            <span data-i18n="nav.products.spec">产品规格</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">🔖</span>
+            <span data-i18n="nav.products.tag">自定义标签</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">📁</span>
+            <span data-i18n="nav.products.category">项目类别</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">📏</span>
+            <span data-i18n="nav.products.unit">销售单位</span>
+          </div>
+          <div class="sub-nav-item" onclick="window.location.href='products.html'">
+            <span class="sub-dot">🎴</span>
+            <span data-i18n="nav.products.handCard">手牌管理</span>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item" onclick="window.location.href='inventory.html'">
+        <span class="nav-icon">📦</span>
+        <span data-i18n="nav.inventory">库存管理</span>
+      </div>
+      <div class="nav-item" onclick="navigate(this)">
+        <span class="nav-icon">📋</span>
+        <span data-i18n="nav.orders">订单管理</span>
+      </div>
+      <div class="nav-item" onclick="navigate(this)">
+        <span class="nav-icon">👥</span>
+        <span data-i18n="nav.members">会员管理</span>
+      </div>
+      <div class="nav-item" onclick="navigate(this)">
+        <span class="nav-icon">📊</span>
+        <span data-i18n="nav.reports">营业报表</span>
+      </div>
+      <div class="nav-item" onclick="navigate(this)">
+        <span class="nav-icon">🎫</span>
+        <span data-i18n="nav.promotion">优惠营销</span>
+      </div>
+      <div class="nav-item" onclick="navigate(this)">
+        <span class="nav-icon">⚙️</span>
+        <span data-i18n="nav.settings">系统设置</span>
+      </div>
+      <div class="sidebar-footer">
+        <span class="store-name" data-i18n="storeName">旗舰店</span>
+        <span class="store-id">#001</span>
+      </div>
+    </nav>
+
+    <!-- ========== 收银内容区域 ========== -->
+    <div class="checkout-layout">
+
+      <!-- 左侧：项目/商品选择 -->
+      <div class="checkout-left">
+        <!-- 搜索栏 -->
+        <div class="checkout-search">
+          <div class="search-input-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="搜索项目 / 产品 / 医生..." id="searchInput" oninput="filterProducts()" />
+          </div>
+          <button class="search-scan-btn" onclick="simulateScan()">
+            <span>📷</span>
+            <span data-i18n="scan">扫码</span>
+          </button>
+        </div>
+
+        <!-- 分类 Tab -->
+        <div class="checkout-tabs" id="categoryTabs"></div>
+
+        <!-- 项目/商品网格 -->
+        <div class="product-grid-wrap">
+          <div class="product-grid" id="productGrid"></div>
+        </div>
+      </div>
+
+      <!-- 右侧：购物车 -->
+      <div class="checkout-right">
+        <!-- 会员信息 -->
+        <div class="member-bar" onclick="openMemberSelect()">
+          <div class="member-avatar">👤</div>
+          <div class="member-info">
+            <div class="member-name" id="memberName" data-i18n="walkIn">散客</div>
+            <div class="member-detail" id="memberDetail"></div>
+          </div>
+          <button class="member-select-btn" data-i18n="memberSelect">选择会员</button>
+        </div>
+
+        <!-- 购物车标题 -->
+        <div class="cart-header">
+          <span data-i18n="cartTitle">购物车</span>
+          <span class="cart-count" id="cartCount">0 <span data-i18n="items">项</span></span>
+          <button class="cart-clear-btn" onclick="clearCart()" data-i18n="clearCart">清空</button>
+        </div>
+
+        <!-- 购物车列表 -->
+        <div class="cart-items" id="cartItems">
+          <div class="cart-empty">
+            <div class="cart-empty-icon">🛒</div>
+            <span data-i18n="cartEmpty">点击左侧项目添加</span>
+          </div>
+        </div>
+
+        <!-- 购物车底部 -->
+        <div class="cart-footer" id="cartFooter" style="display:none;">
+          <!-- 疗程卡折扣提示 -->
+          <div class="discount-bar" id="discountBar" style="display:none;">
+            <span class="discount-tag">🎫</span>
+            <span id="discountDesc"></span>
+          </div>
+
+          <!-- 订单汇总 -->
+          <div class="order-summary-line">
+            <span data-i18n="subtotal">小计</span>
+            <span id="subtotalAmount">¥0</span>
+          </div>
+          <div class="discount-bar" id="discountLine" style="display:none;">
+            <span data-i18n="discount">优惠</span>
+            <span id="discountAmount">-¥0</span>
+          </div>
+
+          <!-- 合计 -->
+          <div class="cart-summary">
+            <div class="cart-summary-label">
+              <span data-i18n="total">合计</span>
+            </div>
+            <div class="cart-total-price" id="totalAmount">
+              <span class="currency">¥</span>0
+            </div>
+          </div>
+
+          <!-- 快捷金额 -->
+          <div class="quick-amounts">
+            <button class="quick-amount" onclick="quickPay(50)">¥50</button>
+            <button class="quick-amount" onclick="quickPay(100)">¥100</button>
+            <button class="quick-amount" onclick="quickPay(200)">¥200</button>
+            <button class="quick-amount" onclick="quickPay(500)">¥500</button>
+          </div>
+
+          <!-- 支付按钮 -->
+          <div class="payment-buttons">
+            <button class="payment-btn wechat" onclick="pay('wechat')">
+              <span class="btn-icon">💚</span> <span data-i18n="payWechat">微信</span>
+            </button>
+            <button class="payment-btn alipay" onclick="pay('alipay')">
+              <span class="btn-icon">💙</span> <span data-i18n="payAlipay">支付宝</span>
+            </button>
+            <button class="payment-btn cash" onclick="pay('cash')">
+              <span class="btn-icon">💰</span> <span data-i18n="payCash">现金</span>
+            </button>
+            <button class="payment-btn card" onclick="pay('card')">
+              <span class="btn-icon">💳</span> <span data-i18n="payCard">银行卡</span>
+            </button>
+            <button class="payment-btn checkout-primary" onclick="pay('balance')">
+              <span class="btn-icon">🪪</span> <span data-i18n="payBalance">储值卡支付</span>
+            </button>
+          </div>
+
+          <!-- 挂单按钮 -->
+          <div style="text-align:center;margin-top:8px;">
+            <button class="quick-amount" onclick="holdOrder()" style="width:100%;padding:10px;">
+              ⏸️ <span data-i18n="holdOrder">挂单</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 挂单面板 ========== -->
+  <div class="hold-panel" id="holdPanel">
+    <div class="hold-panel-header">
+      <span data-i18n="holdPanel">挂单列表</span>
+      <button onclick="closeHoldPanel()">✕</button>
+    </div>
+    <div id="holdList"></div>
+  </div>
+  <div class="theme-overlay" id="holdOverlay" onclick="closeHoldPanel()"></div>
+
+  <!-- ========== 会员选择弹窗 ========== -->
+  <div class="modal-overlay" id="memberOverlay" onclick="closeMemberSelect()"></div>
+  <div class="modal" id="memberModal">
+    <div class="modal-header">
+      <span data-i18n="selectMember">选择会员</span>
+      <button onclick="closeMemberSelect()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="text" class="modal-search" placeholder="搜索姓名 / 手机号..."
+             oninput="filterMembers(this.value)" data-i18n-placeholder="memberSearchPlaceholder" />
+      <div id="memberList"></div>
+    </div>
+  </div>
+
+  <!-- ========== 主题面板 ========== -->
+  <div class="theme-panel" id="themePanel">
+    <div class="theme-panel-header">
+      <span data-i18n="theme.title">切换主题</span>
+      <button onclick="toggleThemePanel()">✕</button>
+    </div>
+    <div class="theme-list">
+      <div class="theme-group-label">✦ 浅色侧边栏</div>
+      <div class="theme-option active" data-theme="aurora-blue" onclick="setTheme('aurora-blue')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#1677FF,#69B1FF)"></div>
+        <span data-i18n="theme.auroraBlue">极光蓝</span>
+      </div>
+      <div class="theme-option" data-theme="twilight-purple" onclick="setTheme('twilight-purple')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#722ED1,#B37FEB)"></div>
+        <span data-i18n="theme.twilightPurple">暮光紫</span>
+      </div>
+      <div class="theme-option" data-theme="teal-green" onclick="setTheme('teal-green')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#00A76F,#66D9A8)"></div>
+        <span data-i18n="theme.tealGreen">松石绿</span>
+      </div>
+      <div class="theme-option" data-theme="lava-orange" onclick="setTheme('lava-orange')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#FF5C00,#FF9A6C)"></div>
+        <span data-i18n="theme.lavaOrange">熔岩橙</span>
+      </div>
+      <div class="theme-group-label">✦ 深色侧边栏</div>
+      <div class="theme-option" data-theme="deep-blue" onclick="setTheme('deep-blue')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#1A2A4A,#4096FF)"></div>
+        <span data-i18n="theme.deepBlue">深海蓝</span>
+      </div>
+      <div class="theme-option" data-theme="royal-purple" onclick="setTheme('royal-purple')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#2D1B69,#9D6BFF)"></div>
+        <span data-i18n="theme.royalPurple">尊贵紫</span>
+      </div>
+      <div class="theme-option" data-theme="forest-green" onclick="setTheme('forest-green')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#064E3B,#34D399)"></div>
+        <span data-i18n="theme.forestGreen">墨林绿</span>
+      </div>
+      <div class="theme-option" data-theme="sunset-orange" onclick="setTheme('sunset-orange')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#7C2D12,#F97316)"></div>
+        <span data-i18n="theme.sunsetOrange">落日橙</span>
+      </div>
+      <div class="theme-group-label">✦ 方案九·十二</div>
+      <div class="theme-option" data-theme="golden" onclick="setTheme('golden')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#2C1810,#B8860B)"></div>
+        <span data-i18n="theme.golden">黄金满地</span>
+      </div>
+      <div class="theme-option" data-theme="festive-red" onclick="setTheme('festive-red')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#3E1212,#C62828)"></div>
+        <span data-i18n="theme.festiveRed">恭贺欣喜</span>
+      </div>
+      <div class="theme-option" data-theme="marble" onclick="setTheme('marble')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#2A2A36,#7A7A8A)"></div>
+        <span data-i18n="theme.marble">大理石</span>
+      </div>
+      <div class="theme-option" data-theme="ink-wash" onclick="setTheme('ink-wash')">
+        <div class="theme-preview" style="background:linear-gradient(135deg,#1A1A1A,#2C2C2C)"></div>
+        <span data-i18n="theme.inkWash">宣纸水墨</span>
+      </div>
+    </div>
+  </div>
+  <div class="theme-overlay" id="themeOverlay" onclick="toggleThemePanel()"></div>
+
+  <!-- ========== 分类设置模态框 ========== -->
+  <div class="modal-overlay" id="catSettingsOverlay" onclick="closeCategorySettings()"></div>
+  <div class="modal" id="catSettingsModal">
+    <div class="modal-header">
+      <span>分类设置</span>
+      <button onclick="closeCategorySettings()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:12px;color:var(--text-tertiary);margin-bottom:12px;">拖拽排序，开启/关闭分类在快速开单页面的显示</p>
+      <div id="catSettingsList"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeCategorySettings()">取消</button>
+      <button class="btn btn-primary" onclick="saveCategorySettings()">保存</button>
+    </div>
+  </div>
+
+  <!-- ========== 移动端侧边栏抽屉 ========== -->
+  <div class="mobile-sidebar-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-sidebar-drawer" id="mobileDrawer">
+    <div class="mobile-drawer-header">
+      <span class="logo">🏪 <span data-i18n="brand">收银通</span></span>
+      <button class="mobile-drawer-close" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <div class="mobile-drawer-items">
+      <div class="mobile-drawer-item" onclick="window.location.href='index.html';closeMobileMenu()">
+        <span>🏠</span> <span data-i18n="nav.overview">总览</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="window.location.href='checkout.html';closeMobileMenu()">
+        <span>🧾</span> <span data-i18n="nav.checkout">快速开单</span>
+      </div>
+      <div class="mobile-drawer-section">📅 预约管理</div>
+      <div class="mobile-drawer-sub">
+        <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>📋</span> 预约记录</div>
+        <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>🗓️</span> 预约看板</div>
+        <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>📊</span> 预约数据</div>
+        <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>👥</span> 可约员工</div>
+        <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>⚙️</span> 预约参数</div>
+      </div>
+      <div class="mobile-drawer-item" onclick="window.location.href='products.html';closeMobileMenu()">
+        <span>📦</span> <span data-i18n="nav.products">商品管理</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="window.location.href='inventory.html';closeMobileMenu()">
+        <span>📊</span> <span data-i18n="nav.inventory">库存管理</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>📋</span> <span data-i18n="nav.orders">订单管理</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>👥</span> <span data-i18n="nav.members">会员管理</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>📊</span> <span data-i18n="nav.reports">营业报表</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>🎫</span> <span data-i18n="nav.promotion">优惠营销</span>
+      </div>
+      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
+        <span>⚙️</span> <span data-i18n="nav.settings">系统设置</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 移动端底部导航 ========== -->
+  <div class="mobile-bottom-nav">
+    <div class="mobile-nav-item" data-page="overview" onclick="navigateBottomNav('index.html')">
+      <span class="nav-icon">🏠</span>
+      <span data-i18n="nav.overview">总览</span>
+    </div>
+    <div class="mobile-nav-item active" data-page="checkout" onclick="navigateBottomNav('checkout.html')">
+      <span class="nav-icon">🧾</span>
+      <span data-i18n="nav.checkout">开单</span>
+    </div>
+    <div class="mobile-nav-item" data-page="booking" onclick="navigateBottomNav('booking.html')">
+      <span class="nav-icon">📅</span>
+      <span data-i18n="nav.appointment">预约</span>
+    </div>
+    <div class="mobile-nav-item" data-page="products" onclick="navigateBottomNav('products.html')">
+      <span class="nav-icon">📦</span>
+      <span>商品</span>
+    </div>
+    <div class="mobile-nav-item" onclick="toggleMobileMenu()">
+      <span class="nav-icon">☰</span>
+      <span>更多</span>
+    </div>
+  </div>
+
+  <script>setMobileNavActive('checkout');</script>
+  <script src="checkout.js?v=20260427"></script>
+</div>
+</body>
+</html>

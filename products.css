@@ -1,0 +1,527 @@
+/* ========== Products Layout ========== */
+
+/* ====== Secondary Sidebar ====== */
+.p-sub-sidebar {
+  width: 140px;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border-color);
+  padding: 8px 0 12px;
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+
+.p-sub-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  padding: 8px 12px 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.p-sub-section-title {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  padding: 10px 12px 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.6;
+}
+
+.p-sub-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition);
+  border-left: 3px solid transparent;
+}
+
+.p-sub-item:hover {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.p-sub-item.active {
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  border-left-color: var(--color-primary);
+  font-weight: 500;
+}
+
+.p-sub-icon {
+  font-size: 14px;
+  width: 18px;
+  text-align: center;
+}
+
+/* ====== Content ====== */
+.p-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg-body);
+  min-width: 0;
+}
+
+/* ====== Global Bar ====== */
+.p-global-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 20px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.p-global-left {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.p-global-right {
+  display: flex;
+  gap: 16px;
+}
+
+.p-global-stat {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.p-global-stat strong {
+  font-size: 14px;
+}
+
+/* ====== Tab Content ====== */
+.p-tab-content {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.p-tab-content.active {
+  display: flex;
+}
+
+/* ====== Homepage Cards ====== */
+.p-big-section {
+  padding: 16px 20px;
+}
+
+.p-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.p-card-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.p-card-grid-sm {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.p-big-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 24px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.p-big-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.p-big-icon {
+  font-size: 36px;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.p-big-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.p-sm-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 16px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.p-sm-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow);
+}
+
+.p-sm-icon {
+  font-size: 24px;
+  margin-bottom: 4px;
+  line-height: 1;
+}
+
+.p-sm-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ====== Action Bar (for data tabs) ====== */
+.p-action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  gap: 8px;
+  flex-shrink: 0;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+}
+
+.p-action-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.p-action-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.p-filter {
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-body);
+  color: var(--text-primary);
+  font-size: 12px;
+  outline: none;
+}
+
+.p-filter:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.p-search {
+  min-width: 140px;
+}
+
+/* ====== Table ====== */
+.p-table-wrap {
+  flex: 1;
+  overflow: auto;
+  background: var(--bg-card);
+}
+
+.p-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.p-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.p-table th {
+  background: var(--bg-body);
+  color: var(--text-secondary);
+  font-weight: 600;
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+.p-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.p-table tbody tr:hover {
+  background: var(--color-primary-light);
+}
+
+.p-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.p-table input[type="checkbox"] {
+  accent-color: var(--color-primary);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+/* ====== Status Tags ====== */
+.p-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.p-tag.enabled {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.p-tag.disabled {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+.p-tag.sold {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.p-tag.unsold {
+  background: #F0F0F0;
+  color: var(--text-tertiary);
+}
+
+.p-tag.benchmark {
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+}
+
+/* ====== Pagination ====== */
+.p-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.p-page-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.p-page-info {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 0 4px;
+}
+
+/* ====== Config Placeholder ====== */
+.p-config-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--text-tertiary);
+  background: var(--bg-card);
+  margin: 16px;
+  border-radius: var(--radius);
+  border: 2px dashed var(--border-color);
+  min-height: 300px;
+}
+
+/* ====== Action Links ====== */
+.p-action-link {
+  color: var(--color-primary);
+  cursor: pointer;
+  margin-right: 6px;
+  font-size: 11px;
+  transition: opacity var(--transition);
+}
+
+.p-action-link:hover {
+  opacity: 0.7;
+}
+
+.p-action-link.danger {
+  color: var(--color-danger);
+}
+
+/* ====== Tab Back Bar ====== */
+.p-tab-back-bar {
+  padding: 10px 0 0 16px;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.p-back-link {
+  color: var(--color-primary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  transition: background 0.2s;
+  font-weight: 500;
+}
+.p-back-link:hover {
+  background: var(--color-primary-light);
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 1200px) {
+  .p-card-grid, .p-card-grid-sm {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .p-sub-sidebar {
+    display: none;
+    width: 0;
+    min-width: 0;
+    flex: 0 0 0;
+  }
+  .p-card-grid, .p-card-grid-sm {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .p-action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* ====== Modal ====== */
+.p-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+
+}
+.p-modal-overlay.open {
+  display: flex;
+}
+.p-modal {
+  background: var(--bg-card);
+  border-radius: 12px;
+  width: 500px;
+  max-width: 90vw;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  overflow: hidden;
+  /* 固定居中，不受页面滚动影响 */
+  position: relative;
+  z-index: 1001;
+}
+.p-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border-color);
+  font-weight: 600;
+  font-size: 17px;
+}
+.p-modal-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  line-height: 1;
+}
+.p-modal-close:hover {
+  color: var(--text-primary);
+}
+.p-modal-body {
+  padding: 24px;
+}
+.p-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border-color);
+}
+.p-form-group {
+  margin-bottom: 20px;
+}
+.p-form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+.p-form-row {
+  display: flex;
+  gap: 12px;
+}
+.p-form-row .p-form-group {
+  flex: 1;
+}
+.p-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 15px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.p-input:focus {
+  border-color: var(--color-primary);
+}
+
+/* ====== Modal Header Buttons ====== */
+.modal-header-btn {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  padding: 7px 20px !important;
+  min-height: 34px !important;
+  line-height: 1.3 !important;
+}
+.modal-save-btn {
+  box-shadow: 0 0 0 1.5px rgba(22,119,255,0.35) !important;
+}
