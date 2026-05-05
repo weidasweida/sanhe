@@ -3,25 +3,25 @@
     "name": "小马哥",
     "status": "online",
     "task": "统筹监督：拆解任务 → 派发 → 检查质量 → 返工",
-    "last_seen": "22:29:35"
+    "last_seen": "22:31:46"
   },
   "brothers": {
     "didi": {
       "name": "小马弟",
       "status": "offline",
       "task": "",
-      "last_seen": "22:29:35",
+      "last_seen": "22:31:46",
       "error": "<urlopen error [Errno 111] Connection refused>"
     },
     "meimei": {
       "name": "小马妹",
       "status": "online",
-      "task": "我没有在运行任何任务，正等待你的指令。有什么需要帮忙的吗？",
-      "last_seen": "22:29:35",
+      "task": "我现在没有在执行任何具体任务，正等待你的指令。有什么需要帮忙的吗？",
+      "last_seen": "22:31:46",
       "error": ""
     }
   },
-  "updated_at": "2026-05-05 22:29:35",
+  "updated_at": "2026-05-05 22:31:46",
   "stats": {
     "online": 2,
     "offline": 1,
