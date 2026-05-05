@@ -23,7 +23,7 @@
     h1 span { color: #888; font-size: 14px; font-weight: normal; }
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 16px;
       margin-bottom: 24px;
     }
@@ -189,8 +189,52 @@
       </div>
     </div>
 
-    <!-- 小马妹 -->
-    <div class="card" id="card-meimei">
+    <!-- 八戒 -->
+    <div class="card online" id="card-bajie">
+      <div class="card-header">
+        <div class="card-title">🐷 八戒 <span class="status-dot online"></span></div>
+        <span class="status-badge online">在线 · 待命</span>
+      </div>
+      <div class="info-row"><span class="info-label">位置</span><span class="info-value">WSL 本地</span></div>
+      <div class="info-row"><span class="info-label">API</span><span class="info-value">:8643</span></div>
+      <div class="info-row"><span class="info-label">模型</span><span class="info-value">DeepSeek</span></div>
+      <div class="task-section">
+        <div class="task-label">当前任务</div>
+        <div class="task-box" id="bajie-task">
+          <div class="task-title">⏳ 待命 — 归小马哥调度</div>
+        </div>
+      </div>
+      <div class="log-section">
+        <div class="task-label">执行记录</div>
+        <div class="log-box" id="bajie-log">
+          <div class="log-entry"><span class="time">--:--:--</span> <span class="info">等待任务...</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 沙僧 -->
+    <div class="card online" id="card-shaseng">
+      <div class="card-header">
+        <div class="card-title">👨 沙僧 <span class="status-dot online"></span></div>
+        <span class="status-badge online">在线 · 待命</span>
+      </div>
+      <div class="info-row"><span class="info-label">位置</span><span class="info-value">WSL 本地</span></div>
+      <div class="info-row"><span class="info-label">API</span><span class="info-value">:8644</span></div>
+      <div class="info-row"><span class="info-label">模型</span><span class="info-value">DeepSeek</span></div>
+      <div class="task-section">
+        <div class="task-label">当前任务</div>
+        <div class="task-box" id="shaseng-task">
+          <div class="task-title">⏳ 待命 — 归小马哥调度</div>
+        </div>
+      </div>
+      <div class="log-section">
+        <div class="task-label">执行记录</div>
+        <div class="log-box" id="shaseng-log">
+          <div class="log-entry"><span class="time">--:--:--</span> <span class="info">等待任务...</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
       <div class="card-header">
         <div class="card-title">🐴 小马妹 <span class="status-dot offline"></span></div>
         <span class="status-badge offline">空闲</span>

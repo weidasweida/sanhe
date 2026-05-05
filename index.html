@@ -3,392 +3,328 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>收银系统 - 总览</title>
-  <link rel="stylesheet" href="styles.css?v=20260427" />
-  <script src="shared-data.js?v=20260427"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <title>三兄弟监控面板</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h1 span { color: #888; font-size: 14px; font-weight: normal; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    .card {
+      background: #1a1a2e;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #2a2a4a;
+      transition: all 0.3s;
+    }
+    .card.online { border-color: #22c55e; box-shadow: 0 0 20px rgba(34,197,94,0.1); }
+    .card.offline { border-color: #ef4444; opacity: 0.7; }
+    .card.working { border-color: #f59e0b; box-shadow: 0 0 20px rgba(245,158,11,0.15); }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .status-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .status-dot.online { background: #22c55e; box-shadow: 0 0 8px #22c55e; }
+    .status-dot.offline { background: #ef4444; }
+    .status-dot.working { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .status-badge {
+      font-size: 12px;
+      padding: 2px 10px;
+      border-radius: 10px;
+      font-weight: 500;
+    }
+    .status-badge.online { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .status-badge.offline { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .status-badge.working { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 13px;
+      border-bottom: 1px solid #2a2a3a;
+    }
+    .info-row:last-child { border: none; }
+    .info-label { color: #888; }
+    .info-value { color: #e0e0e0; }
+    .task-section {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #2a2a3a;
+    }
+    .task-label { font-size: 12px; color: #888; margin-bottom: 6px; }
+    .task-box {
+      background: #12121e;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+      min-height: 40px;
+    }
+    .task-box .task-title { color: #f59e0b; font-weight: 500; }
+    .task-box .task-detail { color: #aaa; margin-top: 4px; font-size: 12px; }
+    .task-box.empty { color: #555; display: flex; align-items: center; justify-content: center; }
+    .log-section { margin-top: 12px; }
+    .log-box {
+      background: #0a0a14;
+      border-radius: 8px;
+      padding: 10px;
+      max-height: 120px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      line-height: 1.6;
+      color: #666;
+    }
+    .log-box::-webkit-scrollbar { width: 4px; }
+    .log-box::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+    .log-entry { color: #888; }
+    .log-entry .time { color: #555; }
+    .log-entry .ok { color: #22c55e; }
+    .log-entry .err { color: #ef4444; }
+    .log-entry .info { color: #60a5fa; }
+    .bottom-bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: #1a1a2e;
+      border-radius: 8px;
+      border: 1px solid #2a2a4a;
+    }
+    .refresh-btn {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .refresh-btn:hover { background: #2563eb; }
+    .last-update { color: #666; font-size: 12px; }
+    .overall-status {
+      display: flex;
+      gap: 16px;
+      font-size: 13px;
+    }
+    .overall-status .stat { display: flex; align-items: center; gap: 6px; }
+  </style>
 </head>
 <body>
-<div id="app" data-theme="aurora-blue">
+  <h1>🤖 三兄弟监控面板 <span>收银系统重建项目</span></h1>
 
-  <!-- ========== 顶部栏 ========== -->
-  <header class="header">
-    <div class="header-left">
-      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
-      <div class="logo">🏪 <span data-i18n="brand">收银通</span></div>
-      <span class="version">v2.0</span>
-    </div>
-    <div class="header-right">
-      <button class="lang-switch" onclick="toggleLang()">EN / 中文</button>
-      <button class="theme-btn" onclick="toggleThemePanel()">🎨</button>
-      <div class="notification-badge">🔔 <span class="badge">3</span></div>
-      <div class="user-avatar">👤 <span data-i18n="admin">管理员</span></div>
-    </div>
-  </header>
-
-  <!-- ========== 主区域 ========== -->
-  <div class="main-layout">
-
-    <!-- 左侧导航 -->
-    <nav class="sidebar">
-      <div class="nav-item active" onclick="window.location.href='index.html'">
-        <span class="nav-icon">🏠</span>
-        <span data-i18n="nav.overview">总览</span>
+  <div class="grid" id="brothersGrid">
+    <!-- 小马哥 -->
+    <div class="card online" id="card-boss">
+      <div class="card-header">
+        <div class="card-title">🐴 小马哥 <span class="status-dot online"></span></div>
+        <span class="status-badge online">在线 · 总管</span>
       </div>
-      <div class="nav-item" onclick="window.location.href='checkout.html'">
-        <span class="nav-icon">🧾</span>
-        <span data-i18n="nav.checkout">快速开单</span>
-      </div>
-      <div class="nav-item" onclick="window.location.href='booking.html'">
-        <span class="nav-icon">📅</span>
-        <span data-i18n="nav.appointment">预约管理</span>
-      </div>
-      <div class="nav-item" onclick="window.location.href='products.html'">
-        <span class="nav-icon">📦</span>
-        <span data-i18n="nav.products">商品管理</span>
-      </div>
-      <div class="nav-item" onclick="window.location.href='inventory.html'">
-        <span class="nav-icon">📦</span>
-        <span data-i18n="nav.inventory">库存管理</span>
-      </div>
-      <div class="nav-item" onclick="window.location.href='members.html'">
-        <span class="nav-icon">📋</span>
-        <span data-i18n="nav.orders">订单管理</span>
-      </div>
-      <div class="nav-item" onclick="window.location.href='members.html'">
-        <span class="nav-icon">👥</span>
-        <span data-i18n="nav.members">会员管理</span>
-      </div>
-      <div class="nav-item" onclick="window.location.href='reports.html'">
-        <span class="nav-icon">📊</span>
-        <span data-i18n="nav.reports">营业报表</span>
-      </div>
-      <div class="nav-item" onclick="window.location.href='marketing.html'">
-        <span class="nav-icon">🎫</span>
-        <span data-i18n="nav.promotion">优惠营销</span>
-      </div>
-      <div class="nav-item" onclick="window.location.href='settings.html'">
-        <span class="nav-icon">⚙️</span>
-        <span data-i18n="nav.settings">系统设置</span>
-      </div>
-      <div class="sidebar-footer">
-        <span class="store-name" data-i18n="storeName">旗舰店</span>
-        <span class="store-id">#001</span>
-      </div>
-    </nav>
-
-    <!-- 内容区域 -->
-    <main class="content">
-
-      <!-- 五大指标 -->
-      <section class="metrics-row">
-        <div class="metric-card">
-          <div class="metric-icon" style="background:var(--color-primary-light)">💰</div>
-          <div class="metric-body">
-            <div class="metric-value">¥12,580</div>
-            <div class="metric-label" data-i18n="metrics.revenue">今日流水</div>
-            <div class="metric-trend up">+5.2%</div>
-          </div>
+      <div class="info-row"><span class="info-label">IP</span><span class="info-value">本地 WSL</span></div>
+      <div class="info-row"><span class="info-label">角色</span><span class="info-value">总管 · 任务分解 · 质量检查</span></div>
+      <div class="task-section">
+        <div class="task-label">当前任务</div>
+        <div class="task-box">
+          <div class="task-title">📋 统筹管理</div>
+          <div class="task-detail">拆解任务 → 派发给小马弟/小马妹 → 检查结果 → 返工或下一步</div>
         </div>
-        <div class="metric-card">
-          <div class="metric-icon" style="background:#E8F5E9">📄</div>
-          <div class="metric-body">
-            <div class="metric-value">128</div>
-            <div class="metric-label" data-i18n="metrics.orders">订单数</div>
-            <div class="metric-trend down">-2.3%</div>
-          </div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-icon" style="background:#FFF3E0">👤</div>
-          <div class="metric-body">
-            <div class="metric-value">¥98.3</div>
-            <div class="metric-label" data-i18n="metrics.avgOrder">客单价</div>
-            <div class="metric-trend up">+7.1%</div>
-          </div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-icon" style="background:#F3E5F5">🪪</div>
-          <div class="metric-body">
-            <div class="metric-value">12</div>
-            <div class="metric-label" data-i18n="metrics.newMembers">新增会员</div>
-            <div class="metric-trend up">+20%</div>
-          </div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-icon" style="background:#FBE9E7">↩️</div>
-          <div class="metric-body">
-            <div class="metric-value">2</div>
-            <div class="metric-label" data-i18n="metrics.refunds">退款数</div>
-            <div class="metric-trend down">-50%</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 中间行：交易流水 + 快捷操作 -->
-      <section class="middle-row">
-        <div class="card transaction-feed">
-          <div class="card-header">
-            <span data-i18n="feed.title">实时交易流水</span>
-            <button class="card-action" data-i18n="feed.viewAll">查看全部 →</button>
-          </div>
-          <div class="feed-list">
-            <div class="feed-item">
-              <span class="feed-time">10:32</span>
-              <span class="feed-items" data-i18n="feed.item1">可乐 ×2</span>
-              <span class="feed-amount">¥6.00</span>
-            </div>
-            <div class="feed-item">
-              <span class="feed-time">10:30</span>
-              <span class="feed-items" data-i18n="feed.item2">薯片 ×1</span>
-              <span class="feed-amount">¥5.00</span>
-            </div>
-            <div class="feed-item">
-              <span class="feed-time">10:28</span>
-              <span class="feed-items" data-i18n="feed.item3">矿泉水 ×3</span>
-              <span class="feed-amount">¥9.00</span>
-            </div>
-            <div class="feed-item">
-              <span class="feed-time">10:25</span>
-              <span class="feed-items" data-i18n="feed.item4">方便面 ×2</span>
-              <span class="feed-amount">¥10.00</span>
-            </div>
-            <div class="feed-item">
-              <span class="feed-time">10:20</span>
-              <span class="feed-items" data-i18n="feed.item5">面包 ×1</span>
-              <span class="feed-amount">¥8.50</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="card quick-actions">
-          <div class="card-header">
-            <span data-i18n="actions.title">快捷操作</span>
-          </div>
-          <div class="actions-grid">
-            <button class="action-btn" onclick="window.location.href='checkout.html'">
-              <span class="action-icon">🧾</span>
-              <span data-i18n="actions.checkout">开单收银</span>
-            </button>
-            <button class="action-btn">
-              <span class="action-icon">⏸️</span>
-              <span data-i18n="actions.hold">挂单/取单</span>
-            </button>
-            <button class="action-btn">
-              <span class="action-icon">🖨️</span>
-              <span data-i18n="actions.print">打印小票</span>
-            </button>
-            <button class="action-btn">
-              <span class="action-icon">💳</span>
-              <span data-i18n="actions.payment">收支款</span>
-            </button>
-            <button class="action-btn">
-              <span class="action-icon">📦</span>
-              <span data-i18n="actions.stockTake">快速盘点</span>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- 图表区域 -->
-      <section class="chart-section">
-        <div class="card chart-card">
-          <div class="card-header">
-            <span data-i18n="chart.hourlySales">今日销售趋势（按小时）</span>
-          </div>
-          <div class="chart-container">
-            <canvas id="salesChart"></canvas>
-          </div>
-        </div>
-      </section>
-
-      <!-- 底部行：品类占比 + 提醒中心 -->
-      <section class="bottom-row">
-        <div class="card pie-card">
-          <div class="card-header">
-            <span data-i18n="chart.categoryShare">品类销售占比</span>
-          </div>
-          <div class="pie-container">
-            <canvas id="pieChart"></canvas>
-            <div class="pie-legend">
-              <div class="legend-item"><span class="dot" style="background:#1677FF"></span> <span data-i18n="categories.food">食品</span> <span class="pct">45%</span></div>
-              <div class="legend-item"><span class="dot" style="background:#00B42A"></span> <span data-i18n="categories.beverage">饮料</span> <span class="pct">30%</span></div>
-              <div class="legend-item"><span class="dot" style="background:#FF7D00"></span> <span data-i18n="categories.daily">日用品</span> <span class="pct">15%</span></div>
-              <div class="legend-item"><span class="dot" style="background:#722ED1"></span> <span data-i18n="categories.other">其他</span> <span class="pct">10%</span></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card reminder-card">
-          <div class="card-header">
-            <span data-i18n="reminders.title">提醒中心</span>
-          </div>
-          <div class="reminder-list">
-            <div class="reminder-item warning">
-              <span class="reminder-icon">⚠️</span>
-              <span data-i18n="reminders.lowStock">可乐库存不足</span>
-            </div>
-            <div class="reminder-item alert">
-              <span class="reminder-icon">🔔</span>
-              <span data-i18n="reminders.shiftNotEnded">交班未确认</span>
-            </div>
-            <div class="reminder-item info">
-              <span class="reminder-icon">📦</span>
-              <span data-i18n="reminders.needRestock">今日需补货 5 件</span>
-            </div>
-            <div class="reminder-item success">
-              <span class="reminder-icon">🎂</span>
-              <span data-i18n="reminders.memberBirthday">会员生日 3 人</span>
-            </div>
-            <div class="reminder-item info">
-              <span class="reminder-icon">📋</span>
-              <span data-i18n="reminders.pendingReview">未对账 2 笔</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-    </main>
-  </div>
-
-  <!-- ========== 主题选择面板 ========== -->
-  <div class="theme-panel" id="themePanel">
-    <div class="theme-panel-header">
-      <span data-i18n="theme.title">切换主题</span>
-      <button onclick="toggleThemePanel()">✕</button>
-    </div>
-    <div class="theme-list">
-      <div class="theme-group-label">✦ 浅色侧边栏</div>
-      <div class="theme-option active" data-theme="aurora-blue" onclick="setTheme('aurora-blue')">
-        <div class="theme-preview" style="background:linear-gradient(135deg,#1677FF,#69B1FF)"></div>
-        <span data-i18n="theme.auroraBlue">极光蓝</span>
-      </div>
-      <div class="theme-option" data-theme="twilight-purple" onclick="setTheme('twilight-purple')">
-        <div class="theme-preview" style="background:linear-gradient(135deg,#722ED1,#B37FEB)"></div>
-        <span data-i18n="theme.twilightPurple">暮光紫</span>
-      </div>
-      <div class="theme-option" data-theme="teal-green" onclick="setTheme('teal-green')">
-        <div class="theme-preview" style="background:linear-gradient(135deg,#00A76F,#66D9A8)"></div>
-        <span data-i18n="theme.tealGreen">松石绿</span>
-      </div>
-      <div class="theme-option" data-theme="lava-orange" onclick="setTheme('lava-orange')">
-        <div class="theme-preview" style="background:linear-gradient(135deg,#FF5C00,#FF9A6C)"></div>
-        <span data-i18n="theme.lavaOrange">熔岩橙</span>
-      </div>
-      <div class="theme-group-label">✦ 深色侧边栏</div>
-      <div class="theme-option" data-theme="deep-blue" onclick="setTheme('deep-blue')">
-        <div class="theme-preview" style="background:linear-gradient(135deg,#1A2A4A,#4096FF)"></div>
-        <span data-i18n="theme.deepBlue">深海蓝</span>
-      </div>
-      <div class="theme-option" data-theme="royal-purple" onclick="setTheme('royal-purple')">
-        <div class="theme-preview" style="background:linear-gradient(135deg,#2D1B69,#9D6BFF)"></div>
-        <span data-i18n="theme.royalPurple">尊贵紫</span>
-      </div>
-      <div class="theme-option" data-theme="forest-green" onclick="setTheme('forest-green')">
-        <div class="theme-preview" style="background:linear-gradient(135deg,#064E3B,#34D399)"></div>
-        <span data-i18n="theme.forestGreen">墨林绿</span>
-      </div>
-      <div class="theme-option" data-theme="sunset-orange" onclick="setTheme('sunset-orange')">
-        <div class="theme-preview" style="background:linear-gradient(135deg,#7C2D12,#F97316)"></div>
-        <span data-i18n="theme.sunsetOrange">落日橙</span>
-      </div>
-      <div class="theme-group-label">✦ 方案九·十二</div>
-      <div class="theme-option" data-theme="golden" onclick="setTheme('golden')">
-        <div class="theme-preview" style="background:linear-gradient(135deg,#2C1810,#B8860B)"></div>
-        <span data-i18n="theme.golden">黄金满地</span>
-      </div>
-      <div class="theme-option" data-theme="festive-red" onclick="setTheme('festive-red')">
-        <div class="theme-preview" style="background:linear-gradient(135deg,#3E1212,#C62828)"></div>
-        <span data-i18n="theme.festiveRed">恭贺欣喜</span>
-      </div>
-      <div class="theme-option" data-theme="marble" onclick="setTheme('marble')">
-        <div class="theme-preview" style="background:linear-gradient(135deg,#2A2A36,#7A7A8A)"></div>
-        <span data-i18n="theme.marble">大理石</span>
-      </div>
-      <div class="theme-option" data-theme="ink-wash" onclick="setTheme('ink-wash')">
-        <div class="theme-preview" style="background:linear-gradient(135deg,#1A1A1A,#2C2C2C)"></div>
-        <span data-i18n="theme.inkWash">宣纸水墨</span>
       </div>
     </div>
-  </div>
-  <div class="theme-overlay" id="themeOverlay" onclick="toggleThemePanel()"></div>
 
-  <!-- ========== 移动端侧边栏抽屉 ========== -->
-  <div class="mobile-sidebar-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
-  <div class="mobile-sidebar-drawer" id="mobileDrawer">
-    <div class="mobile-drawer-header">
-      <span class="logo">🏪 <span data-i18n="brand">收银通</span></span>
-      <button class="mobile-drawer-close" onclick="closeMobileMenu()">✕</button>
+    <!-- 小马弟 -->
+    <div class="card working" id="card-didi">
+      <div class="card-header">
+        <div class="card-title">🐴 小马弟 <span class="status-dot working"></span></div>
+        <span class="status-badge working">工作中</span>
+      </div>
+      <div class="info-row"><span class="info-label">IP</span><span class="info-value">47.236.39.12</span></div>
+      <div class="info-row"><span class="info-label">API</span><span class="info-value">:8083</span></div>
+      <div class="info-row"><span class="info-label">模型</span><span class="info-value">DeepSeek</span></div>
+      <div class="task-section">
+        <div class="task-label">当前任务</div>
+        <div class="task-box" id="didi-task">
+          <div class="task-title">🔄 查询中...</div>
+        </div>
+      </div>
+      <div class="log-section">
+        <div class="task-label">执行记录</div>
+        <div class="log-box" id="didi-log">
+          <div class="log-entry"><span class="time">--:--:--</span> <span class="info">等待任务...</span></div>
+        </div>
+      </div>
     </div>
-    <div class="mobile-drawer-items">
-      <div class="mobile-drawer-item active" onclick="window.location.href='index.html';closeMobileMenu()">
-        <span>🏠</span> <span data-i18n="nav.overview">总览</span>
+
+    <!-- 小马妹 -->
+    <div class="card" id="card-meimei">
+      <div class="card-header">
+        <div class="card-title">🐴 小马妹 <span class="status-dot offline"></span></div>
+        <span class="status-badge offline">空闲</span>
       </div>
-      <div class="mobile-drawer-item" onclick="window.location.href='checkout.html';closeMobileMenu()">
-        <span>🧾</span> <span data-i18n="nav.checkout">快速开单</span>
+      <div class="info-row"><span class="info-label">IP</span><span class="info-value">47.84.125.253</span></div>
+      <div class="info-row"><span class="info-label">API</span><span class="info-value">:8084</span></div>
+      <div class="info-row"><span class="info-label">模型</span><span class="info-value">DeepSeek</span></div>
+      <div class="task-section">
+        <div class="task-label">当前任务</div>
+        <div class="task-box empty" id="meimei-task">⏳ 等待派发</div>
       </div>
-      <div class="mobile-drawer-group">
-        <div class="mobile-drawer-item mobile-drawer-group-header" onclick="toggleDrawerGroup(this)">
-          <span>📅</span> <span data-i18n="nav.appointment">预约管理</span>
-          <span class="group-arrow">▶</span>
+      <div class="log-section">
+        <div class="task-label">执行记录</div>
+        <div class="log-box" id="meimei-log">
+          <div class="log-entry"><span class="time">--:--:--</span> <span class="info">等待任务...</span></div>
         </div>
-        <div class="mobile-drawer-sub">
-          <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>📋</span> 预约记录</div>
-          <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>🗓️</span> 预约看板</div>
-          <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>📊</span> 预约数据</div>
-          <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>👥</span> 可约员工</div>
-          <div class="mobile-drawer-item" onclick="window.location.href='booking.html';closeMobileMenu()"><span>⚙️</span> 预约参数</div>
-        </div>
-      </div>
-      <div class="mobile-drawer-item" onclick="window.location.href='products.html';closeMobileMenu()">
-        <span>📦</span> <span data-i18n="nav.products">商品管理</span>
-      </div>
-      <div class="mobile-drawer-item" onclick="window.location.href='inventory.html';closeMobileMenu()">
-        <span>📊</span> <span data-i18n="nav.inventory">库存管理</span>
-      </div>
-      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
-        <span>📋</span> <span data-i18n="nav.orders">订单管理</span>
-      </div>
-      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
-        <span>👥</span> <span data-i18n="nav.members">会员管理</span>
-      </div>
-      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
-        <span>📊</span> <span data-i18n="nav.reports">营业报表</span>
-      </div>
-      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
-        <span>🎫</span> <span data-i18n="nav.promotion">优惠营销</span>
-      </div>
-      <div class="mobile-drawer-item" onclick="closeMobileMenu()">
-        <span>⚙️</span> <span data-i18n="nav.settings">系统设置</span>
       </div>
     </div>
   </div>
 
-  <!-- ========== 移动端底部导航 ========== -->
-  <div class="mobile-bottom-nav">
-    <div class="mobile-nav-item active" data-page="overview" onclick="navigateBottomNav('index.html')">
-      <span class="nav-icon">🏠</span>
-      <span data-i18n="nav.overview">总览</span>
+  <!-- 底部 -->
+  <div class="bottom-bar">
+    <button class="refresh-btn" onclick="refreshAll()">🔄 刷新状态</button>
+    <div class="overall-status">
+      <div class="stat">✅ <span id="taskDone">0</span> 任务完成</div>
+      <div class="stat">🔄 <span id="taskRunning">1</span> 进行中</div>
+      <div class="stat">📋 <span id="taskTotal">1</span> 总任务</div>
     </div>
-    <div class="mobile-nav-item" data-page="checkout" onclick="navigateBottomNav('checkout.html')">
-      <span class="nav-icon">🧾</span>
-      <span data-i18n="nav.checkout">开单</span>
-    </div>
-    <div class="mobile-nav-item" data-page="booking" onclick="navigateBottomNav('booking.html')">
-      <span class="nav-icon">📅</span>
-      <span data-i18n="nav.appointment">预约</span>
-    </div>
-    <div class="mobile-nav-item" data-page="products" onclick="navigateBottomNav('products.html')">
-      <span class="nav-icon">📦</span>
-      <span>商品</span>
-    </div>
-    <div class="mobile-nav-item" onclick="toggleMobileMenu()">
-      <span class="nav-icon">☰</span>
-      <span>更多</span>
-    </div>
+    <div class="last-update">上次更新: <span id="lastUpdate">刚刚</span></div>
   </div>
 
-  <script src="app.js?v=20260427"></script>
-  <script>setMobileNavActive('overview');</script>
-</div>
+  <script>
+    // ===== 任务跟踪 =====
+    const tasks = {
+      boss: {
+        task: '📋 统筹管理：拆解任务 → 派发给小马弟/小马妹 → 检查结果 → 返工或下一步',
+        status: 'online'
+      },
+      didi: {
+        task: '🔄 查询中...',
+        status: 'working',
+        log: [
+          { time: '00:45', msg: '收到任务：安装依赖 + 创建项目骨架', level: 'info' },
+          { time: '00:46', msg: 'pip install flask flask-cors sqlalchemy', level: 'info' },
+          { time: '00:47', msg: '✅ 安装完成', level: 'ok' },
+          { time: '00:48', msg: '创建 backend/ 包结构...', level: 'info' }
+        ]
+      },
+      meimei: {
+        task: '⏳ 等待派发',
+        status: 'offline',
+        log: [
+          { time: '00:45', msg: '等待任务...', level: 'info' }
+        ]
+      }
+    }
+
+    // ===== 通过状态API刷新（实时） =====
+    const STATUS_API = 'http://172.22.209.149:8998/status';
+
+    async function refreshAll() {
+      document.getElementById('lastUpdate').textContent = '刷新中...';
+      try {
+        const r = await fetch(STATUS_API);
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const data = await r.json();
+        updatePanel(data);
+      } catch(e) {
+        document.getElementById('lastUpdate').textContent = '连接失败: ' + e.message;
+        addLog('didi', '状态API连接失败', 'err');
+        addLog('meimei', '状态API连接失败', 'err');
+      }
+    }
+
+    function updatePanel(data) {
+      data.brothers.forEach(b => {
+        const name = b.name;
+        let id = 'didi';
+        if (name === '小马哥') id = 'boss';
+        else if (name === '小马弟') id = 'didi';
+        else if (name === '小马妹') id = 'meimei';
+
+        const card = document.getElementById('card-' + id);
+        const badge = card ? card.querySelector('.status-badge') : null;
+        const dot = card ? card.querySelector('.status-dot') : null;
+        const taskBox = document.getElementById(id + '-task');
+
+        if (card) {
+          card.className = 'card ' + b.status;
+        }
+        if (badge) {
+          badge.textContent = b.status === 'online' ? '在线' : b.status === 'offline' ? '离线' : '工作中';
+          badge.className = 'status-badge ' + b.status;
+        }
+        if (dot) {
+          dot.className = 'status-dot ' + b.status;
+        }
+        if (taskBox && name !== '小马哥') {
+          taskBox.innerHTML = '<div class="task-title">📋 ' + (b.task || '等待任务...') + '</div>';
+        }
+        addLog(id, b.status === 'online' ? '在线' : (b.status === 'offline' ? '离线' : '工作中'), b.status);
+      });
+
+      // 任务统计
+      const taskDone = data.tasks.filter(t => t.status === 'completed').length;
+      const taskRunning = data.tasks.filter(t => t.status === 'in_progress').length;
+      document.getElementById('taskDone').textContent = taskDone;
+      document.getElementById('taskRunning').textContent = taskRunning;
+      document.getElementById('taskTotal').textContent = data.tasks.length;
+      document.getElementById('lastUpdate').textContent = data.updated;
+    }
+
+    function addLog(who, msg, level) {
+      const logBox = document.getElementById(who + '-log');
+      const now = new Date();
+      const time = now.getHours().toString().padStart(2,'0') + ':' +
+                   now.getMinutes().toString().padStart(2,'0') + ':' +
+                   now.getSeconds().toString().padStart(2,'0');
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.innerHTML = '<span class="time">' + time + '</span> <span class="' + level + '">' + msg + '</span>';
+      logBox.appendChild(entry);
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    async function refreshAll() {
+      document.getElementById('lastUpdate').textContent = '刷新中...';
+      await Promise.all([refreshDidi(), refreshMeimei()]);
+      document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+    }
+
+    // 自动刷新
+    setInterval(refreshAll, 30000);
+    setTimeout(refreshAll, 2000);
+  </script>
 </body>
 </html>
